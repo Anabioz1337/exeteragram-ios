@@ -3,14 +3,19 @@ name: build-unsigned-ipa
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, extera-port]
     paths-ignore:
       - "**.md"
+      - "docs/**"
+
+concurrency:
+  group: build-unsigned-ipa-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: macos-14
-    timeout-minutes: 300
+    runs-on: macos-latest
+    timeout-minutes: 330
 
     steps:
       - name: Checkout (with submodules)
@@ -18,88 +23,78 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 1
-        # TODO: Telegram-iOS тянет ~40+ субмодулей, полный checkout >10 ГБ.
-        # После первой пробы проверить, хватит ли глубины по умолчанию и места на диске;
-        # при нехватке — частичный submodule update --init только для нужных.
 
-      - name: Select Xcode
-        # TODO: версию взять из src/TGI/versions.json после заливки клонов,
-        # сейчас стоит плейсхолдер.
+      - name: Select Xcode required by versions.json
         run: |
-          sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
-
-      - name: Show toolchain versions
-        run: |
+          XCODE_VERSION=$(python3 -c 'import json;print(json.load(open("versions.json"))["xcode"])')
+          echo "Required Xcode: $XCODE_VERSION"
+          if [ ! -d "/Applications/Xcode_${XCODE_VERSION}.app" ]; then
+            echo "::notice::Xcode ${XCODE_VERSION} is not preinstalled, installing with xcodes"
+            brew install xcodes
+            sudo xcodes install "${XCODE_VERSION}"
+          fi
+          sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app/Contents/Developer"
           xcodebuild -version
-          swift --version
+
+      - name: Show toolchain versions and disk space
+        run: |
+          sw_vers
+          xcodebuild -version
           python3 --version
+          df -h /
 
-      - name: Install build dependencies
+      # Make.py downloads the bazel binary pinned in versions.json itself
+      # (sha256-verified), so no bazelisk here.
+      # Source paths end up in the binary, so the tree is copied to a stable path.
+      - name: Create canonical source directory
         run: |
-          brew install bazelisk || true
-          pip3 install -r src/TGI/build-system/Make/requirements.txt || true
-        # TODO: актуальный Make.py из upstream обычно сам скачивает нужный bazel
-        # и requirements.txt может отсутствовать — сверить с деревом src/TGI после заливки.
-        # TODO: buck2/buck НЕ используется — современный Telegram-iOS собран через Bazel
-        # (build-system/Make/Make.py), buck остался в старых релизах.
+          sudo mkdir -p /Users/Shared
+          cp -R "$GITHUB_WORKSPACE" /Users/Shared/
+          mv "/Users/Shared/$(basename "$GITHUB_WORKSPACE")" /Users/Shared/telegram-ios
 
-      - name: Prepare build configuration
-        # Генерируем минимальный development-конфиг без реальных Team ID:
-        # код-сайнинг отключается позже, конфиг нужен только чтобы сгенерировать проект.
-        # TODO: точный формат JSON сверить с src/TGI/build-system/template_minimal_development_configuration.json
-        run: |
-          mkdir -p build-config
-          cat <<'EOF' > build-config/minimal.json
-          {
-            "teamId": "",
-            "organizationIdentifier": "org.$(openssl rand -hex 8)",
-            "bundlePrefix": "org.exeteragram",
-            "bundleId": "org.exeteragram.ios"
-          }
-          EOF
-        # TODO: поля точно совпадают со schema у upstream — до первой попытки это драфт.
+      - name: Restore bazel disk cache
+        uses: actions/cache@v4
+        with:
+          path: ~/telegram-bazel-cache
+          key: bazel-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'WORKSPACE', 'MODULE.bazel.lock') }}
+          restore-keys: |
+            bazel-${{ runner.os }}-${{ runner.arch }}-
+            bazel-${{ runner.os }}-
 
-      - name: Generate Xcode project
+      - name: Build unsigned IPA (fake codesigning)
+        working-directory: /Users/Shared/telegram-ios
         run: |
-          cd src/TGI
-          python3 build-system/Make/Make.py \
+          BUILD_NUMBER="${{ github.run_number }}"
+          python3 build-system/Make/ImportCertificates.py --path build-system/fake-codesigning/certs
+          python3 -u build-system/Make/Make.py \
             --cacheDir="$HOME/telegram-bazel-cache" \
-            generateProject \
-            --configurationPath="$(pwd)/../build-config/minimal.json" \
-            --disableProvisioningProfiles
-        # TODO: подтвержденный путь конфига + возможные доп. флаги (--overrideXcodeVersion и др.)
+            --bazelUserRoot="/private/var/tmp/_bazel_ci" \
+            build \
+            --configurationPath="build-system/appstore-configuration.json" \
+            --codesigningInformationPath=build-system/fake-codesigning \
+            --configuration=release_arm64 \
+            --outputBuildArtifactsPath="build/artifacts" \
+            --buildNumber="$BUILD_NUMBER"
 
-      - name: Archive without code signing
+      - name: Collect artifacts
+        working-directory: /Users/Shared/telegram-ios
         run: |
-          xcodebuild \
-            -workspace "$(find . -maxdepth 3 -name 'Telegram.xcworkspace' | head -1)" \
-            -scheme Telegram \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath "$GITHUB_WORKSPACE/build-artifacts/Telegram.xcarchive" \
-            archive \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            DEVELOPMENT_TEAM="" \
-            CODE_SIGN_IDENTITY="" \
-            ENABLE_BITCODE=NO
-        # TODO: имя workspace/scheme уточнить после generateProject (обычно Telegram.xcworkspace).
-
-      - name: Export unsigned .ipa from archive
-        # Без exportOptionsPlist подписи — просто берём готовый .app из xcarchive
-        # и упаковываем в Payload/<name>.ipa, как принято у sideload-сборок.
-        run: |
-          APP_PATH=$(find "$GITHUB_WORKSPACE/build-artifacts" -type d -name "*.app" | head -1)
-          [ -n "$APP_PATH" ] || { echo "::error::no .app found in archive"; exit 1; }
-          mkdir -p "$GITHUB_WORKSPACE/build-artifacts/Payload"
-          cp -R "$APP_PATH" "$GITHUB_WORKSPACE/build-artifacts/Payload/"
-          cd "$GITHUB_WORKSPACE/build-artifacts"
-          zip -qy -r exeteragram-ios-unsigned.ipa Payload
-          ls -la exeteragram-ios-unsigned.ipa
+          ls -la build/artifacts
+          mkdir -p "$GITHUB_WORKSPACE/build-artifacts"
+          cp build/artifacts/Telegram.ipa "$GITHUB_WORKSPACE/build-artifacts/exeteragram-ios-${{ github.run_number }}-unsigned.ipa"
+          [ -f build/artifacts/Telegram.DSYMs.zip ] && cp build/artifacts/Telegram.DSYMs.zip "$GITHUB_WORKSPACE/build-artifacts/" || true
+          df -h /
 
       - name: Upload unsigned ipa artifact
         uses: actions/upload-artifact@v4
         with:
-          name: exeteragram-ios-unsigned-ipa
-          path: ${{ github.workspace }}/build-artifacts/exeteragram-ios-unsigned.ipa
+          name: unsigned-ipa-${{ github.run_number }}
+          path: ${{ github.workspace }}/build-artifacts/*unsigned*.ipa
           if-no-files-found: error
+
+      - name: Upload dSYM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsyms-${{ github.run_number }}
+          path: ${{ github.workspace }}/build-artifacts/*.DSYMs.zip
+          if-no-files-found: ignore
