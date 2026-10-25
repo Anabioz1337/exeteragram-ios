@@ -1,0 +1,105 @@
+name: build-unsigned-ipa
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  build:
+    runs-on: macos-14
+    timeout-minutes: 300
+
+    steps:
+      - name: Checkout (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+        # TODO: Telegram-iOS тянет ~40+ субмодулей, полный checkout >10 ГБ.
+        # После первой пробы проверить, хватит ли глубины по умолчанию и места на диске;
+        # при нехватке — частичный submodule update --init только для нужных.
+
+      - name: Select Xcode
+        # TODO: версию взять из src/TGI/versions.json после заливки клонов,
+        # сейчас стоит плейсхолдер.
+        run: |
+          sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+
+      - name: Show toolchain versions
+        run: |
+          xcodebuild -version
+          swift --version
+          python3 --version
+
+      - name: Install build dependencies
+        run: |
+          brew install bazelisk || true
+          pip3 install -r src/TGI/build-system/Make/requirements.txt || true
+        # TODO: актуальный Make.py из upstream обычно сам скачивает нужный bazel
+        # и requirements.txt может отсутствовать — сверить с деревом src/TGI после заливки.
+        # TODO: buck2/buck НЕ используется — современный Telegram-iOS собран через Bazel
+        # (build-system/Make/Make.py), buck остался в старых релизах.
+
+      - name: Prepare build configuration
+        # Генерируем минимальный development-конфиг без реальных Team ID:
+        # код-сайнинг отключается позже, конфиг нужен только чтобы сгенерировать проект.
+        # TODO: точный формат JSON сверить с src/TGI/build-system/template_minimal_development_configuration.json
+        run: |
+          mkdir -p build-config
+          cat <<'EOF' > build-config/minimal.json
+          {
+            "teamId": "",
+            "organizationIdentifier": "org.$(openssl rand -hex 8)",
+            "bundlePrefix": "org.exeteragram",
+            "bundleId": "org.exeteragram.ios"
+          }
+          EOF
+        # TODO: поля точно совпадают со schema у upstream — до первой попытки это драфт.
+
+      - name: Generate Xcode project
+        run: |
+          cd src/TGI
+          python3 build-system/Make/Make.py \
+            --cacheDir="$HOME/telegram-bazel-cache" \
+            generateProject \
+            --configurationPath="$(pwd)/../build-config/minimal.json" \
+            --disableProvisioningProfiles
+        # TODO: подтвержденный путь конфига + возможные доп. флаги (--overrideXcodeVersion и др.)
+
+      - name: Archive without code signing
+        run: |
+          xcodebuild \
+            -workspace "$(find . -maxdepth 3 -name 'Telegram.xcworkspace' | head -1)" \
+            -scheme Telegram \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath "$GITHUB_WORKSPACE/build-artifacts/Telegram.xcarchive" \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            DEVELOPMENT_TEAM="" \
+            CODE_SIGN_IDENTITY="" \
+            ENABLE_BITCODE=NO
+        # TODO: имя workspace/scheme уточнить после generateProject (обычно Telegram.xcworkspace).
+
+      - name: Export unsigned .ipa from archive
+        # Без exportOptionsPlist подписи — просто берём готовый .app из xcarchive
+        # и упаковываем в Payload/<name>.ipa, как принято у sideload-сборок.
+        run: |
+          APP_PATH=$(find "$GITHUB_WORKSPACE/build-artifacts" -type d -name "*.app" | head -1)
+          [ -n "$APP_PATH" ] || { echo "::error::no .app found in archive"; exit 1; }
+          mkdir -p "$GITHUB_WORKSPACE/build-artifacts/Payload"
+          cp -R "$APP_PATH" "$GITHUB_WORKSPACE/build-artifacts/Payload/"
+          cd "$GITHUB_WORKSPACE/build-artifacts"
+          zip -qy -r exeteragram-ios-unsigned.ipa Payload
+          ls -la exeteragram-ios-unsigned.ipa
+
+      - name: Upload unsigned ipa artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: exeteragram-ios-unsigned-ipa
+          path: ${{ github.workspace }}/build-artifacts/exeteragram-ios-unsigned.ipa
+          if-no-files-found: error
