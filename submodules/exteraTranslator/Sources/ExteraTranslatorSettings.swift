@@ -21,20 +21,20 @@ public struct ExteraTranslationPreferences: Codable, Equatable {
     }
 }
 
-/// User defaults storage for the extera translator, keyed under a dedicated
-/// `extera.translator.` namespace, with change notification through a signal.
+/// User defaults storage for the extera translator, kept in a dedicated
+/// `exteraTranslator` defaults suite, with change notification through a signal.
 public final class ExteraTranslatorSettings {
     public static let shared = ExteraTranslatorSettings()
 
-    private static let namespace = "extera.translator."
-    private static let preferencesKey = "extera.translator.preferences"
+    private static let defaults = UserDefaults(suiteName: "exteraTranslator") ?? .standard
+    private static let preferencesKey = "preferences"
 
     private let promise = ValuePromise<ExteraTranslationPreferences>(ignoreRepeated: true)
     private let lock = NSLock()
     private var cachedPreferences: ExteraTranslationPreferences
 
     private init() {
-        if let data = UserDefaults.standard.data(forKey: ExteraTranslatorSettings.preferencesKey), let preferences = try? JSONDecoder().decode(ExteraTranslationPreferences.self, from: data) {
+        if let data = ExteraTranslatorSettings.defaults.data(forKey: ExteraTranslatorSettings.preferencesKey), let preferences = try? JSONDecoder().decode(ExteraTranslationPreferences.self, from: data) {
             self.cachedPreferences = preferences
         } else {
             self.cachedPreferences = .default
@@ -59,7 +59,7 @@ public final class ExteraTranslatorSettings {
 
     public func update(_ preferences: ExteraTranslationPreferences) {
         let data = (try? JSONEncoder().encode(preferences)) ?? Data()
-        UserDefaults.standard.set(data, forKey: ExteraTranslatorSettings.preferencesKey)
+        ExteraTranslatorSettings.defaults.set(data, forKey: ExteraTranslatorSettings.preferencesKey)
         self.promise.set(preferences)
         self.lock.with {
             self.cachedPreferences = preferences
