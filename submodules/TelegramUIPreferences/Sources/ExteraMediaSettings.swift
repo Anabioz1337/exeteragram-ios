@@ -70,6 +70,10 @@ public struct ExteraMediaSettings: Codable, Equatable {
     public static func ==(lhs: ExteraMediaSettings, rhs: ExteraMediaSettings) -> Bool {
         return lhs.doubleTapSeekSeconds == rhs.doubleTapSeekSeconds && lhs.pauseOnMinimize == rhs.pauseOnMinimize && lhs.disableVolumeAutoplay == rhs.disableVolumeAutoplay && lhs.preferOriginalQuality == rhs.preferOriginalQuality && lhs.pitchCents == rhs.pitchCents && lhs.trackSavePeerIdRaw == rhs.trackSavePeerIdRaw && lhs.lyricsOnlineSearch == rhs.lyricsOnlineSearch && lhs.rhythmBackground == rhs.rhythmBackground && lhs.particles == rhs.particles
     }
+
+    public func withUpdatedTrackSavePeerIdRaw(_ trackSavePeerIdRaw: Int64) -> ExteraMediaSettings {
+        return ExteraMediaSettings(doubleTapSeekSeconds: self.doubleTapSeekSeconds, pauseOnMinimize: self.pauseOnMinimize, disableVolumeAutoplay: self.disableVolumeAutoplay, preferOriginalQuality: self.preferOriginalQuality, pitchCents: self.pitchCents, trackSavePeerIdRaw: trackSavePeerIdRaw, lyricsOnlineSearch: self.lyricsOnlineSearch, rhythmBackground: self.rhythmBackground, particles: self.particles)
+    }
 }
 
 public func updateExteraMediaSettingsInteractively(accountManager: AccountManager<TelegramAccountManagerTypes>, _ f: @escaping (ExteraMediaSettings) -> ExteraMediaSettings) -> Signal<Void, NoError> {

@@ -67,6 +67,7 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
     private let albumArtNode = TransformImageNode()
     
     private var saveMediaDisposable: MetaDisposable?
+    private let trackSaveChannelDisposable = MetaDisposable()
     
     private var validLayout: ContainerViewLayout?
     private var containerUsesCornerRadii = false
@@ -433,6 +434,14 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         
         self.controlsNode.requestShare = { [weak self] subject in
             self?.requestShare(subject)
+        }
+
+        self.controlsNode.requestSaveCurrentTrack = { [weak self] in
+            self?.saveCurrentTrack()
+        }
+
+        self.controlsNode.requestPickSaveChannel = { [weak self] in
+            self?.pickTrackSaveChannel()
         }
         
         self.controlsNode.requestSearchByArtist = { [weak self] artist in
@@ -869,7 +878,95 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         
         self.updateMusicSaved(file: file, isSaved: false)
     }
-    
+
+    private var trackSavePeerId: PeerId {
+        return self.context.account.peerId
+    }
+
+    func saveCurrentTrack() {
+        guard let itemId = self.controlsNode.currentItemId as? PeerMessagesMediaPlaylistItemId, itemId.messageId.namespace == Namespaces.Message.Cloud else {
+            return
+        }
+        let _ = (combineLatest(
+            self.context.engine.data.get(TelegramEngine.EngineData.Item.Messages.Message(id: itemId.messageId)),
+            self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraMediaSettings])
+            |> take(1)
+        )
+        |> deliverOnMainQueue).startStandalone(next: { [weak self] message, sharedData in
+            guard let self else {
+                return
+            }
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
+            let targetPeerId: PeerId = settings.trackSavePeerIdRaw != 0 ? PeerId(_rawValue: settings.trackSavePeerIdRaw) : self.trackSavePeerId
+            let forwardMessage: EnqueueMessage = .forward(source: message.id, threadId: nil, grouping: .auto, attributes: [], correlationId: nil)
+            let _ = enqueueMessages(account: self.context.account, peerId: targetPeerId, messages: [forwardMessage]).startStandalone()
+
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: targetPeerId))
+            |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
+                guard let self else {
+                    return
+                }
+                let peerTitle = peer?.displayTitle(strings: self.presentationData.strings, displayOrder: self.presentationData.nameDisplayOrder) ?? self.presentationData.strings.Extera_SaveTrack
+                let controller = UndoOverlayController(
+                    presentationData: self.presentationData,
+                    content: .succeed(text: self.presentationData.strings.Extera_TrackSaved(peerTitle).string, timeout: nil, customUndoText: nil),
+                    elevatedLayout: false,
+                    action: { _ in return false }
+                )
+                self.getParentController()?.present(controller, in: .current)
+            })
+        })
+    }
+
+    func pickTrackSaveChannel() {
+        let presentationData = self.presentationData
+        let controller = self.context.sharedContext.makeContactMultiselectionController(ContactMultiselectionControllerParams(
+            context: self.context,
+            title: presentationData.strings.Extera_SaveToChannel,
+            mode: .peerSelection(searchChatList: true, searchGroups: false, searchChannels: true),
+            filters: [],
+            isPeerEnabled: { peer in
+                if case let .channel(channel) = peer._asPeer() {
+                    return channel.flags.contains(.canSendMessage)
+                }
+                if case .user = peer._asPeer() {
+                    return true
+                }
+                return false
+            }
+        ))
+        self.trackSaveChannelDisposable.set((controller.result
+        |> take(1)
+        |> deliverOnMainQueue).startStandalone(next: { [weak self, weak controller] result in
+            guard let self, case let .result(peerIds, _) = result, let first = peerIds.first, case let .peer(peerId) = first else {
+                return
+            }
+            let _ = updateExteraMediaSettingsInteractively(accountManager: self.context.sharedContext.accountManager, {
+                return $0.withUpdatedTrackSavePeerIdRaw(peerId.id._internalGetInt64Value())
+            }).startStandalone()
+
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
+                guard let self else {
+                    return
+                }
+                let peerTitle = peer?.displayTitle(strings: self.presentationData.strings, displayOrder: self.presentationData.nameDisplayOrder) ?? self.presentationData.strings.Extera_SaveTrack
+                let controller = UndoOverlayController(
+                    presentationData: self.presentationData,
+                    content: .succeed(text: self.presentationData.strings.Extera_ChannelToSaveChanged(peerTitle).string, timeout: nil, customUndoText: nil),
+                    elevatedLayout: false,
+                    action: { _ in return false }
+                )
+                self.getParentController()?.present(controller, in: .current)
+            })
+            controller?.dismiss()
+        }))
+
+        if let navigationController = (self.getParentController() as? OverlayAudioPlayerControllerImpl)?.parentNavigationController {
+            navigationController.pushViewController(controller)
+        }
+    }
+
     private var isSaved: Bool? {
         if self .copyProtectionEnabled {
             return nil

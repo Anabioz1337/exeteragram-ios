@@ -229,6 +229,7 @@ private final class AudioPlayerRendererContext {
     
     var paused = true
     var baseRate: Double
+    var pitchCents: Float
     
     let audioLevelPipe: ValuePipe<Float>
     
@@ -270,6 +271,7 @@ private final class AudioPlayerRendererContext {
         self.forAudioVideoMessage = forAudioVideoMessage
         self.forceAudioToSpeaker = forceAudioToSpeaker
         self.baseRate = baseRate
+        self.pitchCents = 0.0
         self.audioLevelPipe = audioLevelPipe
         
         self.controlTimebase = controlTimebase
@@ -326,6 +328,13 @@ private final class AudioPlayerRendererContext {
                     context.state = .playing(rate: baseRate, didSetRate: false)
                 }
             }
+        }
+    }
+
+    fileprivate func setPitch(_ cents: Float) {
+        if let timePitchAudioUnit = self.timePitchAudioUnit, self.pitchCents != cents {
+            self.pitchCents = cents
+            AudioUnitSetParameter(timePitchAudioUnit, kTimePitchParam_Pitch, kAudioUnitScope_Global, 0, cents, 0)
         }
     }
     
@@ -585,6 +594,7 @@ private final class AudioPlayerRendererContext {
                 return
             }
             AudioUnitSetParameter(timePitchAudioUnit, kTimePitchParam_Rate, kAudioUnitScope_Global, 0, Float32(self.baseRate), 0)
+            AudioUnitSetParameter(timePitchAudioUnit, kTimePitchParam_Pitch, kAudioUnitScope_Global, 0, self.pitchCents, 0)
             
             var maybeMixerAudioUnit: AudioComponentInstance?
             guard AUGraphNodeInfo(audioGraph, mixerNode, &mixerDescription, &maybeMixerAudioUnit) == noErr, let mixerAudioUnit = maybeMixerAudioUnit else {
@@ -954,6 +964,15 @@ public final class MediaPlayerAudioRenderer {
             if let contextRef = self.contextRef {
                 let context = contextRef.takeUnretainedValue()
                 context.setBaseRate(baseRate)
+            }
+        }
+    }
+
+    public func setPitch(_ cents: Float) {
+        audioPlayerRendererQueue.async {
+            if let contextRef = self.contextRef {
+                let context = contextRef.takeUnretainedValue()
+                context.setPitch(cents)
             }
         }
     }

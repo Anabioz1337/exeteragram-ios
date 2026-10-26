@@ -153,6 +153,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
     private let title: ComponentView<Empty>
     private let descriptionNode: TextNode
     private let shareNode: HighlightableButtonNode
+    private let likeNode: HighlightableButtonNode
     private let artistButton: HighlightTrackingButtonNode
     
     private var profileAudio: ComponentView<Empty>?
@@ -181,7 +182,9 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
     
     private var currentRate: AudioPlaybackRate?
     private let rateButton: AudioRateButton
-    
+
+    private var currentPitchCents: Int32 = 0
+
     let separatorNode: ASDisplayNode
     
     var hasPlainBackground = false {
@@ -196,6 +199,8 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
     
     var requestCollapse: (() -> Void)?
     var requestShare: ((ShareControllerSubject) -> Void)?
+    var requestSaveCurrentTrack: (() -> Void)?
+    var requestPickSaveChannel: (() -> Void)?
     var requestSearchByArtist: ((String) -> Void)?
     var requestSaveToProfile: ((FileMediaReference) -> Void)?
     var requestRemoveFromProfile: ((FileMediaReference) -> Void)?
@@ -262,6 +267,9 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
         
         self.shareNode = HighlightableButtonNode()
         self.shareNode.setImage(generateTintedImage(image: UIImage(bundleImageName: "GlobalMusicPlayer/Share"), color: presentationData.theme.list.itemPrimaryTextColor), for: [])
+
+        self.likeNode = HighlightableButtonNode()
+        self.likeNode.setImage(generateTintedImage(image: UIImage(bundleImageName: "Peer Info/SaveMusic"), color: presentationData.theme.list.itemPrimaryTextColor), for: [])
         
         self.scrubberNode = MediaPlayerScrubbingNode(content: .standard(lineHeight: 7.0, lineCap: .round, scrubberHandle: .none, backgroundColor: presentationData.theme.list.controlSecondaryColor.withMultipliedAlpha(0.5), foregroundColor: presentationData.theme.list.itemPrimaryTextColor, bufferingColor: presentationData.theme.list.itemPrimaryTextColor.withAlphaComponent(0.4), chapters: []))
         self.leftDurationLabel = MediaPlayerTimeTextNode(textColor: presentationData.theme.list.itemSecondaryTextColor, textFont: Font.medium(12.0))
@@ -315,6 +323,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
         self.addSubnode(self.descriptionNode)
         self.addSubnode(self.artistButton)
         self.addSubnode(self.shareNode)
+        self.addSubnode(self.likeNode)
         
         self.addSubnode(self.leftDurationLabel)
         self.addSubnode(self.rightDurationLabel)
@@ -436,6 +445,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
                 }
                 
                 strongSelf.rateButton.isHidden = rateButtonIsHidden
+                strongSelf.likeNode.isHidden = rateButtonIsHidden
                 
                 strongSelf.currentPosition = value.status.timestamp
             } else {
@@ -443,6 +453,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
                 strongSelf.backwardButton.isEnabled = false
                 strongSelf.forwardButton.isEnabled = false
                 strongSelf.rateButton.isHidden = true
+                strongSelf.likeNode.isHidden = true
                 displayData = nil
             }
             
@@ -534,6 +545,9 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
         }
         
         self.shareNode.addTarget(self, action: #selector(self.sharePressed), forControlEvents: .touchUpInside)
+        self.likeNode.addTarget(self, action: #selector(self.likePressed), forControlEvents: .touchUpInside)
+        let likeLongPress = UILongPressGestureRecognizer(target: self, action: #selector(self.likeLongPressed(_:)))
+        self.likeNode.view.addGestureRecognizer(likeLongPress)
         self.orderButton.addTarget(self, action: #selector(self.orderPressed), forControlEvents: .touchUpInside)
         self.loopingButton.addTarget(self, action: #selector(self.loopingPressed), forControlEvents: .touchUpInside)
         self.backwardButton.addTarget(self, action: #selector(self.backwardPressed), forControlEvents: .touchUpInside)
@@ -673,6 +687,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
         
         self.backgroundNode.image = self.hasPlainBackground ? generatePlainBackground(theme: presentationData.theme) : generateBackground(theme: presentationData.theme)
         self.shareNode.setImage(generateTintedImage(image: UIImage(bundleImageName: "GlobalMusicPlayer/Share"), color: presentationData.theme.list.itemPrimaryTextColor), for: [])
+        self.likeNode.setImage(generateTintedImage(image: UIImage(bundleImageName: "Peer Info/SaveMusic"), color: presentationData.theme.list.itemPrimaryTextColor), for: [])
         self.scrubberNode.updateColors(backgroundColor: presentationData.theme.list.controlSecondaryColor.withMultipliedAlpha(0.5), foregroundColor: presentationData.theme.list.itemPrimaryTextColor)
         self.leftDurationLabel.textColor = presentationData.theme.list.itemSecondaryTextColor
         self.rightDurationLabel.textColor = presentationData.theme.list.itemSecondaryTextColor
@@ -701,9 +716,13 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
         }
         
         let sideInset: CGFloat = 20.0
-        
+
+        var likeVisible = false
+        if case let .music(_, _, _, long, _) = self.displayData {
+            likeVisible = long
+        }
         let infoLabelsLeftInset: CGFloat = 53.0
-        let infoLabelsRightInset: CGFloat = 32.0
+        let infoLabelsRightInset: CGFloat = likeVisible ? 76.0 : 32.0
         
         let infoVerticalOrigin: CGFloat = 21.0
         
@@ -851,6 +870,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
         self.updateLabels(transition: transition)
         
         transition.updateFrame(node: self.shareNode, frame: CGRect(origin: CGPoint(x: width - rightInset - sideInset - 34.0, y: infoVerticalOrigin), size: CGSize(width: 42.0, height: 42.0)))
+        transition.updateFrame(node: self.likeNode, frame: CGRect(origin: CGPoint(x: width - rightInset - sideInset - 34.0 - 44.0, y: infoVerticalOrigin), size: CGSize(width: 42.0, height: 42.0)))
         
         let albumArtSize = CGSize(width: 46.0, height: 46.0)
         let makeAlbumArtLayout = self.albumArtNode.asyncLayout()
@@ -1000,7 +1020,17 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
             }
         }
     }
-    
+
+    @objc func likePressed() {
+        self.requestSaveCurrentTrack?()
+    }
+
+    @objc func likeLongPressed(_ recognizer: UILongPressGestureRecognizer) {
+        if case .began = recognizer.state {
+            self.requestPickSaveChannel?()
+        }
+    }
+
     @objc func orderPressed() {
         if let order = self.currentOrder {
             let nextOrder: MusicPlaybackSettingsOrder
@@ -1116,7 +1146,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
             }), action: { [weak self] _, f in
                 scheduleTooltip(nil)
                 f(.default)
-                
+
                 self?.control?(.setBaseRate(rate))
                 if let previousRate, previousRate.isPreset {
                     self?.presentAudioRateTooltip(baseRate: rate, changeType: .preset)
@@ -1126,9 +1156,78 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
             })))
         }
 
+        let currentPitch = self.currentPitchCents
+        for cents in [-600, -300, 0, 300, 600] {
+            let isSelected = currentPitch == cents
+            let text: String
+            if cents == 0 {
+                text = self.presentationData.strings.Extera_Pitch_Normal
+            } else {
+                text = String(format: "%+d %@", cents, self.presentationData.strings.Extera_Pitch_Cents)
+            }
+            presetItems.append(.action(ContextMenuActionItem(text: text, icon: { _ in return nil }, iconSource: ContextMenuActionItemIconSource(size: CGSize(width: 24.0, height: 24.0), signal: .single(isSelected ? generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.contextMenu.primaryColor) : UIImage()), action: { [weak self] _, f in
+                f(.default)
+                self?.control?(.setPitch(Int32(cents)))
+            }))))
+        }
+
+        presetItems.append(.action(ContextMenuActionItem(text: self.presentationData.strings.Extera_PlayerInfo, icon: { _ in return nil }, iconSource: nil, action: { [weak self] _, f in
+            f(.default)
+            self?.openInfoMenu()
+        })))
+
         return .single(ContextController.Items(content: .twoLists(presetItems, [sliderItem])))
     }
     
+    private func openInfoMenu() {
+        guard let controller = self.getParentController(), let fileReference = self.currentFileReference else {
+            return
+        }
+        let media = fileReference.media
+        let strings = self.presentationData.strings
+
+        var duration: Double?
+        var resolution: PixelDimensions?
+        for attribute in media.attributes {
+            switch attribute {
+                case let .Audio(_, attributeDuration, _, _, _):
+                    duration = Double(attributeDuration)
+                case let .Video(attributeDuration, attributeSize, _, _, _, _):
+                    duration = attributeDuration
+                    resolution = attributeSize
+                default:
+                    break
+            }
+        }
+        if duration == nil {
+            duration = self.currentDuration
+        }
+
+        var items: [ContextMenuItem] = []
+        let appendInfoRow: (String, String) -> Void = { label, value in
+            items.append(.action(ContextMenuActionItem(text: "\(label): \(value)", icon: { _ in return nil }, action: { _, dismiss in
+                dismiss(.standard(false))
+            })))
+        }
+        appendInfoRow(strings.Extera_PlayerInfo_Format, media.mimeType)
+        if let size = media.size {
+            appendInfoRow(strings.Extera_PlayerInfo_Size, dataSizeString(size, formatting: DataSizeStringFormatting(presentationData: self.presentationData)))
+        }
+        if let duration {
+            let seconds = Int(duration.rounded())
+            appendInfoRow(strings.Extera_PlayerInfo_Duration, String(format: "%d:%02d", seconds / 60, seconds % 60))
+            if let size = media.size, duration > 0.0 {
+                appendInfoRow(strings.Extera_PlayerInfo_Bitrate, String(format: "%d kbps", Int((Double(size) * 8.0 / duration / 1000.0).rounded())))
+            }
+        }
+        if let resolution {
+            appendInfoRow(strings.Extera_PlayerInfo_Resolution, "\(resolution.width)×\(resolution.height)")
+        }
+
+        let contextController = makeContextController(presentationData: self.presentationData, source: .reference(HeaderContextReferenceContentSource(controller: controller, sourceNode: self.rateButton.referenceNode, shouldBeDismissed: .single(false))), items: .single(ContextController.Items(content: .list(items))), gesture: nil)
+        controller.presentInGlobalOverlay(contextController)
+    }
+
     private func openRateMenu(sourceNode: ASDisplayNode, gesture: ContextGesture?) {
         guard let controller = self.getParentController() else {
             return
