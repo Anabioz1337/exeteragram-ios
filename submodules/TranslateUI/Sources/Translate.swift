@@ -186,7 +186,7 @@ public func canTranslateChats(context: AccountContext) -> Bool {
     default:
         break
     }
-    return chatTranslationAvailable
+    return chatTranslationAvailable || ExteraTranslatorSettings.shared.current.enabled
 }
 
 public func canTranslateText(context: AccountContext, text: String, showTranslate: Bool, showTranslateIfTopical: Bool = false, ignoredLanguages: [String]?) -> (canTranslate: Bool, language: String?) {
