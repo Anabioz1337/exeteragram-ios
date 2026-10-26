@@ -29,6 +29,8 @@ import ChatControllerInteraction
 import WallpaperBackgroundNode
 import TelegramStringFormatting
 import InvisibleInkDustNode
+import TelegramUIPreferences
+import ExteraSpeechUI
 
 public struct ChatMessageInstantVideoItemLayoutResult {
     public let contentSize: CGSize
@@ -158,6 +160,8 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
     public var audioTranscriptionState: AudioTranscriptionButtonComponent.TranscriptionState = .collapsed
     public var audioTranscriptionText: TranscribedText?
     private var transcribeDisposable: Disposable?
+    private var exteraSpeechSettingsDisposable: Disposable?
+    private var exteraSpeechSettings: ExteraSpeechSettings?
     public var hasExpandedAudioTranscription: Bool {
         if case .expanded = audioTranscriptionState {
             return true
@@ -208,6 +212,7 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
         self.playerStatusDisposable.dispose()
         self.fetchedThumbnailDisposable.dispose()
         self.transcribeDisposable?.dispose()
+        self.exteraSpeechSettingsDisposable?.dispose()
     }
     
     override public func didLoad() {
@@ -634,6 +639,7 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
             return (result, { [weak self] layoutData, animation in
                 if let strongSelf = self {
                     strongSelf.item = item
+                    strongSelf.setupExteraSpeechSettingsSubscription(item.context)
                     strongSelf.videoFrame = displayVideoFrame
                     strongSelf.appliedForwardInfo = ChatMessageAppliedForwardInfo(messageId: item.message.id, source: forwardSource, authorSignature: forwardAuthorSignature)
                     strongSelf.viewOnceIconImage = viewOnceIconImage
@@ -1815,7 +1821,14 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
         if !item.context.isPremium, case .inProgress = self.audioTranscriptionState {
             return
         }
-        
+
+        if let settings = self.exteraSpeechSettings, settings.isEnabled,
+           transcribedText(message: EngineMessage(item.message)) == nil,
+           item.message.media.contains(where: { $0 is TelegramMediaFile }) {
+            self.transcribeOnDevice(settings: settings)
+            return
+        }
+
         let presentationData = item.context.sharedContext.currentPresentationData.with { $0 }
         let premiumConfiguration = PremiumConfiguration.with(appConfiguration: item.context.currentAppConfiguration.with { $0 })
         
@@ -1913,7 +1926,74 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
         
         self.updateTranscriptionExpanded?(self.audioTranscriptionState)
     }
-    
+
+    private func setupExteraSpeechSettingsSubscription(_ context: AccountContext) {
+        guard self.exteraSpeechSettingsDisposable == nil else {
+            return
+        }
+        self.exteraSpeechSettingsDisposable = (context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSpeechSettings])
+        |> map { sharedData -> ExteraSpeechSettings in
+            if let entry = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSpeechSettings], let settings = entry.get(ExteraSpeechSettings.self) {
+                return settings
+            }
+            return .defaultSettings
+        }
+        |> deliverOnMainQueue).start(next: { [weak self] settings in
+            self?.exteraSpeechSettings = settings
+        })
+    }
+
+    private func transcribeOnDevice(settings: ExteraSpeechSettings) {
+        guard self.transcribeDisposable == nil, let item = self.item, let mediaFile = item.message.media.first(where: { $0 is TelegramMediaFile }) as? TelegramMediaFile else {
+            return
+        }
+
+        let presentationData = item.context.sharedContext.currentPresentationData.with { $0 }
+
+        self.audioTranscriptionState = .inProgress
+        self.requestUpdateLayout(true)
+
+        self.transcribeDisposable = (exteraVoiceMessageTranscriptionSignal(context: item.context, mediaFile: mediaFile, settings: settings, deviceLanguageCode: presentationData.strings.baseLanguageCode)
+        |> deliverOnMainQueue).startStrict(next: { [weak self] outcome in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.transcribeDisposable?.dispose()
+            strongSelf.transcribeDisposable = nil
+
+            switch outcome {
+            case let .transcript(text):
+                let _ = item.context.engine.messages.storeLocallyTranscribedAudio(messageId: item.message.id, text: text, isFinal: true, error: nil).startStandalone()
+                strongSelf.audioTranscriptionState = .collapsed
+                strongSelf.requestUpdateLayout(true)
+
+                let popupController = ExteraSpeechTranscriptPopupController(presentationData: presentationData, transcript: text, presentCopyFeedback: {
+                    if let hapticFeedback = strongSelf.hapticFeedback {
+                        hapticFeedback.impact(.light)
+                    }
+                })
+                item.controllerInteraction.presentControllerInCurrent(popupController, nil)
+            case .failure:
+                if let hapticFeedback = strongSelf.hapticFeedback {
+                    hapticFeedback.impact(.medium)
+                }
+                let tipController = UndoOverlayController(presentationData: presentationData, content: .universal(animation: "anim_voiceToText", scale: 0.065, colors: [:], title: nil, text: presentationData.strings.Extera_Speech_Error_Failed, customUndoText: nil, timeout: 5.0), elevatedLayout: false, position: .top, animateInAsReplacement: false, action: { _ in
+                    return false
+                })
+                item.controllerInteraction.presentControllerInCurrent(tipController, nil)
+
+                strongSelf.audioTranscriptionState = .collapsed
+                strongSelf.requestUpdateLayout(true)
+            }
+        }, completed: { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.transcribeDisposable?.dispose()
+            strongSelf.transcribeDisposable = nil
+        })
+    }
+
     private func presentAudioTranscriptionTooltip(finished: Bool) -> Bool {
         guard let item = self.item, !item.associatedData.isPremium else {
             return false
