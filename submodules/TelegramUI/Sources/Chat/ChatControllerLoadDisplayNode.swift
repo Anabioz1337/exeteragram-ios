@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
+import ExteraTranslator
 import Display
 import AsyncDisplayKit
 import TelegramCore
@@ -692,8 +693,10 @@ extension ChatControllerImpl {
             }
         }
         
-        if #available(iOS 18.0, *) {
-            if engineExperimentalInternalTranslationService == nil, let hostView = self.context.sharedContext.mainWindow?.hostView {
+        if engineExperimentalInternalTranslationService == nil {
+            if ExteraTranslatorSettings.shared.current.enabled {
+                engineExperimentalInternalTranslationService = ExteraHTTPInternalTranslationService()
+            } else if #available(iOS 18.0, *), let hostView = self.context.sharedContext.mainWindow?.hostView {
                 let translationService = ExperimentalInternalTranslationServiceImpl(view: hostView.containerView)
                 engineExperimentalInternalTranslationService = translationService
             }

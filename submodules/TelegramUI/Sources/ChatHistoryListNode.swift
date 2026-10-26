@@ -22,6 +22,7 @@ import ChatPresentationInterfaceState
 import TelegramNotices
 import ChatControllerInteraction
 import TranslateUI
+import ExteraTranslator
 import ChatHistoryEntry
 import ChatOverscrollControl
 import ChatBotInfoItem
@@ -2315,9 +2316,10 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                     providedByGroupBoost: audioTranscriptionProvidedByBoost
                 )
                 
+                let exteraTranslationEnabled = ExteraTranslatorSettings.shared.current.enabled
                 var translateToLanguage: (fromLang: String, toLang: String)?
-                if let translationState, (isPremium || autoTranslate)  && translationState.isEnabled {
-                    var languageCode = translationState.toLang ?? chatPresentationData.strings.baseLanguageCode
+                if let translationState, (isPremium || autoTranslate || exteraTranslationEnabled) && translationState.isEnabled {
+                    var languageCode = exteraTranslationEnabled ? ExteraTranslatorSettings.shared.effectiveTargetLanguage(appLanguageCode: chatPresentationData.strings.baseLanguageCode) : (translationState.toLang ?? chatPresentationData.strings.baseLanguageCode)
                     let rawSuffix = "-raw"
                     if languageCode.hasSuffix(rawSuffix) {
                         languageCode = String(languageCode.dropLast(rawSuffix.count))
