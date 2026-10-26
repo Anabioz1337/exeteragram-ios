@@ -63,7 +63,7 @@ private enum ApplicationSpecificSharedDataKeyValues: Int32 {
     case mediaDisplaySettings = 20
     case updateSettings = 21
     case chatSettings = 22
-    case exteraSpeechSettings = 23
+    case exteraSpeechSettings = 24
 }
 
 public struct ApplicationSpecificSharedDataKeys {
