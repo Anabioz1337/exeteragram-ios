@@ -311,6 +311,8 @@ swift_library(
         "//submodules/Components/ComponentDisplayAdapters:ComponentDisplayAdapters",
         "//submodules/Media/ConvertOpusToAAC:ConvertOpusToAAC",
         "//submodules/Media/LocalAudioTranscription:LocalAudioTranscription",
+        "//submodules/ExteraSpeech:ExteraSpeech",
+        "//submodules/TelegramUI/Components/ExteraSpeechUI:ExteraSpeechUI",
         "//submodules/Components/PagerComponent:PagerComponent",
         "//submodules/Components/LottieAnimationComponent:LottieAnimationComponent",
         "//submodules/TelegramUI/Components/NotificationExceptionsScreen:NotificationExceptionsScreen",
