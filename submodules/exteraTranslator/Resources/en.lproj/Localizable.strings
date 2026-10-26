@@ -6,3 +6,4 @@
 "ExteraTranslator.ProviderGoogle" = "Google";
 "ExteraTranslator.ProviderYandex" = "Yandex";
 "ExteraTranslator.YandexApiKey" = "Yandex API key";
+"ExteraTranslator.TranslateBeforeSend" = "Translate";

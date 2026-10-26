@@ -95,6 +95,7 @@ final class ChatSendMessageContextScreenComponent: Component {
     let schedule: (ChatSendMessageActionSheetController.SendParameters?) -> Void
     let editPrice: (Int64) -> Void
     let openPremiumPaywall: (ViewController) -> Void
+    let translateBeforeSend: (title: String, action: () -> Void)?
     let reactionItems: [ReactionItem]?
     let availableMessageEffects: AvailableMessageEffects?
     let isPremium: Bool
@@ -117,6 +118,7 @@ final class ChatSendMessageContextScreenComponent: Component {
         schedule: @escaping (ChatSendMessageActionSheetController.SendParameters?) -> Void,
         editPrice: @escaping (Int64) -> Void,
         openPremiumPaywall: @escaping (ViewController) -> Void,
+        translateBeforeSend: (title: String, action: () -> Void)?,
         reactionItems: [ReactionItem]?,
         availableMessageEffects: AvailableMessageEffects?,
         isPremium: Bool,
@@ -138,6 +140,7 @@ final class ChatSendMessageContextScreenComponent: Component {
         self.schedule = schedule
         self.editPrice = editPrice
         self.openPremiumPaywall = openPremiumPaywall
+        self.translateBeforeSend = translateBeforeSend
         self.reactionItems = reactionItems
         self.availableMessageEffects = availableMessageEffects
         self.isPremium = isPremium
@@ -506,7 +509,23 @@ final class ChatSendMessageContextScreenComponent: Component {
             }
             
             var items: [ContextMenuItem] = []
-            
+
+            if let translateBeforeSend = component.translateBeforeSend, textString.length != 0 {
+                items.append(.action(ContextMenuActionItem(
+                    id: AnyHashable("translateBeforeSend"),
+                    text: translateBeforeSend.title,
+                    icon: { theme in
+                        return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Translate"), color: theme.contextMenu.primaryColor)
+                    }, action: { [weak self] _, _ in
+                        guard let self, let component = self.component else {
+                            return
+                        }
+                        self.environment?.controller()?.dismiss()
+                        component.translateBeforeSend?.action()
+                    }
+                )))
+            }
+
             let canAdjustMediaCaptionPosition: Bool
             switch component.params {
             case let .sendMessage(sendMessage):
@@ -1515,6 +1534,7 @@ public class ChatSendMessageContextScreen: ViewControllerComponentContainer, Cha
         schedule: @escaping (ChatSendMessageActionSheetController.SendParameters?) -> Void,
         editPrice: @escaping (Int64) -> Void,
         openPremiumPaywall: @escaping (ViewController) -> Void,
+        translateBeforeSend: (title: String, action: () -> Void)?,
         reactionItems: [ReactionItem]?,
         availableMessageEffects: AvailableMessageEffects?,
         isPremium: Bool,
@@ -1541,6 +1561,7 @@ public class ChatSendMessageContextScreen: ViewControllerComponentContainer, Cha
                 schedule: schedule,
                 editPrice: editPrice,
                 openPremiumPaywall: openPremiumPaywall,
+                translateBeforeSend: translateBeforeSend,
                 reactionItems: reactionItems,
                 availableMessageEffects: availableMessageEffects,
                 isPremium: isPremium,

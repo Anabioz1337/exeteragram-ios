@@ -12,6 +12,7 @@ import TopMessageReactions
 import ReactionSelectionNode
 import ChatControllerInteraction
 import ChatSendAudioMessageContextPreview
+import ExteraTranslator
 
 extension ChatSendMessageEffect {
     convenience init(_ effect: ChatSendMessageActionSheetController.SendParameters.Effect) {
@@ -298,6 +299,17 @@ func chatMessageDisplaySendMessageOptions(selfController: ChatControllerImpl, no
                     }
                     selfController.push(c)
                 },
+                translateBeforeSend: {
+                    guard ExteraTranslatorSettings.shared.current.enabled else {
+                        return nil
+                    }
+                    return (
+                        title: exteraTranslatorString("ExteraTranslator.TranslateBeforeSend"),
+                        action: { [weak selfController] in
+                            selfController?.translateComposeInputWithExtera()
+                        }
+                    )
+                }(),
                 reactionItems: (!((textInputView.attributedText?.string ?? "").isEmpty) || mediaPreview != nil) ? effectItems : nil,
                 availableMessageEffects: availableMessageEffects,
                 isPremium: hasPremium,
