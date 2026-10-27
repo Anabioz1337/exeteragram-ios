@@ -50,7 +50,7 @@ public final class ExteraAppearanceSettings {
     }
 
     public var updated: Signal<Int, NoError> {
-        return self.versionPromise.signal()
+        return self.versionPromise.get()
     }
 
     private func finishWriting() {

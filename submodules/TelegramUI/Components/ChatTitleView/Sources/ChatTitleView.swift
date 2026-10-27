@@ -299,7 +299,7 @@ public final class ChatTitleView: UIView, NavigationBarTitleView {
                                 } else {
                                     if !peerView.isContact, let user = peer as? TelegramUser, !user.flags.contains(.isSupport), user.botInfo == nil, let phone = user.phone, !phone.isEmpty {
                                         segments = [.text(0, NSAttributedString(string: formatPhoneNumber(context: self.context, number: phone), font: titleFont, textColor: titleTheme.rootController.navigationBar.primaryTextColor))]
-                                    } else if let user = peer as? TelegramUser, user.botInfo == nil, ExteraAppearanceSettings.shared.titleText == .username, let username = user.username ?? user.addressName, !username.isEmpty {
+                                    } else if ExteraAppearanceSettings.shared.titleText == .username, let username = peer.addressName, !username.isEmpty {
                                         segments = [.text(0, NSAttributedString(string: "@\(username)", font: titleFont, textColor: titleTheme.rootController.navigationBar.primaryTextColor))]
                                     } else {
                                         segments = [.text(0, NSAttributedString(string: EnginePeer(peer).displayTitle(strings: self.strings, displayOrder: self.nameDisplayOrder), font: titleFont, textColor: titleTheme.rootController.navigationBar.primaryTextColor))]
