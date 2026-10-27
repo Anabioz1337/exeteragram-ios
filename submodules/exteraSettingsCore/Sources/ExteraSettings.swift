@@ -218,6 +218,12 @@ public struct ExteraSettings: Codable, Equatable {
 }
 
 extension ExteraSettings {
+    public func with<Value>(_ keyPath: WritableKeyPath<ExteraSettings, Value>, _ value: Value) -> ExteraSettings {
+        var updated = self
+        updated[keyPath: keyPath] = value
+        return updated
+    }
+
     public var photosQualityPixels: Int {
         switch self.sendPhotosQuality {
             case 0:

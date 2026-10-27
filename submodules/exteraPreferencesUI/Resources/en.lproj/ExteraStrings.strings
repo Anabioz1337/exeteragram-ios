@@ -1,0 +1,1243 @@
+// exteraGram — user-facing strings prepared from the Android fork catalog
+// Source: out/extera-strings-en.xml (+ values/extera.xml of the 2023 tree)
+
+"extera_exteraAppName" = "exteraGram";
+"extera_Preferences" = "exteraGram Preferences";
+
+// Main Menu
+"extera_Links" = "Links";
+"extera_Crowdin" = "Translate";
+"extera_Website" = "Website";
+"extera_Categories" = "Categories";
+"extera_Developer" = "**%1$@** is a member of the **exteraGram** development team.";
+"extera_DeveloperCompact" = "Member of the **exteraGram** development team.";
+"extera_Supporter" = "**%1$@** supported the development of **exteraGram** and received an unique badge.";
+"extera_OfficialChannel" = "**%1$@** is the official resource of **exteraGram**.";
+"extera_NoSuchSetting" = "It seems that such a setting does not exist.";
+"extera_SettingLinkToSavedMessages" = "Setting link sent to **Saved Messages**.";
+"extera_SettingLinkToUser" = "Setting link sent to **%1$@**.";
+"extera_SettingLinkToChats" = "Setting link sent to **%1$@**.";
+"extera_LiteBatteryFollowSystem" = "Use system Battery Saver";
+"extera_LiteBatteryFollowSystemState" = "System";
+"extera_LiteBatteryFollowSystemInfo" = "Controlled by system Battery Saver.";
+
+// Pill Stack
+"extera_PillStackPills" = "Pill Stack";
+"extera_PillStackPillsInfo" = "Display interactive pills in the search field";
+"extera_PillStackPillsSettingsInfo" = "Configure which pills will be visible. Tap to show or hide, hold and drag to change the display order.";
+"extera_PillStackActivePills" = "Active Pills";
+"extera_PillStackHiddenPills" = "Hidden Pills";
+"extera_CurrentLocation" = "Current Location";
+"extera_SelectLocation" = "Select on Map";
+"extera_WeatherPill" = "Weather";
+"extera_WeatherSettingsInfo" = "Choose how to determine the location for the weather display in search.";
+"extera_WeatherLocation" = "Location Detection";
+"extera_WeatherLocationPermissionNo" = "exteraGram needs access to your location to display the current weather.";
+"extera_WeatherLocationPermissionGrant" = "Grant Permission";
+"extera_WeatherLocationServicesEnable" = "Enable Location";
+"extera_WeatherPillTopInfo" = "Weather widget settings for Pill Stack.";
+"extera_PillStackInfiniteScrolling" = "Infinite Scrolling";
+"extera_CryptoPillTargetCurrency" = "Target currency";
+
+// Proxy
+"extera_ProxyDisableOn" = "Disable proxy";
+"extera_ProxyDisableNever" = "Never";
+"extera_ProxyDisableAlways" = "Always";
+"extera_ProxyDisableOnVpn" = "VPN";
+"extera_ProxyDisableOnMobileData" = "Mobile data";
+"extera_ProxyDisableOnWiFi" = "Wi-Fi";
+"extera_ProxyType" = "Type";
+"extera_Unknown" = "Unknown";
+"extera_ProxyRename" = "Proxy name (optional)";
+"extera_ProxyPinLimitReached" = "You can pin up to %1$d proxies.";
+"extera_CopyIpAddress" = "Copy IP address";
+"extera_IpInfoUnavailable" = "Could not load IP address info.";
+"extera_IpInfoCountry" = "Country";
+"extera_IpInfoIsp" = "ISP";
+"extera_IpInfoOrganization" = "Organization";
+"extera_IpInfoDomain" = "Domain";
+"extera_IpInfoTimezone" = "Time zone";
+
+// Translator
+"extera_TranslationProvider" = "Translation Provider";
+"extera_TranslationTarget" = "Target Language";
+"extera_TranslationTargetApp" = "Follow App";
+"extera_ShowTranslateChatButtonLocked" = "Choose another translation provider or subscribe to **Telegram Premium**.";
+
+// Formatting & Behavior
+"extera_DisableNumberRounding" = "Disable Number Rounding";
+"extera_FormatTimeWithSeconds" = "Format Time with Seconds";
+"extera_RelativeLastSeen" = "Relative Last Seen";
+"extera_InAppVibration" = "In-App Vibration";
+"extera_DisableNotificationDelay" = "Disable Notification Delay";
+"extera_AccountNotifications" = "Accounts";
+"extera_AccountNotificationsCount" = "%1$d of %2$d";
+"extera_AccountNotificationsInfo" = "Unchecked accounts don't show notifications while you're using another account.";
+"extera_AccountNotificationsCurrent" = "Notifications from the current account are always shown.";
+"extera_FilterZalgo" = "Filter \"Zalgo\"";
+"extera_FilterZalgoInfo" = "Removes \"%1$@\" symbols in names and messages.";
+"extera_RestartRequired" = "Restart the app for changes to take effect.";
+
+// Message Formatting
+"extera_CodeBlock" = "Code";
+"extera_CreateCode" = "Create Code Block";
+"extera_CreateCodeLanguage" = "Language";
+
+// Speed
+"extera_DownloadSpeedBoost" = "Download Speed Boost";
+"extera_UploadSpeedBoost" = "Upload Speed Boost";
+"extera_Ultra" = "Ultra";
+"extera_SpeedBoostInfo" = "Ultra Boost can cause problems with downloading files and streaming videos on slow Internet connections.";
+
+// Storage
+"extera_StorageSettings" = "Storage";
+"extera_CustomSavePath" = "Custom Save Folder";
+"extera_CustomSavePathHint" = "Leave blank to save directly to root";
+"extera_CustomSavePathDefault" = "Save to root";
+"extera_CustomSavePathInfo" = "Saved files will be stored directly in Pictures, Downloads, etc.";
+"extera_CustomSavePathInfoFolder" = "Saved files will be stored in Pictures/%1$@, Downloads/%1$@, etc.";
+
+// Profile
+"extera_Profile" = "Profile";
+"extera_HidePhoneNumber" = "Hide Phone Number";
+"extera_ShowIdAndDc" = "Show ID and DC";
+"extera_ShowIdAndDcInfo" = "Telegram API shows IDs as they are, while the Bot API adds a minus sign for groups and -100 for supergroups and channels.";
+
+// Archive
+"extera_HideArchiveFolder" = "Hide Archive Folder";
+"extera_ArchiveOnPull" = "Open Archive on Pull-down";
+"extera_DisableUnarchiveSwipe" = "Disable \"Unarchive\" Swipe";
+"extera_DisableUnarchiveSwipeInfo" = "Swiping left will not remove chats from the archive.";
+
+// Appearance
+"extera_Appearance" = "Appearance";
+
+// Avatars
+"extera_AvatarCorners" = "Avatar Corners";
+"extera_AvatarCornersLeft" = "Square";
+"extera_AvatarCornersRight" = "Circle";
+"extera_SingleCornerRadius" = "Single Corner Radius";
+"extera_SingleCornerRadiusInfo" = "Forums will have the same avatar shape as chats.";
+
+// Chat List
+"extera_ListOfChats" = "Chat List";
+"extera_ActionBarTitle" = "Title Text";
+"extera_ActionBarTitleUsername" = "Username";
+"extera_ActionBarTitleName" = "First Name";
+"extera_HideStories" = "Hide Stories";
+"extera_HideActionBarStatus" = "Hide Status";
+"extera_CenterTitle" = "Center Title";
+"extera_ChatHeader" = "Chat Header";
+"extera_HideFloatingButton" = "Hide Floating Button";
+"extera_HideDialogsSearchBar" = "Hide Search Bar";
+"extera_BottomNavigationBarMode" = "Bottom Navigation Bar";
+"extera_BottomNavigationModeShow" = "Show";
+"extera_BottomNavigationModeHide" = "Hide";
+"extera_BottomNavigationModeFloating" = "Floating";
+"extera_HideNavigationBarLabels" = "Hide Labels";
+"extera_SenderMiniAvatars" = "Sender Mini Avatars";
+"extera_ListOfChatsInfo" = "When \"Icons only\" is enabled for folders, the main title will display the folder name.";
+
+// Folders (Tabs)
+"extera_TabTitleStyle" = "Folder Title";
+"extera_TabTitleStyleTextWithIcons" = "Names with Icons";
+"extera_TabTitleStyleIconsOnly" = "Icons only";
+"extera_TabTitleStyleTextOnly" = "Names only";
+"extera_TabCounter" = "Notification Counter";
+"extera_TabCounterUnmuted" = "Unmuted";
+"extera_HideAllChats" = "Hide \"%1$@\" Tab";
+"extera_FoldersInfo" = "Icons are synchronized with your account.";
+
+// App Navigation
+"extera_AppNavigation" = "App Navigation";
+"extera_AppNavigationInfo" = "Top-right menu and drawer settings";
+"extera_NavigationDrawer" = "Navigation Drawer";
+"extera_NavigationDrawerInfo" = "Replaces the top-right menu with a classic swipe-to-open drawer and a hamburger button.";
+"extera_NavigationDrawerImmersiveAnimation" = "Immersive Animation";
+"extera_NavigationDrawerProxyPingShort" = "%1$d ms";
+"extera_MainMenuItems" = "Menu Items";
+"extera_MainMenuItemsInfo" = "Tap to show or hide items, hold to reorder. Layout is shared between the menu and the drawer.";
+"extera_MainMenuHiddenItems" = "Hidden Menu Items";
+"extera_MainMenuDivider" = "Divider";
+"extera_MainMenuAddDivider" = "Add Divider";
+"extera_MainMenuRemoveSettingsInfo" = "Settings cannot be hidden while the bottom navigation bar is disabled.";
+
+// Icon Packs
+"extera_IconPacks" = "Icon Packs";
+"extera_IconPacksInfo" = "Customize icons across the app";
+"extera_IconPickerFilter" = "Filter";
+"extera_IconPickerAllIcons" = "All Icons";
+"extera_IconPickerReplacedIcons" = "Replaced Icons";
+"extera_IconPickerNotReplacedIcons" = "Not Replaced Icons";
+"extera_IconPickerSaveAndExit" = "Save & Exit";
+"extera_BasePacks" = "Base Packs";
+"extera_BaseIconPackInfo" = "The base icon pack is used as a fallback for icons not replaced by other packs.";
+"extera_IconPacksHint" = "Tap to enable or disable a pack. Hold to edit or delete.";
+"extera_NewIconPack" = "Create a new Icon Pack";
+"extera_EditIconPackInfo" = "Edit Info";
+"extera_EnabledPacks" = "Enabled Packs";
+"extera_AllPacks" = "All Packs";
+"extera_PackName" = "Pack Name";
+"extera_AuthorNameOptional" = "Author Name (optional)";
+"extera_NameCannotBeEmpty" = "Name cannot be empty.";
+"extera_Version" = "Version";
+"extera_InstallPack" = "Install Pack";
+"extera_IconCount_one" = "%1$d icon";
+"extera_IconCount_two" = "%1$d icons";
+"extera_IconCount_few" = "%1$d icons";
+"extera_IconCount_many" = "%1$d icons";
+"extera_IconCount_other" = "%1$d icons";
+"extera_UpdatePack" = "Update Pack";
+"extera_DeletePack" = "Delete Pack";
+"extera_DeletePackInfo" = "Are you sure you want to delete **%1$@**?";
+"extera_IconPackErrorInvalidArchive" = "Icon pack archive is invalid.";
+"extera_IconPackErrorMissingMetadata" = "Icon pack archive is missing metadata.json.";
+"extera_IconPackErrorMetadataTooLarge" = "Icon pack metadata is too large.";
+"extera_IconPackErrorInvalidMetadata" = "Icon pack metadata is invalid.";
+"extera_IconPackErrorTooManyFiles" = "Icon pack contains too many files.";
+"extera_IconPackErrorArchiveTooLarge" = "Icon pack is too large.";
+"extera_IconPackErrorFileTooLarge" = "One of the icon files is too large.";
+"extera_IconPackErrorCompressionRatioTooHigh" = "Icon pack archive is compressed too aggressively.";
+"extera_IconPackErrorStorage" = "Couldn't save icon pack.";
+
+// App Icons
+"extera_IconPack" = "Icon Pack";
+"extera_AppIconMonet" = "Monet";
+"extera_AppIconSunset" = "Sunset";
+"extera_AppIconAurora" = "Aurora";
+"extera_AppIconGoogle" = "Google";
+"extera_AppIconAmethyst" = "Amethyst";
+"extera_AppIconInvincible" = "Invincible";
+"extera_AppIconCyberpunk" = "Cyberpunk";
+"extera_AppIconSpace" = "Space";
+"extera_AppIconIceAge" = "Ice Age";
+"extera_AppIconEditor" = "Editor";
+"extera_AppIconOrbit" = "Orbit";
+"extera_AppIconSus" = "Impostor";
+"extera_AppIconWinter" = "Winter";
+"extera_AppIconsApply" = "Select";
+"extera_AppIconsKeep" = "Keep this one";
+"extera_AppIconDefaultInfo" = "It just works";
+"extera_AppIconWinterInfo" = "Winter is coming";
+"extera_AppIconMonetInfo" = "Any color you like";
+"extera_AppIconOrbitInfo" = "To infinity and beyond";
+"extera_AppIconAuroraInfo" = "Localized entirely in your phone";
+"extera_AppIconSunsetInfo" = "Here comes the sun";
+"extera_AppIconIceAgeInfo" = "Where's my acorn?";
+"extera_AppIconEditorInfo" = "final_v2_FINAL.fig";
+"extera_AppIconSpaceInfo" = "The Final Frontier";
+"extera_AppIconAmethystInfo" = "Perfectly balanced";
+"extera_AppIconCyberpunkInfo" = "Wake up, samurai";
+"extera_AppIconGoogleInfo" = "Don't be evil";
+"extera_AppIconInvincibleInfo" = "Think, Mark!";
+
+// General Appearance
+"extera_MaterialDesign3" = "Material Design 3";
+"extera_Sections" = "Sections";
+"extera_SeparateHeaders" = "Separate Headers";
+"extera_DividerStyle" = "Divider Style";
+"extera_DividerStyleHidden" = "Hidden";
+"extera_DividerStyleLine" = "Line";
+"extera_DividerStyleSegments" = "Segments";
+"extera_UseSystemFonts" = "Use System Fonts";
+"extera_UseSystemEmoji" = "Use System Emoji";
+"extera_NewLoadingStyle" = "Loading Style";
+"extera_NewSliderStyle" = "Slider Style";
+"extera_NewSwitchStyle" = "Switch Style";
+"extera_NewFabStyle" = "Floating Button";
+"extera_NewProfileActionsStyle" = "Profile Buttons";
+"extera_NewPlayerStyle" = "Player";
+"extera_TabletMode" = "Tablet Mode";
+"extera_RemoveMessageTail" = "Remove Message Tail";
+"extera_GooeyAvatarAnimation" = "\"Gooey\" Avatar Animation";
+"extera_CustomChatThemes" = "Custom Themes in Chats";
+"extera_CustomChatThemesInfo" = "Each chat will display the theme that was specifically chosen for it.";
+"extera_PredictiveBackIntensity" = "Predictive Back Intensity";
+"extera_PredictiveBackMax" = "Max";
+"extera_PredictiveBackInfo" = "Adjusts how far the screen moves when swiping back.";
+"extera_TransitionAnimation" = "Transition Animation";
+"extera_TransitionAnimationAosp" = "AOSP";
+"extera_TransitionAnimationSpring" = "Spring";
+"extera_TransitionAnimationInfo" = "AOSP uses the stock Android window transition, Spring a smoother one.";
+
+// Blur & Effects
+"extera_BlurOptions" = "Blur Options";
+"extera_GlassOutlineStyle" = "Glass Outline";
+"extera_GlassOutlineGlare" = "Glare";
+"extera_GlassOutlineSolid" = "Solid";
+"extera_GlassOutlineHidden" = "Hidden";
+"extera_ForceBlur" = "Force Blur";
+"extera_ForceBlurInfo" = "Blur effects will be applied to all themes, overriding their default settings.";
+"extera_ForceSnow" = "Force Snowflakes";
+"extera_ForceSnowInfo" = "Falling snowflakes will appear in the action bar, side menu, and chat backgrounds.";
+
+// Chat Media & Appearance
+"extera_StickerSize" = "Sticker Size";
+"extera_StickerSizeLeft" = "Small";
+"extera_StickerSizeRight" = "Large";
+"extera_StickerSizeDialogMessageReplyTo" = "wow";
+"extera_StickerSizeDialogMessage" = "woah, so cute!";
+"extera_StickerShape" = "Sticker Shape";
+"extera_StickerShapeRounded" = "Rounded";
+"extera_StickerShapeRoundedMsg" = "Message";
+"extera_StickerTimeMode" = "Time on Stickers";
+"extera_StickerTimeSide" = "On the Side";
+"extera_StickerTimeHidden" = "Hidden";
+"extera_ViewEmojiSet" = "View Emoji Set";
+"extera_UnlimitedRecentStickers" = "Unlimited Recent Stickers";
+"extera_HideReactions" = "Hide Reactions";
+"extera_HideReactionsInfo" = "Reactions will be completely hidden from the interface.";
+"extera_ReplyBackground" = "Background";
+"extera_ChatSettingsInfo" = "Media Settings, App Icon and other";
+
+// AI
+"extera_AIChat" = "AI Chat";
+"extera_AIChatInfo" = "Setup Services, Roles, and History";
+"extera_AIChatInfo2" = "Generate text from messages or before sending.";
+
+// AI Services
+"extera_Services" = "Services";
+"extera_ServicesInfo" = "Choose the appropriate service for interacting with language models.";
+"extera_NewService" = "New Service";
+"extera_EditService" = "Edit Service";
+"extera_ServiceURL" = "URL";
+"extera_ServiceModel" = "Model";
+"extera_ServiceKey" = "API Key";
+"extera_ServiceInfo" = "Service Info";
+"extera_ServiceProvider" = "Provider";
+"extera_ServiceProviderCustom" = "Custom";
+"extera_ServiceTestAndSave" = "Test and Save";
+"extera_ServicePasteService" = "Paste Service";
+"extera_ServicePasteKey" = "Paste API Key";
+"extera_DeleteServiceInfo" = "Are you sure you want to delete **%1$@**?";
+"extera_ServiceAlreadyExists" = "Service Already Exists";
+"extera_ServiceAlreadyExistsInfo" = "Switched to the existing service.";
+"extera_ServiceDuplicate" = "Another service already uses this URL, model and key.";
+
+// AI Roles
+"extera_Roles" = "Roles";
+"extera_RolesInfo" = "Create roles for your specific needs!";
+"extera_Suggestions" = "Suggestions";
+"extera_RoleName" = "Name";
+"extera_RolePrompt" = "Prompt";
+"extera_PromptInfo" = "A prompt is the initial text given to the model to start generating a response or continue a dialogue.";
+"extera_NewRole" = "New Role";
+"extera_EditRole" = "Edit Role";
+"extera_DeleteRoleInfo" = "Are you sure you want to delete **%1$@**?";
+
+// AI History & Behavior
+"extera_HistoryInfo" = "Conversation history allows the AI to understand previous requests and consider them when generating new responses.";
+"extera_AIGeneration" = "Generation";
+"extera_AIReasoning" = "Reasoning";
+"extera_AIReasoningInfo" = "Lets supported models on this service spend extra tokens thinking before answering.";
+"extera_AITemperature" = "Temperature";
+"extera_AITemperatureInfo" = "Temperature controls response randomness: higher values are more creative, lower values are more focused.";
+"extera_ResponseStreaming" = "Response Streaming";
+"extera_ResponseStreamingInfo" = "Ensures smoother and faster display of responses.";
+"extera_ShowResponseOnly" = "Show Response Only";
+"extera_InsertResponseAsQuote" = "Insert Response as Quote";
+"extera_TapToAddApiKey" = "Tap to add an API Key to get started with AI features.";
+"extera_Generate" = "Generate";
+"extera_GenerateWithHistory" = "With History";
+"extera_GenerateWithPhoto" = "With Photo";
+"extera_ClearConversationHistoryInfo" = "Are you sure you want to clear **all** AI conversation history?";
+
+// AI Errors
+"extera_AIError400" = "Bad Request";
+"extera_AIError400Info" = "Check the request parameters.";
+"extera_AIError401" = "Invalid Credentials";
+"extera_AIError401Info" = "API key is invalid or disabled. Check your credentials.";
+"extera_AIError402" = "Insufficient Credits";
+"extera_AIError402Info" = "Your account or API key has insufficient credits. Add more credits and retry the request.";
+"extera_AIError403" = "Access Denied";
+"extera_AIError403Info" = "You don't have permission to access this model or resource. Check your API key and account permissions.";
+"extera_AIError408" = "Request Timeout";
+"extera_AIError408Info" = "Your request was not processed in time. Please try again later.";
+"extera_AIError429" = "Rate Limit Exceeded";
+"extera_AIError429Info" = "You are sending requests too frequently. Please wait a moment and try again.";
+"extera_AIError502" = "Model Failure";
+"extera_AIError502Info" = "The selected model is unavailable or we received an invalid response from it.";
+"extera_AIError503" = "Service Unavailable";
+"extera_AIError503Info" = "The service is temporarily unavailable or overloaded. Please try again later.";
+"extera_AIError" = "Server Error";
+"extera_AIErrorInfo" = "Please retry your request after a short wait.";
+"extera_AIErrorEmpty" = "Empty Response";
+"extera_AIErrorEmptyInfo" = "The model returned nothing. Try again or choose another model.";
+"extera_AIOnDevice" = "On-device";
+"extera_AIErrorOnDevice" = "On-Device Model Unavailable";
+"extera_AIErrorOnDeviceInfo" = "This device cannot run the on-device model. Pick another service.";
+"extera_AIErrorOnDeviceDownload" = "Model Not Downloaded";
+"extera_AIErrorOnDeviceDownloadInfo" = "The on-device model has not been downloaded yet.";
+"extera_AIErrorOnDeviceDownloading" = "Model Downloading";
+"extera_AIErrorOnDeviceDownloadingInfo" = "The on-device model is still downloading. Please try again later.";
+"extera_AIErrorOnDeviceTooLong" = "Message Too Long";
+"extera_AIErrorOnDeviceTooLongInfo" = "The on-device model cannot fit this request. Shorten it or pick another service.";
+"extera_AIErrorOnDeviceStopped" = "Model Stopped";
+"extera_AIErrorOnDeviceStoppedInfo" = "The on-device model stopped while answering, often because the device ran low on memory. Try again or pick a lighter model.";
+"extera_AIOnDeviceDownloadTitle" = "Download On-Device Model";
+"extera_AIOnDeviceDownloadInfo" = "The model is downloaded once and then runs entirely on this device, without sending anything to a server. The download is large and is handled by the system, so it cannot be stopped once started. Wi-Fi is recommended.";
+"extera_AIOnDeviceDownloadButton" = "Download";
+"extera_AIOnDeviceBadgeReady" = "READY";
+"extera_AIOnDeviceBadgeUnavailable" = "UNAVAILABLE";
+"extera_AIOnDeviceNotificationChannel" = "On-device AI model";
+"extera_AIOnDeviceNotificationReady" = "Model ready";
+"extera_AIOnDeviceNotificationReadyInfo" = "Gemini Nano is downloaded and now runs on your device.";
+"extera_AIOnDeviceDownloadStarted" = "Download started. It continues in the background.";
+"extera_AIOnDeviceBadgeDownload" = "DOWNLOAD";
+"extera_AIOnDeviceBadgeDownloading" = "LOADING";
+"extera_AIOnDeviceRefresh" = "Refresh status";
+"extera_AIOnDevicePreviewModel" = "Preview model";
+"extera_AIOnDeviceFastModel" = "Fast model";
+"extera_AIReplaceTelegram" = "Telegram AI";
+"extera_AIReplaceTelegramEditorInfo" = "Translate, restyle and proofread drafts";
+"extera_AIReplaceTelegramSummariesInfo" = "Summarize long messages and posts";
+"extera_AIReplaceTelegramInfo" = "Selected features use your AI service instead of Telegram servers, without Premium limits.";
+"extera_AIOnDeviceManage" = "AICore settings";
+"extera_AIOnDeviceManageUnavailable" = "System settings for AICore are not available on this device.";
+"extera_AIChangeModel" = "Change";
+"extera_AIAskMore" = "Ask More";
+"extera_AIAssistant" = "Assistant";
+
+// Chat Actions
+"extera_DoubleTapIncoming" = "Incoming Messages";
+"extera_DoubleTapOutgoing" = "Outgoing Messages";
+"extera_DoubleTapInfo" = "Some actions require administrator rights in the chat or channel.";
+"extera_Gestures" = "Gestures";
+"extera_SwipeActions" = "Swipe Actions";
+"extera_SwipeActionsInfo" = "Swipe a message to the left and, without lifting your finger, move up or down to pick an action.";
+"extera_SwipeActionsBehavior" = "Behavior";
+"extera_SwipeActionsLoop" = "Loop Actions";
+"extera_SwipeActionsReversed" = "Reverse Scrolling";
+"extera_SwipeActionsBehaviorInfo" = "With looping, the first action comes right after the last one. Reverse scrolling makes the list move with your finger.";
+"extera_SwipeActionsEnabled" = "Actions";
+"extera_SwipeActionsDisabled" = "Disabled";
+"extera_SwipeActionsOrderInfo" = "Tap an action to turn it on or off, drag to reorder. The topmost action runs on a plain swipe.";
+"extera_SwipeActionsPreviewReply" = "what if i slip and delete it?";
+"extera_SwipeActionsPreviewMessage" = "fear is the mind-killer. drag slower";
+"extera_BottomButton" = "Bottom Button";
+"extera_WidePosts" = "Wide Posts";
+"extera_AIFeatures" = "AI Features";
+"extera_AIFeaturesEditor" = "Editor";
+"extera_AIFeaturesSummaries" = "Summaries";
+"extera_AIFeaturesInstantViewSummaries" = "Instant View Summaries";
+"extera_ChannelDiscussNoCaps" = "Discuss";
+"extera_QuickTransitions" = "Quick Swipe Transition";
+"extera_DisableGreetingSticker" = "Disable Greeting Sticker";
+"extera_AdminShortcuts" = "Quick Admin Shortcuts";
+"extera_HideKeyboardOnScroll" = "Hide Keyboard on Scroll";
+"extera_HideShareButton" = "Hide Side \"%1$@\" Button";
+"extera_ReplaceEditedWithIcon" = "Replace \"%1$@\" with an Icon";
+"extera_MessageMenu" = "Message Menu";
+"extera_GroupMessageMenu" = "Group Message Menu";
+"extera_GroupMessageMenuInfo" = "Grouping moves the main actions to the bottom of the message menu.";
+"extera_GlassMessageMenu" = "Glass Message Menu";
+"extera_GlassMessageMenuInfo" = "The message menu, the header menu and the reactions bar become frosted glass.";
+"extera_GlassMessageMenuBlurOff" = "Glass menus need blur, which is currently off.";
+"extera_AddCommaAfterMention" = "Add Comma after Mention";
+"extera_InlineMathResult" = "Inline Results";
+"extera_InlineMathResultInfo" = "Calculator, Currencies, Units, and Time Zones";
+"extera_InlineMathResultHint" = "The result appears in gray after \"=\". Space inserts it, and Backspace right after the insertion undoes it.";
+"extera_InlineMathResultAnnouncement" = "Result: %1$@";
+"extera_InlineShowResults" = "Show Results";
+"extera_InlineFeatures" = "Features";
+"extera_InlineCalculator" = "Calculator";
+"extera_InlineCurrencies" = "Currencies";
+"extera_InlineUnits" = "Units of Measure";
+"extera_InlineTimeZones" = "Time Zones";
+"extera_InlineDefaultCurrency" = "Default Currency";
+"extera_InlineAngleUnit" = "Angles in sin, cos, tan";
+"extera_InlineAngleDegrees" = "Degrees";
+"extera_InlineAngleRadians" = "Radians";
+"extera_InlineMeasureSystem" = "Measurement System";
+"extera_InlineMeasureMetric" = "Metric";
+"extera_InlineMeasureImperial" = "Imperial";
+"extera_InlineDigitGrouping" = "Group Digits";
+"extera_InlineAutoCurrencyInfo" = "Auto picks the default currency by your phone number.";
+"extera_InlineRatesUpdated" = "Exchange rates updated %1$@.";
+"extera_InlineCapabilities" = "Capabilities";
+"extera_InlineFeatureOff" = "off";
+"extera_InlineTapToCopy" = "Tap an example to copy it.";
+"extera_InlineDocArithmetic" = "Arithmetic and Functions";
+"extera_InlineDocArithmeticInfo" = "Parentheses, powers, functions, number bases";
+"extera_InlineDocFunctionsText" = "Functions and constants. Separate arguments with \";\" or a comma followed by a space.";
+"extera_InlineDocBasesText" = "bin, oct and hex show a number in another base, and dec(x, n) reads x in base n.";
+"extera_InlineDocPercent" = "Percentages and Shorthands";
+"extera_InlineDocPercentInfo" = "Discounts, markups, thousands and millions";
+"extera_InlineDocPercentText" = "A percentage after + or − is taken from the number on its left.";
+"extera_InlineDocShorthandsText" = "\"k\" means a thousand and \"kk\" a million. \"thousand\" and \"million\" work too.";
+"extera_InlineDocCurrenciesInfo" = "Money, crypto and Telegram Stars";
+"extera_InlineDocCurrencyText" = "Without \"to\" or \"in\", an amount converts to the default currency.";
+"extera_InlineDocUnitsInfo" = "Length, weight, temperature, speed, time";
+"extera_InlineDocUnitsText" = "Without \"to\" or \"in\", foreign units convert to your measurement system, and your own ones to a handier unit.";
+"extera_InlineDocDurationsText" = "Durations are split into days, hours and minutes.";
+"extera_InlineDocTimeInfo" = "Cities, abbreviations and UTC offsets";
+"extera_InlineDocTimeText" = "A time in another zone converts to yours.";
+"extera_InlineDocCurrentTimeText" = "Add \"in\" and a city to convert there. \"now\" shows the current time.";
+"extera_HideSendAsPeer" = "Hide \"Send as…\" Button";
+"extera_HideSendAsPeerInfo" = "You can still access the \"Send as…\" menu by long pressing the Emojis/Stickers/GIFs button.";
+"extera_ShowPollResultsBeforeVoting" = "Show Results Before Voting";
+"extera_ShowPollResultsBeforeVotingHint" = "View results for each option before sending your vote.";
+"extera_ShowOnlineStatus" = "Show Online Indicator";
+"extera_ShowForwardsCount" = "Show Forward Count";
+"extera_MessagePreviewDialogMessage" = "I can eat glass and it doesn't hurt me.";
+
+// Chat Search
+"extera_SearchFilterByType" = "Filter by type";
+"extera_SearchFilterPhotos" = "Photos";
+"extera_SearchFilterVideos" = "Videos";
+"extera_SearchFilterVoice" = "Voice Messages";
+"extera_SearchFilterRound" = "Video Messages";
+"extera_SearchFilterPolls" = "Polls";
+"extera_SearchFilterLocations" = "Locations";
+"extera_SearchFilterPinned" = "Pinned";
+"extera_SearchFilterMentions" = "Mentions";
+"extera_SearchOfApproximate" = "%1$d of ≈%2$d";
+
+// Voice & Video Recognition
+"extera_RecognitionLanguage" = "Recognition Language";
+"extera_RecognitionInfo" = "Uses Vosk API. Works offline. The quality of the transcribed text can be low.";
+"extera_MissingLanguageModel" = "Missing Language Model";
+"extera_DownloadingModel" = "Downloading model…";
+"extera_DownloadingModelInfo" = "Please keep this window open while the language model is downloading.";
+"extera_ModelDownload" = "Download (%1$@)";
+"extera_ModelDownloadInfo" = "To continue, you need to download the \"**%1$@**\" language model.";
+"extera_ModelDownloaded" = "Model downloaded successfully.";
+"extera_ModelError" = "Error while downloading the model.";
+"extera_ModelUnzipping" = "Unzipping…";
+"extera_DeleteRecognitionModel" = "Delete Model";
+"extera_DeleteRecognitionModelInfo" = "Are you sure you want to delete the \"**%1$@**\" language model?";
+"extera_RecognitionModelDeleted" = "Model deleted successfully.";
+"extera_RecognitionModelDeleteError" = "Error while deleting the model.";
+"extera_PostProcessingWithAi" = "Use AI for post-processing";
+"extera_PostProcessingWithAiInfo" = "AI will improve readability by correcting errors, adding punctuation, and clarifying unclear parts.";
+
+// Camera
+"extera_CameraType" = "Camera Type";
+"extera_ExtendedSettings" = "Extended Settings";
+"extera_SeamlessSwitching" = "Seamless Switching";
+"extera_ExtendedFramesPerSecond" = "Extended FPS Range";
+"extera_CameraStabilization" = "Stabilization";
+"extera_CameraMirrorMode" = "Mirror Mode";
+"extera_StartWithWideAngleCamera" = "Start with Wide Angle";
+"extera_ZoomSlider" = "Zoom Slider";
+"extera_ZoomSliderInfo" = "Show the zoom control under the video message camera.";
+"extera_StaticZoom" = "Static Zoom";
+"extera_StaticZoomInfo" = "When recording video messages, the zoom level will not reset if you release your fingers.";
+"extera_VideoMessagesCamera" = "Camera in Video Messages";
+"extera_VideoMessagesCameraRear" = "Rear";
+"extera_VideoMessagesCameraFront" = "Front";
+"extera_VideoMessagesCameraAsk" = "Ask";
+"extera_RearCamera" = "Rear Camera";
+"extera_FrontCamera" = "Front Camera";
+"extera_RememberLastUsedCamera" = "Remember Last Used Camera";
+"extera_RememberLastUsedCameraInfo" = "When recording video messages, the last used camera will be selected automatically.";
+
+// Photo
+"extera_AlwaysSendInHD" = "Always Send in HD";
+"extera_HideCameraTile" = "Hide Instant Camera Tile";
+"extera_HideCameraTileInfo" = "The camera tile will be replaced by a floating button. Pressing it launches the Telegram camera; holding it launches the system camera.";
+"extera_ShortStandardQuality" = "SD";
+
+// Playback
+"extera_DoubleTapSeekDuration" = "Double Tap Skip Time";
+"extera_PreferOriginalQuality" = "Prefer Original Quality";
+"extera_PauseOnMinimize" = "Auto-Pause";
+"extera_PauseOnMinimizeVideo" = "Video";
+"extera_PauseOnMinimizeVoice" = "Voice";
+"extera_PauseOnMinimizeRound" = "Round";
+"extera_PauseOnMinimizeInfo" = "Pauses media playback when the device is locked or exteraGram is minimized.";
+"extera_SwipeToPip" = "Swipe to PiP";
+"extera_UnmuteWithVolumeButtons" = "Unmute Videos with Volume Buttons";
+"extera_UnmuteWithVolumeButtonsInfo" = "Pressing a volume button will unmute the video instead of changing the system volume.";
+
+// Google
+"extera_AnalyticsInfo" = "When these options are enabled, data about the device is collected and sent to Google Analytics and Crashlytics, allowing us to keep usage statistics and track errors in the app. \n\nHowever, if the options are switched off, data collection stops and any sent data is instantly deleted.";
+
+// Backup & Restore
+"extera_WriteFileName" = "Enter the file name…";
+"extera_ExportSettings" = "Export Settings";
+"extera_ApplySettings" = "Apply Settings";
+"extera_ImportTitle" = "Are you sure you want to apply these settings?";
+"extera_ImportConfirm" = "Yes, apply";
+"extera_CancelConfirm" = "No, leave as is";
+"extera_SettingsSaved" = "Settings file saved successfully.";
+"extera_SettingsImported" = "Settings applied successfully.";
+"extera_ImportChanges_one" = "**1** change will be applied to the current settings.";
+"extera_ImportChanges_two" = "**%1$d** changes will be applied to the current settings.";
+"extera_ImportChanges_few" = "**%1$d** changes will be applied to the current settings.";
+"extera_ImportChanges_many" = "**%1$d** changes will be applied to the current settings.";
+"extera_ImportChanges_other" = "**%1$d** changes will be applied to the current settings.";
+"extera_SameSettings" = "It looks like the settings are the same as the current ones.";
+
+// Export data
+"extera_ExportData" = "Export data";
+"extera_ExportDelay" = "For security reasons, you will be able to begin downloading your data in %1$@. We have notified all your devices about the export request to make sure it's authorized and give you time to react if it's not.\n\nPlease come back on %2$@ and repeat the request using the same device.";
+"extera_ExportDelayLessThanHour" = "less than a hour";
+"extera_ExportInvalid" = "Sorry, you started a new data export, so this data export has been canceled.";
+
+// Settings Management
+"extera_DeleteAccount" = "Delete Account";
+"extera_ResetSettings" = "Reset Settings";
+"extera_ResetPreferences" = "**exteraGram** preferences have been reset.";
+"extera_ResetPreferencesInfo" = "Are you sure you want to reset **all** exteraGram preferences to their defaults?";
+
+// Donates
+"extera_SupportDevelopment" = "Support Development";
+"extera_SupportDevelopmentInfo" = "By supporting the project, you not only contribute to its development but also get a unique badge.";
+"extera_MakeDonation" = "Make a Donation";
+"extera_MakeDonationInfo" = "Transfer an amount of %1$@ (%2$@) to any of the project's payment details. These can be found in the **Other** section of the app settings.";
+"extera_SendProof" = "Send Proof of Payment";
+"extera_SendProofInfo" = "Send a photo of the payment confirmation to **@exteraOwner**. Make sure the photo clearly shows the amount, date, and time of the transfer.";
+"extera_ReceiveBadge" = "Receive Your Badge";
+"extera_ReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
+"extera_GetBadgeInfo" = "**Support Development** and get an unique badge!";
+"extera_NowPlaying" = "Now playing";
+"extera_ScrobblingService" = "Scrobbling Service";
+"extera_SelectService" = "Select service";
+"extera_SelectServiceInfo" = "Displays the current track in the profile as a card obtained from the scrobbling service.";
+"extera_EnterUsername" = "Enter username";
+"extera_EnterUsernameInfo" = "You can obtain your username on the **official website**.";
+"extera_BoostyPeopleCount_one" = "%1$d person";
+"extera_BoostyPeopleCount_two" = "%1$d people";
+"extera_BoostyPeopleCount_few" = "%1$d people";
+"extera_BoostyPeopleCount_many" = "%1$d people";
+"extera_BoostyPeopleCount_other" = "%1$d people";
+"extera_BoostyInfo" = "Actively support the **exteraGram** on **Boosty**.";
+"extera_BoostyInfo2" = "Thank you for your support!";
+
+// Plugins
+"extera_PluginsNotSupported" = "Plugin installation is available only in the **Full** version of the **exteraGram**.";
+"extera_Plugins" = "Plugins";
+"extera_PluginsEngine" = "Plugins Engine";
+"extera_EnablePluginsEngine" = "Enable Plugins Engine";
+"extera_PluginsInfo" = "You can find plugins in @exteraPlugins.";
+"extera_PluginsNotFound" = "No plugins found.";
+"extera_PluginsEmptyTitle" = "No Plugins Yet";
+"extera_PluginsEmptyInfo" = "Pick plugins in the catalog or find more in @exteraPlugins.";
+"extera_PluginCatalogOpen" = "Open Catalog";
+"extera_PluginCatalog" = "Plugin Catalog";
+"extera_PluginCatalogInfo" = "Browse plugins published in Telegram channels and install them in a tap.";
+"extera_PluginCatalogVerified" = "Verified";
+"extera_PluginCatalogYourRepositories" = "Your Repositories";
+"extera_PluginCatalogAddRepository" = "Add Repository";
+"extera_PluginCatalogRemoveRepository" = "Remove Repository";
+"extera_PluginCatalogRepositoriesInfo" = "Repositories are channels that publish plugins. Plugins from unverified channels can be installed only with **Unknown Sources** enabled.";
+"extera_PluginCatalogChooseChannel" = "Choose Channel";
+"extera_PluginCatalogEnterLink" = "Enter Link";
+"extera_PluginCatalogLinkHint" = "t.me/channel or @channel";
+"extera_PluginCatalogChannelNotFound" = "Channel not found.";
+"extera_PluginCatalogRepositoryAdded" = "**%1$@** added to repositories.";
+"extera_PluginCatalogRepositoryRemoved" = "**%1$@** removed from repositories.";
+"extera_PluginCatalogRepositoryExists" = "This channel is already in the list.";
+"extera_PluginCatalogAddRepositoryConfirm" = "Add **%1$@** to your plugin repositories?";
+"extera_PluginRepositoryLinkToSavedMessages" = "Repository link sent to **Saved Messages**.";
+"extera_PluginRepositoryLinkToUser" = "Repository link sent to **%1$@**.";
+"extera_PluginRepositoryLinkToChats" = "Repository link sent to **%1$@**.";
+"extera_PluginCatalogPlugins_one" = "%1$d plugin";
+"extera_PluginCatalogPlugins_two" = "%1$d plugins";
+"extera_PluginCatalogPlugins_few" = "%1$d plugins";
+"extera_PluginCatalogPlugins_many" = "%1$d plugins";
+"extera_PluginCatalogPlugins_other" = "%1$d plugins";
+"extera_PluginCatalogUpdating" = "Updating…";
+"extera_PluginCatalogNotLoaded" = "Not loaded yet";
+"extera_PluginCatalogUpdates" = "Updates";
+"extera_PluginCatalogInstalled" = "Installed";
+"extera_PluginCatalogSortUpdated" = "Recently Updated";
+"extera_PluginCatalogSortPopular" = "Most Viewed";
+"extera_PluginCatalogSortNewest" = "Newest";
+"extera_PluginCatalogSortName" = "By Name";
+"extera_PluginCatalogNew" = "NEW";
+"extera_PluginCatalogRefreshFailed" = "Couldn't refresh the catalog.";
+"extera_PluginCatalogUpToDate" = "No new plugins or versions.";
+"extera_PluginCatalogNewVersions_one" = "**%1$d** new version found.";
+"extera_PluginCatalogNewVersions_two" = "**%1$d** new versions found.";
+"extera_PluginCatalogNewVersions_few" = "**%1$d** new versions found.";
+"extera_PluginCatalogNewVersions_many" = "**%1$d** new versions found.";
+"extera_PluginCatalogNewVersions_other" = "**%1$d** new versions found.";
+"extera_PluginCatalogAllPlugins" = "All Plugins";
+"extera_PluginCatalogEmpty" = "No plugins in this channel yet.";
+"extera_PluginCatalogInfoLoading" = "Loading details…";
+"extera_PluginCatalogInfoFailed" = "Couldn't read plugin details";
+"extera_PluginCatalogInfoUnavailable" = "Details unavailable";
+"extera_PluginCatalogEngineUnavailable" = "The plugin engine isn't running, so plugin details can't be shown.";
+"extera_PluginCategoryAppearance" = "Appearance";
+"extera_PluginCategoryChats" = "Chats";
+"extera_PluginCategoryMedia" = "Media";
+"extera_PluginCategoryPrivacy" = "Privacy";
+"extera_PluginCategoryTools" = "Tools";
+"extera_PluginCategoryIntegrations" = "Integrations";
+"extera_PluginCategoryFun" = "Fun";
+"extera_PluginCategoryLibraries" = "Libraries";
+"extera_PluginCatalogDownloadFailed" = "Couldn't download **%1$@**.";
+"extera_InstallPlugin" = "Install";
+"extera_UpdatePlugin" = "Update";
+"extera_PluginNotEnabled" = "Enable the **Plugin Engine** to install **%1$@**.";
+"extera_PluginInstalled" = "**%1$@** installed successfully.";
+"extera_PluginUpdated" = "**%1$@** updated successfully.";
+"extera_PluginEnableError" = "Failed to enable **%1$@**.";
+"extera_PluginDisableError" = "Failed to disable **%1$@**.";
+"extera_PluginInstallError" = "Failed to install **%1$@**.";
+"extera_PluginSourceTrusted" = "Trusted source";
+"extera_PluginSourceTrustedInfo" = "Plugins from this source are **verified** and safe to use.";
+"extera_PluginSourceUnknown" = "Unknown source";
+"extera_PluginSourceUnknownInfo" = "Plugins from this source are **unverified** and may pose a security risk.";
+"extera_PluginInstallBlocked" = "Installation Blocked";
+"extera_PluginInstallBlockedInfo" = "Allow unknown sources in plugin settings";
+"extera_PluginVersion" = "Version";
+"extera_PluginVersionValue" = "Version %1$@";
+"extera_PluginRequired" = "Required Plugins";
+"extera_PluginRequiredMissing" = "Not installed";
+"extera_PluginRequiredVersion" = "Requires version %1$@";
+"extera_PluginRequiredDisabled" = "Installed, but disabled";
+"extera_PluginRequiredOutdated" = "Version %1$@, requires %2$@";
+"extera_PluginRequiredDownload" = "Download";
+"extera_PluginRequiredUpdate" = "Update";
+"extera_PluginRequiredInstalled" = "Installed";
+"extera_PluginBundledPackages" = "Bundled Packages";
+"extera_PluginRequirements" = "Requirements";
+"extera_PluginNoDescription" = "No description provided.";
+"extera_PluginIsNotResponding" = "Plugin isn't responding.";
+"extera_PluginIsNotRespondingAlert" = "%1$@ isn't responding";
+"extera_PluginNoAuthor" = "Unknown Author";
+"extera_EnableAfterInstallation" = "Enable After Installation";
+"extera_EnterValue" = "Enter a value";
+"extera_PluginDelete" = "Delete Plugin";
+"extera_PluginDeleteInfo" = "Are you sure you want to delete **%1$@**?";
+"extera_ResetPluginSettings" = "**%1$@** settings have been reset.";
+"extera_ResetPluginSettingsInfo" = "Are you sure you want to reset **%1$@** settings to default?";
+"extera_PluginsUnknownSources" = "Unknown Sources";
+"extera_PluginsUnknownSourcesInfo" = "You are agreeing to install plugins from unknown sources. Every plugin has:";
+"extera_PluginsUnknownSourcesInfo2" = "Allow installing plugins from unverified sources.";
+"extera_PluginsUnknownSourcesAccount" = "Full access to your account";
+"extera_PluginsUnknownSourcesAccountInfo" = "Act on your behalf: read, send and delete messages.";
+"extera_PluginsUnknownSourcesFiles" = "App files and data";
+"extera_PluginsUnknownSourcesFilesInfo" = "Read cached chats, media, settings and authorization data.";
+"extera_PluginsUnknownSourcesCode" = "Unrestricted code";
+"extera_PluginsUnknownSourcesCodeInfo" = "Run any code and send anything to any server.";
+"extera_PluginsUnknownSourcesWarning" = "A malicious plugin can take over your account.";
+"extera_PluginsStaticAnalysis" = "Static Analysis";
+"extera_PluginsStaticAnalysisInfo" = "Check plugin code before installation and show what it can do.";
+"extera_PluginAnalyzing" = "Analyzing…";
+"extera_PluginAnalysisRunning" = "Checking code…";
+"extera_PluginAnalysisRunningInfo" = "Usually takes a few seconds";
+"extera_PluginAnalysisCaution" = "Warnings found";
+"extera_PluginAnalysisClean" = "No threats found";
+"extera_PluginAnalysisNewInVersion" = "New in this version";
+"extera_PluginAnalysisLimitations" = "Static analysis can't see code that a plugin downloads or decrypts while running.";
+"extera_PluginAnalysisFailed" = "Analysis didn't finish";
+"extera_PluginAnalysisFailedTimeout" = "The analyzer took too long and was stopped.";
+"extera_PluginAnalysisFailedCrash" = "The analyzer stopped unexpectedly.";
+"extera_PluginAnalysisFailedTooLarge" = "The file is too large to analyze.";
+"extera_PluginAnalysisFailedMemory" = "The analyzer used too much memory and was stopped.";
+"extera_PluginAnalysisFailedError" = "The analyzer reported an error.";
+"extera_PluginAnalysisCautionInfo" = "No critical or dangerous issues";
+"extera_PluginAnalysisThreats" = "Threats found";
+"extera_PluginAnalysisCleanInfo" = "Nothing suspicious found";
+"extera_PluginAnalysisCriticalCount_one" = "%1$d critical";
+"extera_PluginAnalysisCriticalCount_two" = "%1$d critical";
+"extera_PluginAnalysisCriticalCount_few" = "%1$d critical";
+"extera_PluginAnalysisCriticalCount_many" = "%1$d critical";
+"extera_PluginAnalysisCriticalCount_other" = "%1$d critical";
+"extera_PluginAnalysisDangerCount_one" = "%1$d dangerous";
+"extera_PluginAnalysisDangerCount_two" = "%1$d dangerous";
+"extera_PluginAnalysisDangerCount_few" = "%1$d dangerous";
+"extera_PluginAnalysisDangerCount_many" = "%1$d dangerous";
+"extera_PluginAnalysisDangerCount_other" = "%1$d dangerous";
+"extera_PluginAnalysisNameDynamicCode" = "Dynamic code";
+"extera_PluginAnalysisNameEmbeddedCode" = "Packed code";
+"extera_PluginAnalysisNameReflectionDynamic" = "Dynamic calls";
+"extera_PluginAnalysisNameNativeCode" = "Native code";
+"extera_PluginAnalysisNameAntiAnalysis" = "Anti-analysis";
+"extera_PluginAnalysisNameHiddenParts" = "Unreadable parts";
+"extera_PluginAnalysisNameRemoteCode" = "Remote code";
+"extera_PluginAnalysisNameRemoteControl" = "Remote control";
+"extera_PluginAnalysisNameHidesBehavior" = "Hidden behavior";
+"extera_PluginAnalysisNameNetwork" = "Internet access";
+"extera_PluginAnalysisNameExfiltrateMessages" = "Data upload";
+"extera_PluginAnalysisNameDeviceIdUpload" = "Device ID upload";
+"extera_PluginAnalysisNameFiles" = "File access";
+"extera_PluginAnalysisNameTelegramFiles" = "Telegram downloads";
+"extera_PluginAnalysisNameProcesses" = "System processes";
+"extera_PluginAnalysisNameAppExit" = "App restart";
+"extera_PluginAnalysisNameHostTampering" = "App tampering";
+"extera_PluginAnalysisNameJavaHooks" = "Method hooks";
+"extera_PluginAnalysisNameUiHooks" = "Sensitive screen hooks";
+"extera_PluginAnalysisNamePersistence" = "Plugin management";
+"extera_PluginAnalysisNameAppSettings" = "App settings";
+"extera_PluginAnalysisNameWalletAccess" = "Crypto wallet";
+"extera_PluginAnalysisNamePrivacy" = "Private data";
+"extera_PluginAnalysisNameSystemOverlay" = "Drawing over other apps";
+"extera_PluginAnalysisNameExfiltrateFiles" = "File upload";
+"extera_PluginAnalysisNameTelegramLeak" = "Data leak via Telegram";
+"extera_PluginAnalysisNameSessionViaTelegram" = "Session leak";
+"extera_PluginAnalysisNameSms" = "SMS";
+"extera_PluginAnalysisNameScreenCapture" = "Screen capture";
+"extera_PluginAnalysisNameInstallsApps" = "App installation";
+"extera_PluginAnalysisNameMediaLibrary" = "Photos and media";
+"extera_PluginAnalysisNameWebviewBridge" = "Web page bridge";
+"extera_PluginAnalysisNameBackground" = "Background work";
+"extera_PluginAnalysisNameIntents" = "Other apps";
+"extera_PluginAnalysisNameNotifications" = "Notifications";
+"extera_PluginAnalysisNameThirdPartyCode" = "Unchecked packages";
+"extera_PluginAnalysisNameTelegramApi" = "Telegram requests";
+"extera_PluginAnalysisNameSensitiveRequests" = "Account operations";
+"extera_PluginAnalysisNameInterceptsRequests" = "Request interception";
+"extera_PluginAnalysisNameSessionData" = "Session data";
+"extera_PluginAnalysisNameHiddenAccountActions" = "Hidden account actions";
+"extera_PluginAnalysisNameAccountTakeover" = "Account takeover";
+"extera_PluginAnalysisNameMessagesRead" = "Reading messages";
+"extera_PluginAnalysisNameMessagesSend" = "Sending messages";
+"extera_PluginAnalysisNameMessagesDelete" = "Deleting messages";
+"extera_PluginAnalysisNameContacts" = "Contacts access";
+"extera_PluginAnalysisNameForwardMessages" = "Message forwarding";
+"extera_PluginAnalysisViewReport" = "View Report";
+"extera_PluginAnalysisConfirmInstall" = "I Understand the Risks, Install";
+"extera_PluginAnalysisConfirmUpdate" = "I Understand the Risks, Update";
+"extera_PluginAnalysisReport" = "Analysis Report";
+"extera_PluginAnalysisGroupCritical" = "Critical";
+"extera_PluginAnalysisGroupDanger" = "Dangerous";
+"extera_PluginAnalysisGroupCaution" = "Needs attention";
+"extera_PluginAnalysisGroupInfo" = "Other";
+"extera_PluginAnalysisGroupLimits" = "Analysis limits";
+"extera_PluginAnalysisMorePlaces" = "More places: %d";
+"extera_PluginAnalysisMoreValues" = "More: %d";
+"extera_PluginAnalysisDecodedCode" = "Unpacked code";
+"extera_PluginAnalysisCompiledCode" = "Compiled code";
+"extera_PluginAnalysisNativeLibrary" = "Native library";
+"extera_PluginAnalysisHiddenInComment" = "Hidden in a comment, lines %1$d–%2$d";
+"extera_PluginAnalysisEncodedData" = "Encoded data · %1$@";
+"extera_PluginAnalysisLimitTime" = "Time limit reached";
+"extera_PluginAnalysisLimitTimeInfo" = "Analysis stopped before checking all of the code";
+"extera_PluginAnalysisLimitIncomplete" = "Incomplete analysis";
+"extera_PluginAnalysisLimitIncompleteInfo" = "Part of the plugin is too complex to analyze completely";
+"extera_PluginAnalysisUnresolvedRequests" = "The type of some requests could not be determined";
+"extera_PluginAnalysisUnresolvedHooks" = "The target of some hooks could not be determined";
+"extera_PluginAnalysisNewBadge_one" = "%1$d new";
+"extera_PluginAnalysisNewBadge_two" = "%1$d new";
+"extera_PluginAnalysisNewBadge_few" = "%1$d new";
+"extera_PluginAnalysisNewBadge_many" = "%1$d new";
+"extera_PluginAnalysisNewBadge_other" = "%1$d new";
+"extera_PluginAnalysisCategoryCode" = "Code";
+"extera_PluginAnalysisCategoryAccount" = "Account";
+"extera_PluginAnalysisCategoryMessages" = "Messages";
+"extera_PluginAnalysisCategoryNetwork" = "Network";
+"extera_PluginAnalysisCategoryFiles" = "Files";
+"extera_PluginAnalysisCategoryDevice" = "Device";
+"extera_PluginAnalysisCategoryApp" = "App";
+"extera_PluginAnalysisCategoryPackages" = "Packages";
+"extera_PluginAnalysisCategoryOther" = "Other";
+"extera_PluginAnalysisStatementDynamicCode" = "Runs code that isn't in the plugin file";
+"extera_PluginAnalysisStatementEmbeddedCode" = "Contains packed code";
+"extera_PluginAnalysisStatementLoadsCode" = "Loads extra compiled code";
+"extera_PluginAnalysisStatementReflectionDynamic" = "Chooses what to call while running";
+"extera_PluginAnalysisStatementNativeCode" = "Runs native code that can't be checked";
+"extera_PluginAnalysisStatementAntiAnalysis" = "Tries to hide what it does";
+"extera_PluginAnalysisStatementHiddenParts" = "Has parts that couldn't be read";
+"extera_PluginAnalysisStatementRemoteCode" = "Can download and run code you haven't seen";
+"extera_PluginAnalysisStatementRemoteControl" = "Can be controlled remotely";
+"extera_PluginAnalysisStatementHidesBehavior" = "Hides part of its behavior";
+"extera_PluginAnalysisStatementNetwork" = "Connects to the internet";
+"extera_PluginAnalysisStatementExfiltrateMessages" = "Can send your messages or contacts to the internet";
+"extera_PluginAnalysisStatementDeviceIdUpload" = "Sends device identifiers to the internet";
+"extera_PluginAnalysisStatementFiles" = "Reads and writes files";
+"extera_PluginAnalysisStatementTelegramFiles" = "Downloads files through Telegram";
+"extera_PluginAnalysisStatementProcesses" = "Starts system processes";
+"extera_PluginAnalysisStatementAppExit" = "Can close or restart the app";
+"extera_PluginAnalysisStatementHostTampering" = "Changes how the app or other plugins work";
+"extera_PluginAnalysisStatementJavaHooks" = "Changes app behavior with hooks";
+"extera_PluginAnalysisStatementUiHooks" = "Changes login, payment or security screens";
+"extera_PluginAnalysisStatementPersistence" = "Can install or change plugins";
+"extera_PluginAnalysisStatementAppSettings" = "Changes app settings";
+"extera_PluginAnalysisStatementWalletAccess" = "Accesses your crypto wallet";
+"extera_PluginAnalysisStatementPrivacy" = "Accesses private device data";
+"extera_PluginAnalysisStatementSystemOverlay" = "Can show its own windows on top of other apps";
+"extera_PluginAnalysisStatementExfiltrateFiles" = "Can send your files to the internet";
+"extera_PluginAnalysisStatementTelegramLeak" = "Sends your private data through Telegram messages";
+"extera_PluginAnalysisStatementSessionViaTelegram" = "Can send your account session through Telegram";
+"extera_PluginAnalysisStatementSms" = "Can read or send SMS from your phone";
+"extera_PluginAnalysisStatementScreenCapture" = "Can capture the screen or turn off screenshot protection";
+"extera_PluginAnalysisStatementInstallsApps" = "Can install other apps";
+"extera_PluginAnalysisStatementMediaLibrary" = "Reads your photos and media";
+"extera_PluginAnalysisStatementWebviewBridge" = "Lets web pages call into the app";
+"extera_PluginAnalysisStatementBackground" = "Runs in the background or reacts to system events";
+"extera_PluginAnalysisStatementIntents" = "Opens other apps or sends them data";
+"extera_PluginAnalysisStatementNotifications" = "Reads the app's notifications";
+"extera_PluginAnalysisStatementThirdPartyCode" = "Installs packages that weren't checked";
+"extera_PluginAnalysisStatementTelegramApi" = "Sends requests on your behalf";
+"extera_PluginAnalysisStatementSensitiveRequests" = "Can move money, gifts or control of your account";
+"extera_PluginAnalysisStatementInterceptsRequests" = "Reads and changes Telegram requests";
+"extera_PluginAnalysisStatementSessionData" = "Touches account session data";
+"extera_PluginAnalysisStatementHiddenAccountActions" = "Can act on your account and hide it";
+"extera_PluginAnalysisStatementAccountTakeover" = "Can take over your account";
+"extera_PluginAnalysisStatementMessagesRead" = "Reads your messages and chats";
+"extera_PluginAnalysisStatementMessagesSend" = "Sends, forwards or edits messages";
+"extera_PluginAnalysisStatementMessagesDelete" = "Deletes messages";
+"extera_PluginAnalysisStatementContacts" = "Reads your contacts";
+"extera_PluginAnalysisStatementForwardMessages" = "Can forward your messages inside Telegram";
+"extera_PluginsSafeMode" = "Safe Mode";
+"extera_PluginsSafeModeShortcut" = "Start with safe mode";
+"extera_PluginsSafeModeInfo" = "The Plugin Engine is disabled due to a crash. Disabling safe mode may lead to unpredictable consequences.";
+"extera_PluginsSafeModeInfo2" = "In Safe Mode, all plugins are inactive. This allows you to safely find and disable a problematic plugin.";
+"extera_PluginsDevMode" = "Developer Mode";
+"extera_PluginsCompactView" = "Plugins Compact View";
+"extera_PluginsDocumentation" = "Documentation";
+"extera_PluginsTrusted" = "Trusted Plugins";
+"extera_PluginsDevServerLaunched" = "Developer Server is started.";
+"extera_PluginsDevServerStopped" = "Developer Server is stopped.";
+"extera_PluginsPoweredBy" = "Powered by Chaquopy.";
+"extera_PluginEngineNotEnabled" = "Enable the **Plugin Engine** to open settings of **%1$@**.";
+"extera_PluginNotFound" = "**%1$@** not found.";
+"extera_PluginHasNoSettings" = "**%1$@** has no settings.";
+"extera_PluginsPySdkUpdate" = "PySDK Update";
+"extera_PluginsPySdkAutoUpdate" = "Update Automatically";
+"extera_PluginsPySdkEnableBetaVersion" = "Install Beta Versions";
+"extera_PluginsPySdkCheckUpdates" = "Check for Updates";
+"extera_CheckingForUpdates" = "Checking for Updates…";
+"extera_LatestVersionInstalled" = "Latest version is installed";
+"extera_RestartPluginSystemToApplyUpdate" = "Update loaded, restart Plugin Engine to apply";
+"extera_LoadingUpdate" = "Loading Update…";
+"extera_RestoreSdkFromApk" = "Restore SDK from APK";
+"extera_PluginsPySdkEngineDisabled" = "Plugin Engine is disabled";
+"extera_PluginsPySdkNotInstalled" = "SDK is not installed";
+"extera_PluginsPySdkStarting" = "Starting…";
+"extera_PluginsPySdkPythonFailed" = "Python failed to start";
+"extera_PluginsPySdkInstallFailed" = "SDK installation failed, restart the app";
+"extera_PluginsPySdkStartFailed" = "SDK failed to start, restart the app";
+"extera_EnableAutoUpdate" = "Enable Auto Update";
+"extera_PluginsDisableArt" = "Compatibility Mode";
+"extera_PluginsDisableArtInfo" = "Prevents plugin hook failures by disabling ART Profile Saver.";
+
+// Updates
+"extera_UpdateInstalling" = "Updating in progress…";
+"extera_UpdateInstallingRelaunch" = "The app will restart once the update is finished.";
+"extera_UpdateInstallingNotification" = "You will be notified when the update is complete.";
+"extera_UpdateInstalledNotification" = "Update complete. Tap to open the app.";
+"extera_UpdateFailedToInstall" = "Update installation failed with error code: %d";
+"extera_UpdateAvailable" = "Update Available!";
+
+// Message Details
+"extera_Details" = "Details";
+"extera_Date" = "Date";
+"extera_EditedDate" = "Edit Date";
+"extera_ForwardedDate" = "Forward Date";
+"extera_FileSize" = "File Size";
+"extera_FileName" = "File Name";
+"extera_FilePath" = "File Path";
+"extera_Platform" = "Platform";
+"extera_SentFrom" = "Sent from %1$@";
+"extera_Resolution" = "Resolution";
+"extera_Bitrate" = "Bitrate";
+"extera_Duration" = "Duration";
+"extera_MimeType" = "Mime Type";
+"extera_Datacenter" = "Datacenter";
+
+// Date Formatting
+"extera_DateFormatOption" = "Format:";
+"extera_DateFormatOptionNone" = "None";
+"extera_DateFormatOptionRelative" = "Relative";
+"extera_DateFormatOptionShortTime" = "Short Time";
+"extera_DateFormatOptionLongTime" = "Long Time";
+"extera_DateFormatOptionShortDate" = "Short Date";
+"extera_DateFormatOptionLongDate" = "Long Date";
+"extera_DateFormatOptionDayOfWeek" = "Day of week";
+
+// Login & QR
+"extera_LoginQrTitle" = "QR code login";
+"extera_LoginQrSubtitle" = "Use another device to scan this QR code.";
+"extera_WifiConnect" = "Connect";
+"extera_WifiDisabled" = "Wi-Fi is disabled.";
+"extera_WifiFailed" = "Failed to connect to Wi-Fi.";
+"extera_WifiSuccess" = "Successfully connected to Wi-Fi.";
+"extera_AreYouSureToLogin" = "Are you sure you want to log in to this account on another device?";
+
+// AdBlock
+"extera_PageBlocked" = "Page blocked";
+"extera_PageBlockedDescription" = "exteraGram has prevented the following page from loading:\n**%1$@**";
+"extera_PageBlockedGoBack" = "Go back";
+"extera_PageBlockedProceed" = "Proceed";
+"extera_BlockAds" = "Block Ads";
+"extera_BlockedRequests_one" = "%1$d blocked";
+"extera_BlockedRequests_two" = "%1$d blocked";
+"extera_BlockedRequests_few" = "%1$d blocked";
+"extera_BlockedRequests_many" = "%1$d blocked";
+"extera_BlockedRequests_other" = "%1$d blocked";
+"extera_AdBlockFiltersLoading" = "Loading Filters…";
+
+// Other
+"extera_SetAsBadge" = "Set as Badge";
+"extera_AutoLockInstant" = "Instant";
+"extera_TestBackend" = "Test Backend";
+"extera_SearchPhotoInfo" = "Services can use images following their privacy policies and terms of use.";
+"extera_PhotoUploadFailed" = "Failed to upload photo.";
+"extera_TrackSaved" = "Track saved to **%1$@**.";
+"extera_ChannelToSaveChanged" = "Tracks will be saved to **%1$@**.";
+"extera_DeletedMessage" = "Deleted Message";
+
+// Bot Button Context Menu
+"extera_CopyTitle" = "Copy Title";
+"extera_CopyCallback" = "Copy Callback Data";
+"extera_CopyInlineQuery" = "Copy Inline Query";
+"extera_CopyID" = "Copy User ID";
+
+// Information Toasts & Dialogs
+"extera_SetAsBadgeStatusInfo" = "Badge status set.";
+"extera_UserNotFound" = "User with this **ID** not found.";
+"extera_ChatNotFound" = "Chat with this **ID** not found.";
+"extera_PhotoCopied" = "Photo copied to clipboard.";
+"extera_FrameCopied" = "Frame copied to clipboard.";
+"extera_TapToCopy" = "Tap to copy";
+"extera_ProfileUsesEmojiPack" = "This profile uses emoji from the %@ pack for its background.";
+"extera_ProfileUsesEmojiPacks" = "This profile uses emoji from the **%d packs** for its background.";
+"extera_ReplyUsesEmojiPacks" = "This reply uses emoji from the %@ pack for its background.";
+"extera_StickerSavedHint" = "Sticker saved to gallery.";
+"extera_EmojiSavedHint" = "Emoji saved to gallery.";
+"extera_GifGallerySavedHint" = "GIF saved to gallery.";
+"extera_MutualContactInfo" = "This contact is mutual.";
+"extera_LocalPremiumEmojiHint" = "You do not have a **Telegram Premium** subscription, so only **exteraGram** users will be able to see this emoji.";
+
+// Main Tabs
+"extera_HideContactsTab" = "Hide Contacts Tab";
+"extera_ShowContactsTab" = "Show Contacts Tab";
+"extera_ContactsTabWasShownTitle" = "**Contacts** Tab is now visible.";
+"extera_ContactsTabWasHiddenTitle" = "**Contacts** Tab is now hidden.";
+
+// Passkeys
+"extera_PasskeyInfo2" = "This feature only works with password managers that allow the user to manage trust settings for privileged apps, such as **Bitwarden** or **KeePassDX**.";
+"extera_PasskeyUnsupportedTitle" = "Unsupported password manager";
+"extera_PasskeyUnsupportedMessage" = "Try other password managers like **Bitwarden** or **KeePassDX**.";
+
+// Date Information
+"extera_CreationDateUserApproximately" = "**%1$@** created their account approximately on **%2$@**.";
+"extera_CreationDateUserEarlier" = "**%1$@** created their account earlier than **%2$@**.";
+"extera_CreationDateUserLater" = "**%1$@** created their account later than **%2$@**.";
+"extera_CreationDateChat" = "**%1$@** was created on **%2$@**.";
+"extera_CreationDateSelfApproximately" = "You created your account approximately on **%1$@**.";
+"extera_CreationDateSelfEarlier" = "You created your account earlier than **%1$@**.";
+"extera_CreationDateSelfLater" = "You created your account later than **%1$@**.";
+"extera_JoinDateChat" = "You joined **%1$@** on **%2$@**.";
+"extera_GroupMemberJoined" = "joined %1$@";
+
+// Menu Items
+"extera_SendVideoWithoutCompression" = "Send Without Compression";
+"extera_ToBeginning" = "To Beginning";
+"extera_MessageHistory" = "History";
+"extera_BoldItalic" = "Bold Italic";
+"extera_CopyPhoto" = "Copy Photo";
+"extera_CopyFrame" = "Copy Frame";
+"extera_Repeat" = "Repeat";
+"extera_Subtitles" = "Subtitles";
+"extera_ChooseSubtitles" = "Choose Subtitles";
+"extera_DisableSubtitles" = "Disable Subtitles";
+"extera_SubtitlesAdded" = "Subtitles enabled.";
+"extera_SubtitlesRemoved" = "Subtitles disabled.";
+"extera_SubtitlesLoadError" = "Couldn't load subtitles.";
+"extera_SubtitlesUnsupportedFormat" = "Unsupported subtitle format.";
+
+// Sticker Maker
+"extera_StickerCornerRadius" = "Sticker Corners";
+"extera_StickerCornerRadiusInfo" = "Choose how rounded the sticker corners should look.";
+"extera_StickerCornerRadiusLarge" = "Large";
+"extera_StickerCornerRadiusMedium" = "Medium";
+"extera_StickerCornerRadiusSmall" = "Small";
+"extera_StickerCornerRadiusNone" = "None";
+
+// Feed
+"extera_Feed" = "Feed";
+"extera_FeedShownChannels" = "Shown in feed";
+"extera_FeedHiddenChannels" = "Hidden";
+"extera_FeedChannels" = "Channels";
+"extera_FeedChannelsInfo" = "Uncheck a channel to hide its posts from All. Categories still show it. New channels are shown automatically.";
+"extera_FeedSettings" = "Feed Settings";
+"extera_FeedNoPosts" = "No channel posts yet.";
+"extera_FeedAllChannelsExcluded" = "All channels are excluded from the feed.";
+"extera_FeedMarkAllRead" = "Mark All as Read";
+"extera_FeedMarkAllReadConfirm" = "Mark all posts in your feed channels as read? This will also mark them as read in the original channels.";
+"extera_FeedMarkAllReadDone" = "All posts marked as read";
+"extera_FeedIncludeArchived" = "Show Chats From Archive";
+"extera_FeedIncludeArchivedInfo" = "Also include channels from your archived chats in the feed.";
+"extera_FeedHideChannel" = "Hide from Feed";
+"extera_FeedChannelHidden" = "**%1$@** hidden from feed";
+"extera_FeedBottomTab" = "Show in Bottom Tabs";
+"extera_FeedBottomTabInfo" = "Show the feed as a bottom navigation tab in place of the Contacts tab.";
+"extera_WidePostsInFeed" = "Wide Posts in Feed";
+"extera_FeedUnreadCounter" = "Unread Post Counter";
+"extera_FeedCategories" = "Categories";
+"extera_FeedCategoriesInfo" = "Categories appear as tabs at the top of the feed. Drag to reorder, tap the eye to hide a tab.";
+"extera_FeedCategoryCreate" = "Create Category";
+"extera_FeedCategoryNew" = "New Category";
+"extera_FeedCategoryEdit" = "Edit Category";
+"extera_FeedCategoryName" = "Category name";
+"extera_FeedCategoryChannelsInfo" = "Posts from the selected channels appear when this category is open, even if a channel is hidden from All. A channel can be in several categories.";
+"extera_FeedCategoryDelete" = "Delete Category";
+"extera_FeedCategoryDeleteConfirm" = "Delete the category **%1$@**? Its channels will stay in the feed.";
+"extera_FeedCategoryHide" = "Hide Category";
+"extera_FeedCategoryShow" = "Show Category";
+"extera_FeedCategoryHiddenInfo" = "**%1$@** is hidden. You can show it again in feed settings.";
+"extera_FeedCategoryUnsavedChanges" = "You have edited this category. Save changes?";
+"extera_FeedCategoryEmpty" = "No channels in this category.";
+"extera_FeedHiddenFromAll" = "Hidden from All";
+"extera_FeedCategoryEmptyInfo" = "Add channels to it, and their posts will appear here.";
+"extera_FeedCategoryAddChannels" = "Add Channels";
+"extera_FeedAllChannelsExcludedInfo" = "Hidden channels still appear in their categories.";
+"extera_HideFeedTab" = "Hide Feed Tab";
+"extera_DisableMarkdown" = "Disable Markdown";
+"extera_EnableMarkdown" = "Enable Markdown";
+
+// Player
+"extera_PlayerCollapse" = "Collapse player";
+"extera_PlayerShowRemaining" = "Show remaining time";
+"extera_PlayerShowDuration" = "Show duration";
+"extera_PlayerTimeRemaining" = "−%1$@";
+"extera_PlayerLyrics" = "Lyrics";
+"extera_PlayerQueue" = "Queue";
+"extera_PlayerQueueSearch" = "Search in queue";
+"extera_PlayerQueueAdd" = "Add music";
+"extera_PlayerCoverColors" = "Cover Colors";
+"extera_PlayerLyricsOnline" = "Online Lyrics";
+"extera_PlayerMotionCovers" = "Animated Covers";
+"extera_PlayerMotionCoversEnabled" = "Covers will be loaded from Apple Music by track title and artist.";
+"extera_PlayerRhythmBackground" = "Rhythm Background";
+"extera_PlayerRhythmBackgroundInfo" = "The background pulses to the beat of the music.";
+"extera_PlayerParticles" = "Particles";
+"extera_PlayerParticlesInfo" = "Sparks fly off the cover to the beat of the music.";
+"extera_PlayerSettings" = "Player Settings";
+"extera_PlayerQualityKbps" = "%1$d kbps";
+"extera_PlayerQualityKhz" = "%1$@ kHz";
+"extera_PlayerQualityBits" = "%1$d-bit";
+"extera_PlayerInfoFormat" = "Format";
+"extera_PlayerInfoSampleRate" = "Sample Rate";
+"extera_PlayerInfoBitDepth" = "Bit Depth";
+"extera_PlayerSpeedPitch" = "Change Pitch";
+"extera_PlayerCoverColorsFull" = "Full Player";
+"extera_PlayerCoverColorsMini" = "Mini Player";
+"extera_PlayerLyricsOnlineInfo" = "Look up lyrics online when the track has none.";
+"extera_PlayerLyricsProgress" = "Line Progress";
+"extera_PlayerLyricsProgressHorizontal" = "Left to Right";
+"extera_PlayerLyricsProgressVertical" = "Top to Bottom";
+"extera_PlayerLyricsProgressInfo" = "How the current line fills as it is sung.";
+"extera_PlayerTrackOf" = "Track %1$d of %2$d";
+"extera_PlayerSpeedDescription" = "Playback speed %1$@. Hold for more options";
+"extera_LyricsCredit" = "Lyrics: %1$@";
+"extera_LyricsOfferTitle" = "Find the Lyrics?";
+"extera_LyricsOfferText" = "The track title and artist will be sent directly to LRCLIB (lrclib.net) and lrcmux, not through Telegram. You can turn this off in the player menu.";
+"extera_LyricsOfferButton" = "Search Lyrics";
+"extera_LyricsNotFoundTitle" = "No Lyrics Found";
+"extera_LyricsNotFoundText" = "There are no lyrics for this track in the file tags or online.";
+"extera_LyricsNotFoundTextOffline" = "There are no lyrics for this track in the file tags. Online search is turned off in the player menu.";
+"extera_LyricsInstrumentalTitle" = "Instrumental";
+"extera_LyricsInstrumentalText" = "This track is marked as having no lyrics.";
+"extera_LyricsErrorTitle" = "Couldn't Load Lyrics";
+"extera_LyricsErrorText" = "The server didn't respond. Check your connection and try again.";
+
+// Non-translatable
+"extera_formatterDay24HSec" = "HH:mm:ss";
+"extera_formatterDay12HSec" = "h:mm:ss a";
+"extera_PhotoEditorTypefaceImpact" = "Impact";
+"extera_SensitiveRequestTitle" = "Confirm action";
+"extera_SensitiveRequestWarning" = "If you didn't start this yourself, tap Decline: it may have been started by a plugin.";
+"extera_SensitiveRequestCategoryPayments" = "Payments";
+"extera_SensitiveRequestCategoryChatManagement" = "Chat management";
+"extera_SensitiveRequestMethod" = "Request";
+"extera_SensitiveRequestChat" = "Chat";
+"extera_SensitiveRequestUser" = "User";
+"extera_SensitiveRequestAmount" = "Amount";
+"extera_SensitiveRequestDebit" = "To be deducted";
+"extera_SensitiveRequestUnknownAmount" = "Could not determine the amount. This does not mean the operation is free.";
+"extera_SensitiveRequestAnonymous" = "Hide sender name";
+"extera_SensitiveRequestUpgradeIncluded" = "Prepay gift upgrade";
+"extera_SensitiveRequestGiftMessage" = "Gift message ID";
+"extera_SensitiveRequestSavedGift" = "Saved gift ID";
+
+// Main Menu
+"extera_AboutExteraDescription" = "Experimental Telegram client based on Official Sources!";
+"extera_Channel" = "Channel";
+"extera_SourceCode" = "Source Code";
+
+// Appearance
+"extera_TabStyle" = "Folder Style";
+"extera_TabStyleTextOnly" = "Text";
+"extera_TabStyleRounded" = "Rounded";
+"extera_TabStyleChips" = "Chips";
+"extera_TabStylePills" = "Pills";
+"extera_SolarIcons" = "Use \"Solar\" Icons";
+"extera_SolarIconsInfo" = "Powered by @Design480 × @TierOhneNation";
+"extera_DisableDividers" = "Disable Dividers";
+"extera_AlternativeNavigation" = "Alternative Navigation";
+"extera_AlternativeNavigationInfo" = "An experimental option that includes new, smoother transition animations between screens.";
+"extera_DrawerOptions" = "Drawer Options";
+"extera_DrawerIconSet" = "Icon Set";
+"extera_DrawerAlternativeOpeningAnimation" = "Alternative Opening Animation";
+"extera_DependsOnTheDate" = "Depends on the Date";
+"extera_NewYear" = "New Year";
+"extera_ValentinesDay" = "Valentine's Day";
+"extera_Halloween" = "Halloween";
+"extera_DrawerElements" = "Drawer Elements";
+
+// General
+"extera_CameraTypeSystem" = "System";
+"extera_DefaultCameraInfo" = "Use the Telegram's built-in Camera.";
+"extera_CameraXInfo" = "CameraX is only supported on selected devices; effects and lenses support depends on your manufacturer.";
+"extera_SystemCameraInfo" = "Access directly the system camera (not applicable for video messages).";
+"extera_PerformanceMode" = "Performance Mode";
+"extera_PerformanceModeInfo" = "CameraX's Quality will be reduced in favor of performance.";
+"extera_CameraQuality" = "Camera Quality";
+
+// Chats
+"extera_StickerTime" = "Hide Time on Stickers";
+"extera_HideCategories" = "Hide Categories";
+"extera_HideCategoriesInfo" = "The categories will disappear from the search bar in the reactions selection dialog and emoji panel.";
+"extera_DoubleTap" = "Double Tap";
+"extera_DisableJumpToNextChannel" = "Disable \"Jump to the Next Channel\"";
+"extera_ShowActionTimestamps" = "Show Timestamps for Actions";
+"extera_AddCommaAfterMentionInfo" = "A comma will be placed automatically after tapping on the user you want to mention.";
+"extera_HidePhotoCounter" = "Hide Photo Counter";
+"extera_HidePhotoCounterInfo" = "The annoying photo counter at the top of the screen will disappear from your view.";
+"extera_DisablePlayback" = "Disable Playback";
+"extera_DisablePlaybackInfo" = "Disables playback when volume button is pressed.";
+
+// Boost
+"extera_Encryptors" = "Encryptors";
+"extera_Encrypt" = "Encrypt";
+"extera_Decrypt" = "Decrypt";
+"extera_EncryptionKeyInfo" = "This key will be used to encrypt and decrypt messages in this chat room.";
+
+// Updates
+"extera_LastCheck" = "Last Check";
+"extera_CurrentVersion" = "Current Version";
+"extera_BuildType" = "Build Type";
+"extera_BTRelease" = "Release";
+"extera_BTBeta" = "Beta";
+"extera_CheckOnLaunch" = "Check on Launch";
+"extera_ClearUpdatesCache" = "Clear Updates Cache";
+"extera_ClearedUpdatesCache" = "Cleared **%1$@** of Cache.";
+"extera_NothingToClear" = "Nothing to Clear.";
+"extera_CheckForUpdates" = "Check for Updates";
+"extera_NoUpdates" = "Updates not found.";
+"extera_UpdateSize" = "Update Size";
+"extera_Changelog" = "Changelog:";
+
+// Other
+"extera_ResetSettingsBulletin" = "**exteraGram** Preferences have been reset.";
+"extera_MutualContact" = "mutual contact";
+"extera_OpenPremiumBot" = "Open Official Bot";
+"extera_CopySticker" = "Copy Sticker";
+"extera_SaveMessage" = "Save Message";
+"extera_ConfirmCall" = "Confirm Call";
+"extera_CallTo" = "Call to **%1$@**?";
+"extera_AppIconGradient" = "Gradient";
+"extera_AppIconNeo" = "Neo";
+"extera_AppIcon480DSGN" = "480 DSGN";
+
+// Categories
+"extera_General" = "General";
+"extera_Chats" = "Chats";
+"extera_Other" = "Other";
+
+// Option labels
+"extera_OptionOff" = "Off";
+"extera_OptionDefault" = "Default";
+"extera_OptionApi" = "API";
+"extera_OptionBotApi" = "Bot API";
+"extera_OptionFast" = "Fast";
+"extera_SecondsShort" = "%1$d s";
+"extera_PixelsShort" = "%1$d px";
