@@ -204,8 +204,8 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
             var isStory: Bool = false
             var isPoll: Bool = false
             
-            let titleColor: UIColor
-            let mainColor: UIColor
+            var titleColor: UIColor
+            var mainColor: UIColor
             let dustColor: UIColor
             var secondaryColor: UIColor?
             var tertiaryColor: UIColor?
@@ -281,6 +281,13 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
                 mainColor = serviceMessageColorComponents(chatTheme: arguments.presentationData.theme.theme.chat, wallpaper: arguments.presentationData.theme.wallpaper).primaryText
                 dustColor = titleColor
                 placeholderColor = serviceColor.primaryText.withAlphaComponent(0.2)
+            }
+
+            if ExteraChatP1.replyAccentBackground, case let .bubble(incoming) = arguments.type {
+                mainColor = incoming ? arguments.presentationData.theme.theme.chat.message.incoming.accentControlColor : arguments.presentationData.theme.theme.chat.message.outgoing.accentControlColor
+                secondaryColor = nil
+                tertiaryColor = nil
+                titleColor = .white
             }
             
             if let message = arguments.message {

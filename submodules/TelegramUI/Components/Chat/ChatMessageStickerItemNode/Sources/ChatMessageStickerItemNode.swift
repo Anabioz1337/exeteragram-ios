@@ -393,7 +393,8 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
     }
     
     override public func asyncLayout() -> (_ item: ChatMessageItem, _ params: ListViewItemLayoutParams, _ mergedTop: ChatMessageMerge, _ mergedBottom: ChatMessageMerge, _ dateHeaderAtBottom: ChatMessageHeaderSpec) -> (ListViewItemNodeLayout, (ListViewItemUpdateAnimation, ListViewItemApply, Bool) -> Void) {
-        let displaySize = CGSize(width: 184.0, height: 184.0)
+        let stickerScale = CGFloat(ExteraChatP1.stickerSizeAdjustment / 16.0)
+        let displaySize = CGSize(width: 184.0 * stickerScale, height: 184.0 * stickerScale)
         let telegramFile = self.telegramFile
         let layoutConstants = self.layoutConstants
         let imageLayout = self.imageNode.asyncLayout()
@@ -955,6 +956,9 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                 }
             }
             var dateAndStatusFrame = CGRect(origin: CGPoint(x: min(layoutSize.width - dateAndStatusSize.width - 14.0, max(displayLeftInset, updatedImageFrame.maxX - dateOffset.x)), y: updatedImageFrame.maxY - dateOffset.y), size: dateAndStatusSize)
+            if ExteraChatP1.stickerTimePosition == 1 {
+                dateAndStatusFrame.origin.x = max(displayLeftInset, updatedImageFrame.minX)
+            }
             
             let baseShareButtonSize = CGSize(width: 30.0, height: 60.0)
             var baseShareButtonFrame = CGRect(origin: CGPoint(x: !incoming ? updatedImageFrame.minX - baseShareButtonSize.width - 6.0 : updatedImageFrame.maxX + 6.0, y: updatedImageFrame.maxY - 10.0 - baseShareButtonSize.height - 4.0), size: baseShareButtonSize)
@@ -1070,6 +1074,8 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                     dateAndStatusApply(animation)
                     if case .customChatContents = item.associatedData.subject {
                         strongSelf.dateAndStatusNode.isHidden = true
+                    } else {
+                        strongSelf.dateAndStatusNode.isHidden = ExteraChatP1.stickerTimePosition == 2
                     }
                     
                     if let updatedShareButtonNode = updatedShareButtonNode {

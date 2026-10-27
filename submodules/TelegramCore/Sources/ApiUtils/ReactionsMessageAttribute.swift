@@ -174,6 +174,10 @@ private func mergeReactions(reactions: [MessageReaction], recentPeers: [Reaction
 }
 
 public func mergedMessageReactions(attributes: [MessageAttribute], isTags: Bool) -> ReactionsMessageAttribute? {
+    if ExteraChatP1.hideReactions {
+        return nil
+    }
+
     var current: ReactionsMessageAttribute?
     var pending: PendingReactionsMessageAttribute?
     var pendingStars: PendingStarsReactionsMessageAttribute?

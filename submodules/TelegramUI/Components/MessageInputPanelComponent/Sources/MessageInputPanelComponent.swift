@@ -2124,7 +2124,14 @@ public final class MessageInputPanelComponent: Component {
             } else if component.style == .story {
                 inputActionButtonStyle = .legacy
             } else {
-                inputActionButtonStyle = .legacy
+                switch ExteraChatP1.bottomButtonStyle {
+                case 1:
+                    inputActionButtonStyle = .accent
+                case 2:
+                    inputActionButtonStyle = .glass(isTinted: false)
+                default:
+                    inputActionButtonStyle = .legacy
+                }
             }
             let inputActionButtonSize = self.inputActionButton.update(
                 transition: transition,

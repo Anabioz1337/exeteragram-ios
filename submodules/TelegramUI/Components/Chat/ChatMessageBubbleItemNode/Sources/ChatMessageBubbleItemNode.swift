@@ -1848,6 +1848,8 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                         hasAvatar = incoming
                     } else if case .customChatContents = item.chatLocation {
                         hasAvatar = false
+                    } else if ExteraChatP1.widePosts {
+                        hasAvatar = false
                     } else if overrideEffectiveAuthor {
                         hasAvatar = true
                     }
