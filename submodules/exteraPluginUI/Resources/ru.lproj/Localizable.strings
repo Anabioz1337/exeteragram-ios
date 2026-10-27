@@ -1,0 +1,53 @@
+"Extera.Plugins.Title" = "Плагины";
+"Extera.Plugins.Catalog" = "Каталог";
+"Extera.Plugins.InstallFromFile" = "Установить из файла";
+"Extera.Plugins.EmptyState.Title" = "Плагины не установлены";
+"Extera.Plugins.EmptyState.Text" = "Плагины расширяют возможности Telegram. Установите их из каталога или из файла .plugin. Плагин получает доступ к тому, что ему разрешено, поэтому перед установкой изучите его отчёт анализа.";
+"Extera.Plugins.Enabled" = "Включён";
+"Extera.Plugins.SafeModeBlocked" = "Заблокирован безопасным режимом";
+"Extera.Plugins.Author" = "автор %@";
+
+"Extera.Plugins.Catalog.RepositoryHeader" = "РЕПОЗИТОРИЙ";
+"Extera.Plugins.Catalog.Channel" = "Канал репозитория плагинов";
+"Extera.Plugins.Catalog.ChannelValue" = "t.me/exteraPluginRepo";
+"Extera.Plugins.Catalog.VerifiedOnly" = "Только проверенные источники";
+"Extera.Plugins.Catalog.VerifiedOnlyFooter" = "Плагины из неизвестных источников выполняют любой код с полным доступом к аккаунту, файлам и буферу обмена. Проверяйте каждый плагин перед установкой.";
+"Extera.Plugins.Catalog.SortingHeader" = "СОРТИРОВКА";
+"Extera.Plugins.Catalog.Sorting.RecentlyUpdated" = "Недавно обновлённые";
+"Extera.Plugins.Catalog.Sorting.MostViewed" = "Популярные";
+"Extera.Plugins.Catalog.Sorting.Newest" = "Новые";
+"Extera.Plugins.Catalog.Sorting.ByName" = "По имени";
+"Extera.Plugins.Catalog.NewBadge" = "НОВЫЙ";
+"Extera.Plugins.Catalog.Verified" = "Проверен";
+"Extera.Plugins.Catalog.Unverified" = "Неизвестный источник";
+
+"Extera.Plugins.Report.Title" = "Статический анализ";
+"Extera.Plugins.Report.Header" = "Проверьте возможности плагина перед установкой.";
+"Extera.Plugins.Report.Level.Critical" = "Критично";
+"Extera.Plugins.Report.Level.Dangerous" = "Опасно";
+"Extera.Plugins.Report.Level.Caution" = "Внимание";
+"Extera.Plugins.Report.BlockingNote" = "Статический анализ не видит код, который плагин загружает или расшифровывает во время работы.";
+
+"Extera.Plugins.Consent.Title" = "Критичные разрешения";
+"Extera.Plugins.Consent.Intro" = "Плагин запрашивает разрешения, влияющие на платежи, чаты и подарки.";
+"Extera.Plugins.Consent.Permission.Payments" = "Платежи";
+"Extera.Plugins.Consent.Permission.ChatManagement" = "Управление чатами";
+"Extera.Plugins.Consent.Permission.GiftUpgrade" = "Улучшение подарков";
+"Extera.Plugins.Consent.Payments.Hint" = "Может отправлять и запрашивать платежи";
+"Extera.Plugins.Consent.ChatManagement.Hint" = "Может управлять чатами и сообщениями";
+"Extera.Plugins.Consent.GiftUpgrade.Hint" = "Может улучшать и передавать подарки";
+"Extera.Plugins.Consent.Confirm" = "Разрешить и установить";
+"Extera.Plugins.Consent.Decline" = "Отклонить";
+
+"Extera.Plugins.DevMode.Title" = "Режим разработчика";
+"Extera.Plugins.DevMode.ServerURL" = "Адрес Developer Server";
+"Extera.Plugins.DevMode.Reload" = "Перезагрузить плагины";
+"Extera.Plugins.DevMode.Reloaded" = "Перезагрузка запрошена";
+"Extera.Plugins.DevMode.LogsHeader" = "ЛОГИ РАБОТЫ";
+"Extera.Plugins.DevMode.NoLogs" = "Пока нет логов";
+
+"Extera.Plugins.Sensitive.Title" = "Запрос чувствительной операции";
+"Extera.Plugins.Sensitive.Message" = "%1$@ запрашивает %2$@.";
+"Extera.Plugins.Sensitive.Footer" = "Отказ останавливает операцию. Плагин получает уведомление об отказе.";
+"Extera.Plugins.Sensitive.Confirm" = "Подтвердить";
+"Extera.Plugins.Sensitive.Decline" = "Отклонить";

@@ -8,6 +8,7 @@ import MessageUI
 import TelegramPresentationData
 import TelegramUIPreferences
 import ItemListUI
+import ExteraPluginUI
 import PresentationDataUtils
 import OverlayStatusController
 import AccountContext
@@ -763,6 +764,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
     case restorePurchases(PresentationTheme)
     case logTranslationRecognition(Bool)
     case resetTranslationStates
+    case exteraPluginsUI
     case hostInfo(PresentationTheme, String)
     case versionInfo(PresentationTheme)
     case collectCpuProfile
@@ -788,7 +790,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return DebugControllerSection.experiments.rawValue
         case .crash, .resetBiometricsData, .photoPreview, .knockoutWallpaper, .compressedEmojiCache, .storiesJpegExperiment, .checkSerializedData, .enableQuickReactionSwitch, .experimentalCompatibility, .enableDebugDataDisplay, .fakeGlass, .forceClearGlass, .debugRipple, .inputDecEngineEditor, .coreListChatBackend, .forceRLottieBackend, .respectSystemMicrophone, .useModernVideoMessagePipeline, .videoMessageCameraMode, .browserExperiment, .allForumsHaveTabs, .enableReactionOverrides, .disableReloginTokens, .liveStreamV2, .experimentalCallMute, .groupCallReferenceEngine, .playerV2, .devRequests, .enableUpdates, .pwa, .enableLocalTranslation, .testPasscodeMigration:
             return DebugControllerSection.experiments.rawValue
-        case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers:
+        case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers, .exteraPluginsUI:
             return DebugControllerSection.experiments.rawValue
         case .logTranslationRecognition, .resetTranslationStates:
             return DebugControllerSection.translation.rawValue
@@ -941,6 +943,8 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             // ItemListControllerNode.swift), so an id must match the position the entry is appended
             // at, or the list traps at runtime inside its own state closure.
             return 72
+        case .exteraPluginsUI:
+            return 75
         case .springSendAnimation:
             // Appended right after `inputDecTextBackend`; see the ordering note above.
             return 73
@@ -1130,6 +1134,10 @@ private enum DebugControllerEntry: ItemListNodeEntry {
                         ApplicationSpecificItemCacheCollectionId.translationState
                     ]).start()
                 }
+            })
+        case .exteraPluginsUI:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Plugins", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                arguments.pushController(ExteraPluginsScreen())
             })
         case .resetNotifications:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Reset Notifications", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
@@ -1991,6 +1999,7 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
         
         entries.append(.logTranslationRecognition(experimentalSettings.logLanguageRecognition))
         entries.append(.resetTranslationStates)
+        entries.append(.exteraPluginsUI)
     }
 
     if isMainApp {

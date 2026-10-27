@@ -1,0 +1,53 @@
+"Extera.Plugins.Title" = "Plugins";
+"Extera.Plugins.Catalog" = "Catalog";
+"Extera.Plugins.InstallFromFile" = "Install from File";
+"Extera.Plugins.EmptyState.Title" = "No plugins installed";
+"Extera.Plugins.EmptyState.Text" = "Plugins add features to Telegram. Install them from the catalog or from a .plugin file. A plugin can read what it is given access to, so review its analysis report before installing.";
+"Extera.Plugins.Enabled" = "Enabled";
+"Extera.Plugins.SafeModeBlocked" = "Blocked by Safe Mode";
+"Extera.Plugins.Author" = "by %@";
+
+"Extera.Plugins.Catalog.RepositoryHeader" = "REPOSITORY";
+"Extera.Plugins.Catalog.Channel" = "Plugin Repository Channel";
+"Extera.Plugins.Catalog.ChannelValue" = "t.me/exteraPluginRepo";
+"Extera.Plugins.Catalog.VerifiedOnly" = "Verified sources only";
+"Extera.Plugins.Catalog.VerifiedOnlyFooter" = "Plugins from unknown sources run any code with full access to your account, files and clipboard. Verify every plugin before installing it.";
+"Extera.Plugins.Catalog.SortingHeader" = "SORTING";
+"Extera.Plugins.Catalog.Sorting.RecentlyUpdated" = "Recently Updated";
+"Extera.Plugins.Catalog.Sorting.MostViewed" = "Most Viewed";
+"Extera.Plugins.Catalog.Sorting.Newest" = "Newest";
+"Extera.Plugins.Catalog.Sorting.ByName" = "By Name";
+"Extera.Plugins.Catalog.NewBadge" = "NEW";
+"Extera.Plugins.Catalog.Verified" = "Verified";
+"Extera.Plugins.Catalog.Unverified" = "Unknown source";
+
+"Extera.Plugins.Report.Title" = "Static Analysis";
+"Extera.Plugins.Report.Header" = "Review what the plugin can do before installing.";
+"Extera.Plugins.Report.Level.Critical" = "Critical";
+"Extera.Plugins.Report.Level.Dangerous" = "Dangerous";
+"Extera.Plugins.Report.Level.Caution" = "Caution";
+"Extera.Plugins.Report.BlockingNote" = "Static analysis can't see code that a plugin downloads or decrypts while running.";
+
+"Extera.Plugins.Consent.Title" = "Sensitive Permissions";
+"Extera.Plugins.Consent.Intro" = "This plugin requests permissions that can affect payments, chats and gifts.";
+"Extera.Plugins.Consent.Permission.Payments" = "Payments";
+"Extera.Plugins.Consent.Permission.ChatManagement" = "Chat Management";
+"Extera.Plugins.Consent.Permission.GiftUpgrade" = "Gift Upgrade";
+"Extera.Plugins.Consent.Payments.Hint" = "Can send and request payments";
+"Extera.Plugins.Consent.ChatManagement.Hint" = "Can manage chats and messages";
+"Extera.Plugins.Consent.GiftUpgrade.Hint" = "Can upgrade and transfer gifts";
+"Extera.Plugins.Consent.Confirm" = "Allow and Install";
+"Extera.Plugins.Consent.Decline" = "Decline";
+
+"Extera.Plugins.DevMode.Title" = "Developer Mode";
+"Extera.Plugins.DevMode.ServerURL" = "Developer Server URL";
+"Extera.Plugins.DevMode.Reload" = "Reload Plugins";
+"Extera.Plugins.DevMode.Reloaded" = "Reload requested";
+"Extera.Plugins.DevMode.LogsHeader" = "RUNTIME LOGS";
+"Extera.Plugins.DevMode.NoLogs" = "No logs yet";
+
+"Extera.Plugins.Sensitive.Title" = "Sensitive Request";
+"Extera.Plugins.Sensitive.Message" = "%1$@ requests %2$@.";
+"Extera.Plugins.Sensitive.Footer" = "Declining stops the operation. The plugin is notified about the decline.";
+"Extera.Plugins.Sensitive.Confirm" = "Confirm";
+"Extera.Plugins.Sensitive.Decline" = "Decline";
