@@ -62,6 +62,30 @@ public struct ExteraSettings: Codable, Equatable {
         self.feedWidePosts = feedWidePosts
     }
 
+    public func withUpdatedAdBlockEnabled(_ value: Bool) -> ExteraSettings {
+        return ExteraSettings(adBlockEnabled: value, adBlockBlockedRequests: self.adBlockBlockedRequests, feedEnabled: self.feedEnabled, feedCategories: self.feedCategories, feedIncludeArchived: self.feedIncludeArchived, feedWidePosts: self.feedWidePosts)
+    }
+
+    public func withUpdatedAdBlockBlockedRequests(_ value: Int32) -> ExteraSettings {
+        return ExteraSettings(adBlockEnabled: self.adBlockEnabled, adBlockBlockedRequests: value, feedEnabled: self.feedEnabled, feedCategories: self.feedCategories, feedIncludeArchived: self.feedIncludeArchived, feedWidePosts: self.feedWidePosts)
+    }
+
+    public func withUpdatedFeedEnabled(_ value: Bool) -> ExteraSettings {
+        return ExteraSettings(adBlockEnabled: self.adBlockEnabled, adBlockBlockedRequests: self.adBlockBlockedRequests, feedEnabled: value, feedCategories: self.feedCategories, feedIncludeArchived: self.feedIncludeArchived, feedWidePosts: self.feedWidePosts)
+    }
+
+    public func withUpdatedFeedCategories(_ value: [ExteraFeedCategory]) -> ExteraSettings {
+        return ExteraSettings(adBlockEnabled: self.adBlockEnabled, adBlockBlockedRequests: self.adBlockBlockedRequests, feedEnabled: self.feedEnabled, feedCategories: value, feedIncludeArchived: self.feedIncludeArchived, feedWidePosts: self.feedWidePosts)
+    }
+
+    public func withUpdatedFeedIncludeArchived(_ value: Bool) -> ExteraSettings {
+        return ExteraSettings(adBlockEnabled: self.adBlockEnabled, adBlockBlockedRequests: self.adBlockBlockedRequests, feedEnabled: self.feedEnabled, feedCategories: self.feedCategories, feedIncludeArchived: value, feedWidePosts: self.feedWidePosts)
+    }
+
+    public func withUpdatedFeedWidePosts(_ value: Bool) -> ExteraSettings {
+        return ExteraSettings(adBlockEnabled: self.adBlockEnabled, adBlockBlockedRequests: self.adBlockBlockedRequests, feedEnabled: self.feedEnabled, feedCategories: self.feedCategories, feedIncludeArchived: self.feedIncludeArchived, feedWidePosts: value)
+    }
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: StringCodingKey.self)
 
