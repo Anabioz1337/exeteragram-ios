@@ -85,6 +85,7 @@ submodules/PremiumUI/Sources/PremiumIntroScreen.swift
 submodules/PremiumUI/Sources/StickersCarouselComponent.swift
 submodules/SelectablePeerNode/Sources/SelectablePeerNode.swift
 submodules/SettingsUI/Sources/Data and Storage/DataAndStorageSettingsController.swift
+submodules/SettingsUI/Sources/ExteraSettingsScreen.swift
 submodules/SettingsUI/Sources/Data and Storage/StorageUsageExceptionsScreen.swift
 submodules/SettingsUI/Sources/Data and Storage/WebBrowserDomainExceptionItem.swift
 submodules/SettingsUI/Sources/Data and Storage/WebBrowserSettingsController.swift
