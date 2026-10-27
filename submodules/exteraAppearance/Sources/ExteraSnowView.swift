@@ -3,7 +3,7 @@ import UIKit
 /// Falling snow over the navigation bar, forced by the extera `forceSnow` setting. Renders above
 /// the bar's own content, ignores touches; flakes render white against both light and dark themes.
 public final class ExteraSnowView: UIView {
-    override class var layerClass: AnyClass {
+    public override class var layerClass: AnyClass {
         return CAEmitterLayer.self
     }
 
@@ -55,7 +55,7 @@ public final class ExteraSnowView: UIView {
         layer.emitterCells = [cell]
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         self.emitterLayer.emitterPosition = CGPoint(x: self.bounds.midX, y: self.bounds.minY)
         self.emitterLayer.emitterSize = CGSize(width: max(self.bounds.width, 1.0), height: 1.0)
