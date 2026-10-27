@@ -27,6 +27,38 @@ private func recognitionRecognizer(localeIdentifier: String) -> SFSpeechRecogniz
     return recognizer
 }
 
+private final class TranscriptionDispositionState {
+    private let lock = NSLock()
+    private var disposed = false
+    private var pendingCleanup: (() -> Void)?
+
+    var isDisposed: Bool {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        return self.disposed
+    }
+
+    func dispose() {
+        self.lock.lock()
+        self.disposed = true
+        let cleanup = self.pendingCleanup
+        self.pendingCleanup = nil
+        self.lock.unlock()
+        cleanup?()
+    }
+
+    func recordPendingCleanup(_ cleanup: @escaping () -> Void) {
+        self.lock.lock()
+        if self.disposed {
+            self.lock.unlock()
+            cleanup()
+            return
+        }
+        self.pendingCleanup = cleanup
+        self.lock.unlock()
+    }
+}
+
 /// Runs a one-shot offline transcription of an already-decoded audio file through the
 /// system Speech framework.
 ///
@@ -34,10 +66,10 @@ private func recognitionRecognizer(localeIdentifier: String) -> SFSpeechRecogniz
 /// terminal for this short clip, so callers render the same empty-result state for it.
 public func transcribeAudioFileOffline(path: String, localeIdentifier: String) -> Signal<ExteraSpeechTranscription?, NoError> {
     return Signal { subscriber in
-        let disposable = MetaDisposable()
+        let dispositionState = TranscriptionDispositionState()
 
         SFSpeechRecognizer.requestAuthorization { status in
-            guard status == .authorized, !disposable.isDisposed else {
+            guard status == .authorized, !dispositionState.isDisposed else {
                 Queue.mainQueue().async {
                     subscriber.putNext(nil)
                     subscriber.putCompletion()
@@ -46,7 +78,7 @@ public func transcribeAudioFileOffline(path: String, localeIdentifier: String) -
             }
 
             temporaryCopyQueue.async {
-                guard !disposable.isDisposed else {
+                guard !dispositionState.isDisposed else {
                     return
                 }
 
@@ -96,13 +128,15 @@ public func transcribeAudioFileOffline(path: String, localeIdentifier: String) -
                     }
                 })
 
-                disposable.set(ActionDisposable {
+                dispositionState.recordPendingCleanup({
                     task.cancel()
                     try? FileManager.default.removeItem(atPath: copiedPath)
                 })
             }
         }
 
-        return disposable
+        return ActionDisposable {
+            dispositionState.dispose()
+        }
     }
 }

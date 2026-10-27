@@ -1,4 +1,5 @@
 import Foundation
+import Speech
 
 public struct ExteraSpeechLocaleOption: Equatable {
     public let identifier: String
@@ -10,7 +11,7 @@ private struct OnDeviceLocaleFamily {
     let identifiers: [String]
 }
 
-let onDeviceLocaleFamilies: [OnDeviceLocaleFamily] = [
+private let onDeviceLocaleFamilies: [OnDeviceLocaleFamily] = [
     OnDeviceLocaleFamily(primaryCode: "ar", identifiers: ["ar-SA"]),
     OnDeviceLocaleFamily(primaryCode: "cs", identifiers: ["cs-CZ"]),
     OnDeviceLocaleFamily(primaryCode: "da", identifiers: ["da-DK"]),
@@ -93,7 +94,7 @@ public func exteraAvailableSpeechRecognitionLocales() -> [ExteraSpeechLocaleOpti
         if lhs.displayName.caseInsensitiveCompare(rhs.displayName) == .orderedSame {
             return lhs.identifier < rhs.identifier
         }
-        return lhs.displayName.compare(rhs.displayName, options: [.caseInsensitive, .forced]) == .orderedAscending
+        return lhs.displayName.compare(rhs.displayName, options: [.caseInsensitive]) == .orderedAscending
     }
     return result
 }
