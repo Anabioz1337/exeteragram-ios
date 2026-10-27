@@ -135,7 +135,7 @@ public struct ExteraCatalogEntry {
     }
 }
 
-public struct ExteraPluginLogEntry {
+public struct ExteraPluginLogEntry: Equatable {
     public let timestamp: Date
     public let text: String
 

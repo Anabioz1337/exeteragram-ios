@@ -48,7 +48,6 @@ public final class ExteraPluginRiskReportScreen: UITableViewController {
             }
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(
                 title: exteraPluginsString("Extera.Plugins.Consent.Confirm"),
-                style: .done,
                 primaryAction: action
             )
         }
