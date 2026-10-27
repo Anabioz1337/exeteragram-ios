@@ -17243,3 +17243,29 @@ Error: %8$@";
 "Gift.Delete.Title" = "Delete Gift";
 "Gift.Delete.Text" = "Do you want to delete this gift?\n\nIt will disappear from your profile and can't be restored.";
 "Gift.Delete.Success" = "Gift Deleted";
+
+// exteraGram: Message Details
+"extera.Details" = "Details";
+"extera.Date" = "Date";
+"extera.EditedDate" = "Edit Date";
+"extera.ForwardedDate" = "Forward Date";
+"extera.FileSize" = "File Size";
+"extera.FileName" = "File Name";
+"extera.FilePath" = "File Path";
+"extera.Platform" = "Platform";
+"extera.SentFrom" = "Sent from %1$@";
+"extera.Resolution" = "Resolution";
+"extera.Bitrate" = "Bitrate";
+"extera.Duration" = "Duration";
+"extera.MimeType" = "Mime Type";
+"extera.Datacenter" = "Datacenter";
+
+// exteraGram: Message Details Date Format
+"extera.DateFormatOption" = "Format:";
+"extera.DateFormatOptionNone" = "None";
+"extera.DateFormatOptionRelative" = "Relative";
+"extera.DateFormatOptionShortTime" = "Short Time";
+"extera.DateFormatOptionLongTime" = "Long Time";
+"extera.DateFormatOptionShortDate" = "Short Date";
+"extera.DateFormatOptionLongDate" = "Long Date";
+"extera.DateFormatOptionDayOfWeek" = "Day of week";
