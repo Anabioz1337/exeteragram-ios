@@ -73,6 +73,7 @@ jobs:
           BUILD_NUMBER="${{ github.run_number }}"
           python3 build-system/Make/ImportCertificates.py --path build-system/fake-codesigning/certs
           python3 -u build-system/Make/Make.py \
+            --overrideXcodeVersion \
             --cacheDir="$HOME/telegram-bazel-cache" \
             --bazelUserRoot="/private/var/tmp/_bazel_ci" \
             build \
