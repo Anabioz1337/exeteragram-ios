@@ -73,6 +73,8 @@ open class ItemListRevealOptionsItemNode: ListViewItemNode, ASGestureRecognizerD
     private var animationCompletion: (() -> Void)?
     private var suppressGestureEvents = false
     private var deliveringAction = false
+    public var loopRevealActions = false
+    private var revealLoopIndex = 0
     private var lastSurfaceProgress: CGFloat = 0
     public private(set) var revealOffset: CGFloat = 0.0
     public private(set) var isRevealOptionsActive: Bool = false
@@ -360,6 +362,7 @@ open class ItemListRevealOptionsItemNode: ListViewItemNode, ASGestureRecognizerD
     }
 
     override open func reuse() {
+        self.revealLoopIndex = 0
         self.selectionHighlightEndTime = 0
         self.highlightFadeGeneration += 1
         self.revealOptionsHighlightedBackgroundNode?.layer.removeAnimation(forKey: "opacity")
@@ -517,7 +520,7 @@ open class ItemListRevealOptionsItemNode: ListViewItemNode, ASGestureRecognizerD
             let commit = self.motion.end(translation: Double(translation * self.revealDirection), velocity: Double(velocity * self.revealDirection), cancelled: state == .cancelled, animated: !UIAccessibility.isReduceMotionEnabled)
             self.renderRevealMotion()
             self.startRevealAnimation()
-            if commit, let option = self.revealDirection > 0 ? self.activeOptions.first : self.activeOptions.last {
+            if commit, let option = self.committedRevealOption() {
                 self.deliverRevealOption(option, animated: true)
             } else if !self.motion.wantsOpen {
                 self.revealOptionsInteractivelyClosed()
@@ -536,6 +539,21 @@ open class ItemListRevealOptionsItemNode: ListViewItemNode, ASGestureRecognizerD
         for subview in view.subviews {
             self.cancelRevealContextGestures(in: subview)
         }
+    }
+
+    // The default commit targets the outermost option of the revealed side;
+    // looping walks the revealed side's options on consecutive full swipes.
+    private func committedRevealOption() -> ItemListRevealOption? {
+        let options = self.activeOptions
+        guard !options.isEmpty else {
+            return nil
+        }
+        guard self.loopRevealActions, options.count > 1 else {
+            return self.revealDirection > 0 ? options.first : options.last
+        }
+        let index = self.revealLoopIndex % options.count
+        self.revealLoopIndex += 1
+        return options[index]
     }
 
     private func deliverRevealOption(_ option: ItemListRevealOption, animated: Bool) {
