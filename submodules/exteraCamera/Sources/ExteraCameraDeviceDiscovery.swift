@@ -68,3 +68,28 @@ public func exteraCameraMirror(deviceIsFront: Bool, settings: ExteraCameraSettin
 public func exteraCameraStabilizationEnabled(settings: ExteraCameraSettings? = nil) -> Bool {
     return (settings ?? ExteraCameraOptions.shared.current).stabilization
 }
+
+/// Initial video message camera position: the remembered camera wins over the
+/// fixed preference, "ask" falls back to the rear camera until the caller asks.
+public func exteraVideoMessagesInitialPositionIsFront() -> Bool {
+    let settings = ExteraCameraOptions.shared.current
+    if settings.rememberLastUsedCamera, let last = ExteraCameraOptions.shared.lastUsedCamera {
+        return last == .front
+    }
+    switch settings.videoMessagesCamera {
+    case .ask, .rear:
+        return false
+    case .front:
+        return true
+    }
+}
+
+public enum ExteraVideoMessagesPositionChoice {
+    case rear
+    case front
+}
+
+/// Records the position the round video recorder actually started with.
+public func exteraRecordVideoMessagesCameraChoice(_ choice: ExteraVideoMessagesPositionChoice) {
+    ExteraCameraOptions.shared.recordLastUsedCamera(choice == .front ? .front : .rear)
+}
