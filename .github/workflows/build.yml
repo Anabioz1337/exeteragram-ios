@@ -79,7 +79,7 @@ jobs:
             build \
             --configurationPath="build-system/appstore-configuration.json" \
             --codesigningInformationPath=build-system/fake-codesigning \
-            --configuration=release_arm64 \
+            --configuration=debug_arm64 \
             --outputBuildArtifactsPath="build/artifacts" \
             --buildNumber="$BUILD_NUMBER"
 

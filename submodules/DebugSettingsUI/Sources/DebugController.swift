@@ -11,7 +11,6 @@ import ExteraTranslator
 import ChatListUI
 import ItemListUI
 import ExteraPluginUI
-import SettingsUI
 import PresentationDataUtils
 import OverlayStatusController
 import AccountContext
@@ -1165,7 +1164,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             })
         case .exteraPluginsUI:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Plugins", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
-                arguments.pushController(exteraPluginsScreen(context: context))
+                arguments.pushController(ExteraPluginsScreen())
             })
         case .exteraPillStack:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Pill Stack", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
