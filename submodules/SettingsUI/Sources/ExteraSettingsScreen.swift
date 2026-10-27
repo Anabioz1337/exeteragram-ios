@@ -251,9 +251,9 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
             case let .storageHeader(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .customSaveFolderInput(_, title, text):
-                return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .glass, title: NSAttributedString(string: title), text: NSAttributedString(string: text), placeholder: "", type: .regular(capitalization: true, autocorrection: false), spacing: 10.0, clearType: .always, enabled: true, tag: nil, sectionId: self.section, style: .blocks, textUpdated: { updatedText in
+                return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .glass, title: NSAttributedString(string: title), text: text, placeholder: "", type: .regular(capitalization: true, autocorrection: false), spacing: 10.0, clearType: .always, enabled: true, tag: nil, sectionId: self.section, textUpdated: { updatedText in
                     arguments.setCustomSaveFolderName(updatedText)
-                })
+                }, action: {})
             case let .customSaveFolderHint(_, text):
                 return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
             case let .interfaceHeader(_, text):
