@@ -4118,6 +4118,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
     
     private func enqueueHistoryViewTransition(_ transition: ChatHistoryListViewTransition) {
         var transition = transition
+        self.notifyPluginsOfInsertedMessages(transition)
         // While the post is held (CoreList), the hold already keeps it in place: no scroll.
         if let anchor = transition.keepInPlaceAnchor, !self.listView.isHoldingScrollTarget, transition.scrollToItem == nil, let listIndex = chatHistoryListIndex(ofMessageId: anchor.id, in: transition.historyView) {
             // The surroundings of a pinned cached post have loaded: keep the post exactly where it is
@@ -5780,4 +5781,38 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
         self.listView.scrollGestureHostView.addGestureRecognizer(recognizer)
     }
 
+}
+
+extension ChatHistoryListNodeImpl {
+    private func notifyPluginsOfInsertedMessages(_ transition: ChatHistoryListViewTransition) {
+        guard !transition.insertItems.isEmpty, !ExteraPluginsManager.shared.hasNoRuntimes() else {
+            return
+        }
+        var newMessages: [(text: String, sender: String, chatId: Int64, key: Int64)] = []
+        for insertItem in transition.insertItems {
+            guard insertItem.index >= 0 && insertItem.index < transition.historyView.filteredEntries.count else {
+                continue
+            }
+            switch transition.historyView.filteredEntries[insertItem.index] {
+            case let .MessageEntry(message, _, _, _, _, _):
+                guard message.flags.contains(.Incoming), !message.text.isEmpty else {
+                    continue
+                }
+                var senderName = ""
+                if let user = message.author as? TelegramUser {
+                    senderName = [user.firstName, user.lastName].compactMap { $0 }.joined(separator: " ")
+                } else if let author = message.author {
+                    senderName = author.id.rawValue.description
+                }
+                let chatId = message.id.peerId.toInt64()
+                let messageIdKey = (message.id.peerId.toInt64() << 32) | Int64(message.id.id & 0xFFFFFFFF)
+                newMessages.append((message.text, senderName, chatId, messageIdKey))
+            default:
+                continue
+            }
+        }
+        if !newMessages.isEmpty {
+            ExteraPluginsManager.shared.handleIncomingMessages(newMessages)
+        }
+    }
 }

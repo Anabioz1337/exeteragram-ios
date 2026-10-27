@@ -11,10 +11,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        "//submodules/exteraPluginUI:ExteraPluginUI",
-        "//submodules/exteraPluginUI:ExteraPluginUI",
+        "//submodules/SettingsUI:SettingsUI",
         "//submodules/exteraTranslator:ExteraTranslator",
-        "//submodules/ChatListUI:ChatListUI",
         "//submodules/ChatListUI:ChatListUI",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/CrashReporting:CrashReporting",

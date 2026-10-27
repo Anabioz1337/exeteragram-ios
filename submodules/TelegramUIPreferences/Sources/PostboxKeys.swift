@@ -66,6 +66,7 @@ private enum ApplicationSpecificSharedDataKeyValues: Int32 {
     case exteraSettings = 23
     case exteraSpeechSettings = 24
     case exteraMediaSettings = 25
+    case exteraPluginsSettings = 26
     case exteraPillStackSettings = 27
     case exteraInlineResultsSettings = 28
 }
@@ -97,6 +98,7 @@ public struct ApplicationSpecificSharedDataKeys {
     public static let exteraSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraSettings.rawValue)
     public static let exteraSpeechSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraSpeechSettings.rawValue)
     public static let exteraMediaSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraMediaSettings.rawValue)
+    public static let exteraPluginsSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraPluginsSettings.rawValue)
     public static let exteraPillStackSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraPillStackSettings.rawValue)
     public static let exteraInlineResultsSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraInlineResultsSettings.rawValue)
 }

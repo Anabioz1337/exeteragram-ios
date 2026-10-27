@@ -9,10 +9,8 @@ import TelegramPresentationData
 import TelegramUIPreferences
 import ExteraTranslator
 import ChatListUI
-import ChatListUI
 import ItemListUI
-import ExteraPluginUI
-import ExteraPluginUI
+import SettingsUI
 import PresentationDataUtils
 import OverlayStatusController
 import AccountContext
@@ -1147,7 +1145,9 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             })
         case .exteraPluginsUI:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Plugins", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
-                arguments.pushController(ExteraPluginsScreen())
+                if let context = arguments.context {
+                    arguments.pushController(exteraPluginsScreen(context: context))
+                }
             })
         case .exteraTranslator:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Translator", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
