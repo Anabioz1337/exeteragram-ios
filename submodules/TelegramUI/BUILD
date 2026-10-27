@@ -6,6 +6,15 @@ load(
 )
 
 filegroup(
+    name = "TelegramUIResources",
+    srcs = glob([
+        "Sounds/**/*",
+        "Resources/**/*",
+    ], exclude = ["Sounds/**/.*", "Resources/**/.*"]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
     name = "TelegramUIAssets",
     srcs = glob(["Images.xcassets/**"]),
     visibility = ["//visibility:public"],
