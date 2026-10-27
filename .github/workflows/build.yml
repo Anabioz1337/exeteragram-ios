@@ -3,7 +3,7 @@ name: build-unsigned-ipa
 on:
   workflow_dispatch:
   push:
-    branches: [main, extera-port]
+    branches: [main, extera-port, 'extera/**']
     paths-ignore:
       - "**.md"
       - "docs/**"
