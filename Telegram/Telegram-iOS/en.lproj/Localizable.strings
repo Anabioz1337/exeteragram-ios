@@ -17262,6 +17262,7 @@ Error: %8$@";
 "Extera.Lyrics.SearchOnline" = "Search Lyrics Online";
 "Extera.Lyrics.NotFound" = "Lyrics not found.";
 "Extera.Lyrics.NoInternet" = "Failed to load lyrics.";
+"Extera.Lyrics.Instrumental" = "Instrumental";
 "Extera.RhythmBackground" = "Rhythm Background";
 "Extera.Particles" = "Particles";
 "Extera.PlayerInfo.Format" = "Format";

@@ -207,6 +207,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
     var requestLayout: ((ContainedViewLayoutTransition) -> Void)?
     var requestToggleRhythm: (() -> Void)?
     var requestToggleParticles: (() -> Void)?
+    var requestShowLyrics: (() -> Void)?
 
     var exteraMediaSettings = ExteraMediaSettings.defaultSettings
 
@@ -1185,6 +1186,11 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
                 toggle()
             }))))
         }
+
+        presetItems.append(.action(ContextMenuActionItem(text: self.presentationData.strings.Extera_Lyrics, icon: { _ in return nil }, iconSource: nil, action: { [weak self] _, f in
+            f(.default)
+            self?.requestShowLyrics?()
+        })))
 
         presetItems.append(.action(ContextMenuActionItem(text: self.presentationData.strings.Extera_PlayerInfo, icon: { _ in return nil }, iconSource: nil, action: { [weak self] _, f in
             f(.default)
