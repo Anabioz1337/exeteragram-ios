@@ -66,9 +66,6 @@ swift_library(
     data = [
         ":ExteraPillsBundle",
     ],
-    data = [
-        ":ExteraPillsBundle",
-    ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/LottieSettings:LottieSettings",
@@ -78,7 +75,6 @@ swift_library(
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",
-        "//submodules/ExteraSearchToolkit:ExteraSearchToolkit",
         "//submodules/ExteraSearchToolkit:ExteraSearchToolkit",
         "//submodules/AccountContext:AccountContext",
         "//submodules/TelegramBaseController:TelegramBaseController",
