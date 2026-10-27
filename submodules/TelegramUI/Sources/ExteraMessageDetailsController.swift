@@ -6,7 +6,6 @@ import TelegramCore
 import TelegramPresentationData
 import ItemListUI
 import AccountContext
-import Postbox
 import TelegramStringFormatting
 import exteraSettingsCore
 
@@ -72,12 +71,12 @@ private struct MessageMediaSummary: Equatable {
     var dimensions: PixelDimensions?
     var localFilePath: String?
 
-    init(message: Message, postbox: Postbox) {
+    init(message: Message, context: AccountContext) {
         for media in message.effectiveMedia {
             if let file = media as? TelegramMediaFile {
                 self.fileName = file.fileName
                 self.mimeType = file.mimeType
-                self.localFilePath = postbox.mediaBox.completedResourcePath(file.resource)
+                self.localFilePath = context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(file.resource.id))
 
                 for attribute in file.attributes {
                     switch attribute {
@@ -92,13 +91,13 @@ private struct MessageMediaSummary: Equatable {
                 }
 
                 if self.fileSize == nil {
-                    self.fileSize = postbox.mediaBox.fileSizeForId(file.resource.id)
+                    self.fileSize = engineFileSize(self.localFilePath ?? "").map({ Int64($0) })
                 }
                 break
             } else if let image = media as? TelegramMediaImage, let largestRepresentation = largestImageRepresentation(image.representations) {
                 self.dimensions = largestRepresentation.dimensions
-                self.fileSize = postbox.mediaBox.fileSizeForId(largestRepresentation.resource.id)
-                self.localFilePath = postbox.mediaBox.completedResourcePath(largestRepresentation.resource)
+                self.localFilePath = context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(largestRepresentation.resource.id))
+                self.fileSize = engineFileSize(self.localFilePath ?? "").map({ Int64($0) })
                 break
             }
         }
@@ -241,7 +240,7 @@ private final class ExteraMessageDetailsArguments {
 }
 
 public func exteraMessageDetailsController(context: AccountContext, message: Message) -> ViewController {
-    let summary = MessageMediaSummary(message: message, postbox: context.account.postbox)
+    let summary = MessageMediaSummary(message: message, context: context)
     let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
 
     let datacenterValue = botApiPeerIdString(message.peerId)
