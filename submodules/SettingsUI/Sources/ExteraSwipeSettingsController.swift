@@ -190,11 +190,13 @@ private enum ExteraSwipeOptionEntry: ItemListNodeEntry {
 
     func item(presentationData: ItemListPresentationData, arguments: Any) -> ListViewItem {
         let arguments = arguments as! ExteraSwipeOptionArguments
-        let accentColor = presentationData.theme.list.itemAccentColor
+        switch self {
         case let .option(_, selected, label):
+            let accentColor = presentationData.theme.list.itemAccentColor
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: label, label: selected ? "✓" : "", labelStyle: .coloredText(accentColor), sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
                 arguments.select(Int(self.stableId))
             })
+        }
     }
 }
 
