@@ -6,6 +6,7 @@ import CoreImage
 import TelegramCore
 import DeviceModel
 import Camera
+import ExteraCamera
 
 final class CameraSession {
     private let singleSession: AVCaptureSession?
@@ -101,6 +102,9 @@ final class CameraDeviceContext {
     private func preferredMaxFrameRate(useLower: Bool) -> Double {
         if !self.exclusive || self.isRoundVideo || useLower {
             return 30.0
+        }
+        if ExteraCameraOptions.shared.current.extendedFpsRange {
+            return exteraCameraExtendedMaxFramerate
         }
         switch DeviceModel.current {
         case .iPhone15ProMax, .iPhone14ProMax, .iPhone13ProMax, .iPhone16ProMax, .iPhone17Pro, .iPhone17ProMax:
@@ -347,7 +351,7 @@ private final class CameraContext {
                 if #available(iOS 13.0, *) {
                     front = connection.inputPorts.first?.sourceDevicePosition == .front
                 }
-                self.mainVideoOutput?.push(sampleBuffer, mirror: front)
+                self.mainVideoOutput?.push(sampleBuffer, mirror: exteraCameraMirror(deviceIsFront: front))
                 
                 let timestamp = CACurrentMediaTime()
                 if timestamp > self.lastSnapshotTimestamp + 2.5, !mainDeviceContext.output.isRecording || !self.savedSnapshot {
@@ -365,7 +369,7 @@ private final class CameraContext {
                 if #available(iOS 13.0, *) {
                     front = connection.inputPorts.first?.sourceDevicePosition == .front
                 }
-                self.additionalVideoOutput?.push(sampleBuffer, mirror: front)
+                self.additionalVideoOutput?.push(sampleBuffer, mirror: exteraCameraMirror(deviceIsFront: front))
                 
                 let timestamp = CACurrentMediaTime()
                 if timestamp > self.lastAdditionalSnapshotTimestamp + 2.5, !additionalDeviceContext.output.isRecording || !self.savedAdditionalSnapshot {
@@ -395,7 +399,7 @@ private final class CameraContext {
                 if #available(iOS 13.0, *) {
                     front = connection.inputPorts.first?.sourceDevicePosition == .front
                 }
-                self.mainVideoOutput?.push(sampleBuffer, mirror: front)
+                self.mainVideoOutput?.push(sampleBuffer, mirror: exteraCameraMirror(deviceIsFront: front))
                 
                 let timestamp = CACurrentMediaTime()
                 if timestamp > self.lastSnapshotTimestamp + 2.5, !mainDeviceContext.output.isRecording || !self.savedSnapshot {

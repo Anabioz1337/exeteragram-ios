@@ -6,6 +6,7 @@ import CoreVideo
 import SwiftSignalKit
 import DeviceModel
 import Camera
+import ExteraCamera
 import os.log
 
 private let cameraCaptureLog = OSLog(subsystem: "org.telegram.CameraNeo", category: "Capture")
@@ -695,12 +696,12 @@ final class CameraNeo: NSObject, CameraProtocol {
             input: backInput,
             output: backOutput,
             previewView: self.previewView,
-            mirrored: false
+            mirrored: exteraCameraMirror(deviceIsFront: false)
         ), self.connectVideo(
             input: frontInput,
             output: frontOutput,
             previewView: self.secondaryPreviewView,
-            mirrored: true
+            mirrored: exteraCameraMirror(deviceIsFront: true)
         ) else {
             return false
         }
@@ -808,6 +809,12 @@ final class CameraNeo: NSObject, CameraProtocol {
     }
 
     private func makeVideoDevice(position: Camera.Position) -> AVCaptureDevice? {
+        switch exteraCameraPreferredVideoDevice(position: position) {
+        case .device(let device):
+            return device
+        case .stock:
+            break
+        }
         if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position) {
             return device
         }
@@ -883,7 +890,12 @@ final class CameraNeo: NSObject, CameraProtocol {
         guard let range = device.activeFormat.videoSupportedFrameRateRanges.first(where: { $0.minFrameRate <= fps && $0.maxFrameRate >= fps }) else {
             return
         }
-        let effectiveFps = min(range.maxFrameRate, max(range.minFrameRate, fps))
+        let effectiveFps: Double
+        if ExteraCameraOptions.shared.current.extendedFpsRange {
+            effectiveFps = min(exteraCameraExtendedMaxFramerate, range.maxFrameRate)
+        } else {
+            effectiveFps = min(range.maxFrameRate, max(range.minFrameRate, fps))
+        }
         let duration = CMTime(seconds: 1.0 / effectiveFps, preferredTimescale: 60_000)
         self.withLockedDevice(device) { device in
             if #available(iOS 18.0, *), device.activeFormat.isAutoVideoFrameRateSupported, device.isAutoVideoFrameRateEnabled {
@@ -905,7 +917,9 @@ final class CameraNeo: NSObject, CameraProtocol {
             guard let connection = output?.connection(with: .video), let device else {
                 continue
             }
-            let supportsStandard = connection.isVideoStabilizationSupported && device.activeFormat.isVideoStabilizationModeSupported(.standard)
+            let supportsStandard = exteraCameraStabilizationEnabled()
+                && connection.isVideoStabilizationSupported
+                && device.activeFormat.isVideoStabilizationModeSupported(.standard)
             connection.preferredVideoStabilizationMode = supportsStandard ? .standard : .off
             self.stabilizationObservers.append(connection.observe(\.activeVideoStabilizationMode, options: [.new]) { [weak self, weak connection] _, _ in
                 self?.sessionQueue.async { [weak self, weak connection] in
@@ -1127,12 +1141,12 @@ extension CameraNeo: AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudi
 
         if self.useMultiCam {
             if position == .front {
-                self.additionalVideoOutput?.push(sampleBuffer, mirror: true)
+                self.additionalVideoOutput?.push(sampleBuffer, mirror: exteraCameraMirror(deviceIsFront: true))
             } else {
-                self.mainVideoOutput?.push(sampleBuffer, mirror: false)
+                self.mainVideoOutput?.push(sampleBuffer, mirror: exteraCameraMirror(deviceIsFront: false))
             }
         } else {
-            self.mainVideoOutput?.push(sampleBuffer, mirror: position == .front)
+            self.mainVideoOutput?.push(sampleBuffer, mirror: exteraCameraMirror(deviceIsFront: position == .front))
         }
     }
 

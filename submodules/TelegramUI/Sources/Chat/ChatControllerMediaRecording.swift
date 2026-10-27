@@ -11,6 +11,7 @@ import LegacyComponents
 import TelegramPresentationData
 import TelegramUIPreferences
 import DeviceAccess
+import ExteraCamera
 import TextFormat
 import TelegramBaseController
 import AccountContext
@@ -146,7 +147,33 @@ extension ChatControllerImpl {
         }
     }
     
-    func requestVideoRecorder() {
+    private func presentVideoMessagesCameraChoice() {
+        let presentationData = self.presentationData
+        let alertController = UIAlertController(
+            title: exteraCameraString("extera_ChooseVideoMessagesCamera"),
+            message: nil,
+            preferredStyle: .alert
+        )
+        alertController.addAction(UIAlertAction(title: exteraCameraString("extera_RearCamera"), style: .default, handler: { [weak self] _ in
+            self?.requestVideoRecorder(forcedPositionIsFront: false)
+        }))
+        alertController.addAction(UIAlertAction(title: exteraCameraString("extera_FrontCamera"), style: .default, handler: { [weak self] _ in
+            self?.requestVideoRecorder(forcedPositionIsFront: true)
+        }))
+        alertController.addAction(UIAlertAction(title: presentationData.strings.Common_Cancel, style: .cancel, handler: nil))
+        self.present(alertController, in: .window(.root))
+    }
+
+    func requestVideoRecorder(forcedPositionIsFront: Bool? = nil) {
+        if forcedPositionIsFront == nil, ExteraCameraOptions.shared.current.videoMessagesCamera == .ask,
+           !(ExteraCameraOptions.shared.current.rememberLastUsedCamera && ExteraCameraOptions.shared.lastUsedCamera != nil) {
+            self.presentVideoMessagesCameraChoice()
+            return
+        }
+        let isFrontPosition = forcedPositionIsFront ?? exteraVideoMessagesInitialPositionIsFront()
+        if ExteraCameraOptions.shared.current.rememberLastUsedCamera {
+            exteraRecordVideoMessagesCameraChoice(isFrontPosition ? .front : .rear)
+        }
         if self.videoRecorderValue == nil {
             if let currentInputPanelFrame = self.chatDisplayNode.currentInputPanelFrame() {
                 if self.recorderFeedback == nil {

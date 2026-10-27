@@ -1,4 +1,5 @@
 import Foundation
+import ExteraCamera
 import LottieSettings
 import UIKit
 import Display
@@ -1137,10 +1138,11 @@ public class VideoMessageCameraScreen: ViewController {
                     return
                 }
                 self.cameraState = self.cameraState.updatedPosition(position).updatedFlashMode(flashMode)
-                
+
                 if !self.cameraState.isDualCameraEnabled {
                     self.animatePositionChange()
                 }
+                self.zoomSliderView?.setValue(0.0)
                 
                 self.requestUpdateLayout(transition: .easeInOut(duration: 0.2))
             })
@@ -1155,6 +1157,46 @@ public class VideoMessageCameraScreen: ViewController {
             }
         }
         
+        private var zoomSliderView: ExteraZoomSliderView?
+
+        private func updateZoomSlider(transition: ComponentTransition, containerSize: CGSize, previewFrame: CGRect, isFrontPosition: Bool) {
+            let sliderVisible = !isFrontPosition && ExteraCameraOptions.shared.current.zoomSlider
+            if let sliderView = self.zoomSliderView, !sliderVisible {
+                transition.setAlpha(view: sliderView, alpha: 0.0)
+                return
+            }
+            guard sliderVisible else {
+                return
+            }
+
+            let sliderWidth = min(260.0, previewFrame.width - 32.0)
+            guard sliderWidth > 60.0 else {
+                return
+            }
+            let sliderHeight: CGFloat = 36.0
+            let sliderFrame = CGRect(
+                x: floorToScreenPixels(containerSize.width / 2.0 - sliderWidth / 2.0),
+                y: floorToScreenPixels(previewFrame.maxY + 16.0),
+                width: sliderWidth,
+                height: sliderHeight
+            )
+
+            let sliderView: ExteraZoomSliderView
+            if let current = self.zoomSliderView {
+                sliderView = current
+            } else {
+                sliderView = ExteraZoomSliderView(trackColor: .white, thumbColor: .white)
+                sliderView.onValueChanged = { [weak self] value in
+                    self?.camera?.setZoomLevel(value * 7.0)
+                }
+                self.containerView.addSubview(sliderView)
+                self.zoomSliderView = sliderView
+            }
+            transition.setPosition(view: sliderView, position: sliderFrame.center)
+            transition.setBounds(view: sliderView, bounds: CGRect(origin: .zero, size: sliderFrame.size))
+            transition.setAlpha(view: sliderView, alpha: 1.0)
+        }
+
         @objc private func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
             switch gestureRecognizer.state {
             case .began:
@@ -1172,10 +1214,14 @@ public class VideoMessageCameraScreen: ViewController {
                 if let pinchStartTimestamp, CACurrentMediaTime() - pinchStartTimestamp <= 0.5 {
                     return
                 }
-                self.camera?.rampZoom(1.0, rate: 8.0)
+                if !ExteraCameraOptions.shared.current.staticZoom {
+                    self.camera?.rampZoom(1.0, rate: 8.0)
+                }
             case .cancelled:
                 self.pinchStartTimestamp = nil
-                self.camera?.rampZoom(1.0, rate: 8.0)
+                if !ExteraCameraOptions.shared.current.staticZoom {
+                    self.camera?.rampZoom(1.0, rate: 8.0)
+                }
             case .failed:
                 self.pinchStartTimestamp = nil
             default:
@@ -1670,10 +1716,17 @@ public class VideoMessageCameraScreen: ViewController {
                 if componentView.superview == nil {
                     self.containerView.addSubview(componentView)
                 }
-            
+
                 let componentFrame = CGRect(origin: .zero, size: componentSize)
                 transition.setFrame(view: componentView, frame: componentFrame)
             }
+
+            self.updateZoomSlider(
+                transition: transition,
+                containerSize: backgroundFrame.size,
+                previewFrame: previewFrame,
+                isFrontPosition: self.cameraState.position == .front && !self.cameraState.isDualCameraEnabled
+            )
             
             if let previewState = self.previewState {
                 if previewState.composition !== self.resultPreviewView?.composition {

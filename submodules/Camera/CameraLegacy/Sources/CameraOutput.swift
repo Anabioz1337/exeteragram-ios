@@ -8,6 +8,7 @@ import Vision
 import VideoToolbox
 import TelegramCore
 import Camera
+import ExteraCamera
 
 final class CameraOutput: NSObject {
     private struct RoundVideoFormatDescriptionCacheEntry {
@@ -179,7 +180,7 @@ final class CameraOutput: NSObject {
     func configureVideoStabilization() {
         if let videoDataOutputConnection = self.videoOutput.connection(with: .video) {
             if videoDataOutputConnection.isVideoStabilizationSupported {
-                videoDataOutputConnection.preferredVideoStabilizationMode = .standard
+                videoDataOutputConnection.preferredVideoStabilizationMode = exteraCameraStabilizationEnabled() ? .standard : .off
             }
         }
     }
@@ -204,9 +205,9 @@ final class CameraOutput: NSObject {
         var mirror = false
         if let connection = self.photoOutput.connection(with: .video) {
             connection.videoOrientation = orientation
-            
+
             if #available(iOS 13.0, *) {
-                mirror = connection.inputPorts.first?.sourceDevicePosition == .front
+                mirror = exteraCameraMirror(deviceIsFront: connection.inputPorts.first?.sourceDevicePosition == .front)
             }
         }
         
