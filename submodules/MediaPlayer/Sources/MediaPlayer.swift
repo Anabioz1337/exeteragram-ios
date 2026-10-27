@@ -683,7 +683,11 @@ private final class MediaPlayerContext {
             let _ = self.playerStatusValue.swap(status)
         }
     }
-    
+
+    fileprivate func setPitch(_ cents: Float) {
+        self.audioRenderer?.renderer.setPitch(cents)
+    }
+
     fileprivate func setForceAudioToSpeaker(_ value: Bool) {
         if self.forceAudioToSpeaker != value {
             self.forceAudioToSpeaker = value
@@ -1245,6 +1249,14 @@ public final class MediaPlayer {
         self.queue.async {
             if let context = self.contextRef?.takeUnretainedValue() {
                 context.setBaseRate(baseRate)
+            }
+        }
+    }
+
+    public func setPitch(_ cents: Float) {
+        self.queue.async {
+            if let context = self.contextRef?.takeUnretainedValue() {
+                context.setPitch(cents)
             }
         }
     }

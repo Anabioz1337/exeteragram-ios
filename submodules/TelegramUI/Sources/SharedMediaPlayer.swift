@@ -108,6 +108,15 @@ private enum SharedMediaPlaybackItem: Equatable {
                 node.setForceAudioToSpeaker(value)
         }
     }
+
+    func setPitch(_ cents: Int32) {
+        switch self {
+            case let .audio(player):
+                player.setPitch(Float(cents))
+            case .instantVideo:
+                break
+        }
+    }
 }
 
 final class SharedMediaPlayer {
@@ -474,6 +483,8 @@ final class SharedMediaPlayer {
                             node.setBaseRate(rateValue)
                     }
                 }
+            case let .setPitch(cents):
+                self.playbackItem?.setPitch(cents)
         }
     }
     

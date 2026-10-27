@@ -65,6 +65,7 @@ private enum ApplicationSpecificSharedDataKeyValues: Int32 {
     case chatSettings = 22
     case exteraSettings = 23
     case exteraSpeechSettings = 24
+    case exteraMediaSettings = 25
 }
 
 public struct ApplicationSpecificSharedDataKeys {
@@ -93,6 +94,7 @@ public struct ApplicationSpecificSharedDataKeys {
     public static let chatSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.chatSettings.rawValue)
     public static let exteraSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraSettings.rawValue)
     public static let exteraSpeechSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraSpeechSettings.rawValue)
+    public static let exteraMediaSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraMediaSettings.rawValue)
 }
 
 private enum ApplicationSpecificItemCacheCollectionIdValues: Int8 {

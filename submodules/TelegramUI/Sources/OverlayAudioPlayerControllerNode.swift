@@ -7,6 +7,7 @@ import SwiftSignalKit
 import TelegramCore
 import TelegramPresentationData
 import TelegramUIPreferences
+import UniversalMediaPlayer
 import AccountContext
 import DirectionalPanGesture
 import ChatPresentationInterfaceState
@@ -65,9 +66,22 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
     private var currentAlbumArt: (FileMediaReference, SharedMediaPlaybackAlbumArt)?
     private let albumArtBackground: UIVisualEffectView
     private let albumArtNode = TransformImageNode()
-    
+    private let rhythmGlowView = RhythmGlowView()
+    private let rhythmParticlesNode = RhythmParticlesNode()
+    private(set) var exteraMediaSettings = ExteraMediaSettings.defaultSettings
+
+    private let lyricsView = AudioLyricsView()
+    private var lyricsModeActive = false
+    private var pendingLyricsRequest: LyricRequest?
+    private var loadedLyricsKey: String?
+    private let lyricsFetchDisposable = MetaDisposable()
+    private let lyricsMetadataDisposable = MetaDisposable()
+
     private var saveMediaDisposable: MetaDisposable?
-    
+    private let trackSaveChannelDisposable = MetaDisposable()
+    private let rhythmLevelDisposable = MetaDisposable()
+    private let exteraMediaSettingsDisposable = MetaDisposable()
+
     private var validLayout: ContainerViewLayout?
     private var containerUsesCornerRadii = false
     
@@ -370,11 +384,16 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         self.collapseNode.setImage(generateCollapseIcon(theme: self.presentationData.theme), for: [])
         
         self.albumArtBackground = UIVisualEffectView()
+        self.albumArtBackground.contentView.addSubview(self.rhythmGlowView)
+        self.albumArtBackground.contentView.addSubview(self.rhythmParticlesNode.view)
+        self.albumArtBackground.contentView.addSubview(self.lyricsView)
         self.albumArtBackground.contentView.addSubview(self.albumArtNode.view)
         self.albumArtNode.isUserInteractionEnabled = false
-        
+        self.lyricsView.isHidden = true
+        self.rhythmGlowView.isHidden = true
+
         super.init()
-        
+
         self.backgroundColor = nil
         self.isOpaque = false
         
@@ -433,6 +452,38 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         
         self.controlsNode.requestShare = { [weak self] subject in
             self?.requestShare(subject)
+        }
+
+        self.controlsNode.requestSaveCurrentTrack = { [weak self] in
+            self?.saveCurrentTrack()
+        }
+
+        self.controlsNode.requestPickSaveChannel = { [weak self] in
+            self?.pickTrackSaveChannel()
+        }
+
+        self.controlsNode.requestToggleRhythm = { [weak self] in
+            guard let self else {
+                return
+            }
+            let isEnabled = self.exteraMediaSettings.rhythmBackground
+            let _ = updateExteraMediaSettingsInteractively(accountManager: self.context.sharedContext.accountManager, {
+                return $0.withUpdatedRhythmBackground(!isEnabled)
+            }).startStandalone()
+        }
+
+        self.controlsNode.requestToggleParticles = { [weak self] in
+            guard let self else {
+                return
+            }
+            let isEnabled = self.exteraMediaSettings.particles
+            let _ = updateExteraMediaSettingsInteractively(accountManager: self.context.sharedContext.accountManager, {
+                return $0.withUpdatedParticles(!isEnabled)
+            }).startStandalone()
+        }
+
+        self.controlsNode.requestShowLyrics = { [weak self] in
+            self?.setLyricsModeActive(true)
         }
         
         self.controlsNode.requestSearchByArtist = { [weak self] artist in
@@ -601,15 +652,181 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         )
         
         self.setupReordering()
-        
+
+        self.exteraMediaSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraMediaSettings])
+        |> deliverOnMainQueue).startStrict(next: { [weak self] sharedData in
+            guard let self else {
+                return
+            }
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
+            self.exteraMediaSettings = settings
+            self.controlsNode.exteraMediaSettings = settings
+            self.rhythmGlowView.isHidden = !settings.rhythmBackground
+            if !settings.rhythmBackground {
+                self.rhythmGlowView.alpha = 0.0
+            }
+            if !settings.particles {
+                self.rhythmParticlesNode.clear()
+            }
+        }))
+
+        self.rhythmLevelDisposable.set((context.sharedContext.mediaManager.musicPlayerAudioLevel
+        |> deliverOnMainQueue).startStrict(next: { [weak self] level in
+            self?.updateRhythmLevel(level)
+        }))
+
+        self.lyricsMetadataDisposable.set((context.sharedContext.mediaManager.musicMediaPlayerState
+        |> deliverOnMainQueue).startStrict(next: { [weak self] value in
+            guard let self else {
+                return
+            }
+            guard let (_, valueOrLoading, _) = value, case let .state(state) = valueOrLoading,
+                  case let .music(title, performer, _, _, _) = state.item.displayData, let title, !title.isEmpty else {
+                self.updateLyricsSource(title: nil, performer: "", trackDuration: nil)
+                return
+            }
+            var isPlaying = false
+            switch state.status.status {
+                case .playing:
+                    isPlaying = true
+                case .buffering(_, whilePlaying, _, _):
+                    isPlaying = whilePlaying
+                default:
+                    break
+            }
+            self.lyricsView.updatePlaybackSnapshot(LyricsPlaybackSnapshot(
+                timestamp: state.status.timestamp,
+                generationTimestamp: state.status.generationTimestamp,
+                baseRate: state.status.baseRate,
+                isPlaying: isPlaying
+            ))
+            self.updateLyricsSource(title: title, performer: performer ?? "", trackDuration: state.status.duration > 0.0 ? state.status.duration : nil)
+        }))
+
         self.albumArtBackground.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.albumArtTapped(_:))))
     }
-    
+
+    private struct LyricRequest {
+        let key: String
+        let title: String
+        let performer: String
+        let trackDuration: Double?
+    }
+
+    private var lyricsColors: (primaryColor: UIColor, secondaryColor: UIColor) {
+        return (self.presentationData.theme.list.itemPrimaryTextColor, self.presentationData.theme.list.itemSecondaryTextColor)
+    }
+
+    private func updateLyricsSource(title: String?, performer: String, trackDuration: Double?) {
+        guard let title, !title.isEmpty else {
+            if self.pendingLyricsRequest != nil {
+                self.pendingLyricsRequest = nil
+                self.loadedLyricsKey = nil
+                if self.lyricsModeActive {
+                    self.applyLyricsState(.message(self.presentationData.strings.Extera_Lyrics_NotFound))
+                }
+            }
+            return
+        }
+        let key = "\(title)|\(performer)"
+        if self.pendingLyricsRequest?.key == key {
+            return
+        }
+        self.pendingLyricsRequest = LyricRequest(key: key, title: title, performer: performer, trackDuration: trackDuration)
+        self.loadedLyricsKey = nil
+        if self.lyricsModeActive {
+            self.loadLyricsIfNeeded()
+        } else {
+            self.resetLyricsPresentation()
+        }
+    }
+
+    private func setLyricsModeActive(_ isActive: Bool) {
+        guard self.currentAlbumArt != nil, let layout = self.validLayout, self.lyricsModeActive != isActive else {
+            return
+        }
+        self.lyricsModeActive = isActive
+        self.containerLayoutUpdated(layout, transition: .animated(duration: 0.25, curve: .easeInOut))
+        if isActive {
+            self.loadLyricsIfNeeded()
+        } else {
+            self.lyricsFetchDisposable.set(nil)
+        }
+    }
+
+    private func loadLyricsIfNeeded() {
+        guard self.lyricsModeActive, let request = self.pendingLyricsRequest, request.key != self.loadedLyricsKey else {
+            return
+        }
+        self.loadedLyricsKey = request.key
+        self.lyricsFetchDisposable.set(nil)
+
+        let (primaryColor, secondaryColor) = self.lyricsColors
+        self.lyricsView.applyTheme(primaryColor: primaryColor, secondaryColor: secondaryColor)
+
+        if !self.exteraMediaSettings.lyricsOnlineSearch {
+            self.applyLyricsState(.message(self.presentationData.strings.Extera_Lyrics_NotFound))
+            return
+        }
+        self.applyLyricsState(.loading)
+        self.lyricsFetchDisposable.set((fetchTrackLyrics(engine: self.context.engine, title: request.title, performer: request.performer, trackDuration: request.trackDuration)
+        |> deliverOnMainQueue).startStrict(next: { [weak self] outcome in
+            self?.applyLyricsOutcome(outcome)
+        }))
+    }
+
+    private func applyLyricsOutcome(_ outcome: TrackLyricsOutcome) {
+        switch outcome {
+            case let .found(lyrics):
+                if lyrics.lines.contains(where: { $0.timestamp != nil }) {
+                    self.applyLyricsState(.timed(lyrics.lines))
+                } else {
+                    self.applyLyricsState(.plain(lyrics.lines.map { $0.text }))
+                }
+            case .instrumental:
+                self.applyLyricsState(.instrumental(self.presentationData.strings.Extera_Lyrics_Instrumental))
+            case .notFound:
+                self.applyLyricsState(.message(self.presentationData.strings.Extera_Lyrics_NotFound))
+            case .failed:
+                self.loadedLyricsKey = nil
+                self.applyLyricsState(.message(self.presentationData.strings.Extera_Lyrics_NoInternet))
+        }
+    }
+
+    private func applyLyricsState(_ state: LyricsPresentationState) {
+        guard self.isNodeLoaded else {
+            return
+        }
+        self.lyricsView.present(state)
+    }
+
+    private func resetLyricsPresentation() {
+        guard self.isNodeLoaded else {
+            return
+        }
+        self.lyricsView.present(.loading)
+    }
+
+    private func updateRhythmLevel(_ level: Float) {
+        let clamped = CGFloat(max(0.0, min(level, 1.0)))
+        let isBigArtVisible = self.currentAlbumArt != nil
+        if self.exteraMediaSettings.rhythmBackground && isBigArtVisible {
+            self.rhythmGlowView.updateLevel(clamped)
+        }
+        if self.exteraMediaSettings.particles && isBigArtVisible {
+            self.rhythmParticlesNode.emit(level: clamped, color: self.presentationData.theme.list.itemPrimaryTextColor, boundsSize: self.rhythmParticlesNode.bounds.size)
+        }
+    }
+
     deinit {
         self.presentationDataDisposable?.dispose()
         self.replacementHistoryNodeReadyDisposable.dispose()
         self.dataDisposable?.dispose()
         self.saveMediaDisposable?.dispose()
+        self.rhythmLevelDisposable.dispose()
+        self.exteraMediaSettingsDisposable.dispose()
+        self.lyricsFetchDisposable.dispose()
+        self.lyricsMetadataDisposable.dispose()
     }
     
     override func didLoad() {
@@ -729,7 +946,10 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
     
     func updatePresentationData(_ presentationData: PresentationData) {
         self.presentationData = presentationData
-        
+
+        let (primaryColor, secondaryColor) = self.lyricsColors
+        self.lyricsView.applyTheme(primaryColor: primaryColor, secondaryColor: secondaryColor)
+
         self.historyBackgroundContentNode.backgroundColor = self.hasAnyHistoryMessages == true ? self.presentationData.theme.list.itemModalBlocksBackgroundColor : self.presentationData.theme.list.modalPlainBackgroundColor
         self.historyFrameLeftOverlayNode.backgroundColor = self.hasAnyHistoryMessages == true ? self.presentationData.theme.list.modalBlocksBackgroundColor : self.presentationData.theme.list.modalPlainBackgroundColor
         self.historyFrameRightOverlayNode.backgroundColor = self.hasAnyHistoryMessages == true ? self.presentationData.theme.list.modalBlocksBackgroundColor : self.presentationData.theme.list.modalPlainBackgroundColor
@@ -869,7 +1089,95 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         
         self.updateMusicSaved(file: file, isSaved: false)
     }
-    
+
+    private var trackSavePeerId: PeerId {
+        return self.context.account.peerId
+    }
+
+    func saveCurrentTrack() {
+        guard let itemId = self.controlsNode.currentItemId as? PeerMessagesMediaPlaylistItemId, itemId.messageId.namespace == Namespaces.Message.Cloud else {
+            return
+        }
+        let _ = (combineLatest(
+            self.context.engine.data.get(TelegramEngine.EngineData.Item.Messages.Message(id: itemId.messageId)),
+            self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraMediaSettings])
+            |> take(1)
+        )
+        |> deliverOnMainQueue).startStandalone(next: { [weak self] message, sharedData in
+            guard let self else {
+                return
+            }
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
+            let targetPeerId: PeerId = settings.trackSavePeerIdRaw != 0 ? PeerId(_rawValue: settings.trackSavePeerIdRaw) : self.trackSavePeerId
+            let forwardMessage: EnqueueMessage = .forward(source: message.id, threadId: nil, grouping: .auto, attributes: [], correlationId: nil)
+            let _ = enqueueMessages(account: self.context.account, peerId: targetPeerId, messages: [forwardMessage]).startStandalone()
+
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: targetPeerId))
+            |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
+                guard let self else {
+                    return
+                }
+                let peerTitle = peer?.displayTitle(strings: self.presentationData.strings, displayOrder: self.presentationData.nameDisplayOrder) ?? self.presentationData.strings.Extera_SaveTrack
+                let controller = UndoOverlayController(
+                    presentationData: self.presentationData,
+                    content: .succeed(text: self.presentationData.strings.Extera_TrackSaved(peerTitle).string, timeout: nil, customUndoText: nil),
+                    elevatedLayout: false,
+                    action: { _ in return false }
+                )
+                self.getParentController()?.present(controller, in: .current)
+            })
+        })
+    }
+
+    func pickTrackSaveChannel() {
+        let presentationData = self.presentationData
+        let controller = self.context.sharedContext.makeContactMultiselectionController(ContactMultiselectionControllerParams(
+            context: self.context,
+            title: presentationData.strings.Extera_SaveToChannel,
+            mode: .peerSelection(searchChatList: true, searchGroups: false, searchChannels: true),
+            filters: [],
+            isPeerEnabled: { peer in
+                if case let .channel(channel) = peer._asPeer() {
+                    return channel.flags.contains(.canSendMessage)
+                }
+                if case .user = peer._asPeer() {
+                    return true
+                }
+                return false
+            }
+        ))
+        self.trackSaveChannelDisposable.set((controller.result
+        |> take(1)
+        |> deliverOnMainQueue).startStandalone(next: { [weak self, weak controller] result in
+            guard let self, case let .result(peerIds, _) = result, let first = peerIds.first, case let .peer(peerId) = first else {
+                return
+            }
+            let _ = updateExteraMediaSettingsInteractively(accountManager: self.context.sharedContext.accountManager, {
+                return $0.withUpdatedTrackSavePeerIdRaw(peerId.id._internalGetInt64Value())
+            }).startStandalone()
+
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
+                guard let self else {
+                    return
+                }
+                let peerTitle = peer?.displayTitle(strings: self.presentationData.strings, displayOrder: self.presentationData.nameDisplayOrder) ?? self.presentationData.strings.Extera_SaveTrack
+                let controller = UndoOverlayController(
+                    presentationData: self.presentationData,
+                    content: .succeed(text: self.presentationData.strings.Extera_ChannelToSaveChanged(peerTitle).string, timeout: nil, customUndoText: nil),
+                    elevatedLayout: false,
+                    action: { _ in return false }
+                )
+                self.getParentController()?.present(controller, in: .current)
+            })
+            controller?.dismiss()
+        }))
+
+        if let navigationController = (self.getParentController() as? OverlayAudioPlayerControllerImpl)?.parentNavigationController {
+            navigationController.pushViewController(controller)
+        }
+    }
+
     private var isSaved: Bool? {
         if self .copyProtectionEnabled {
             return nil
@@ -1108,6 +1416,20 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
             let makeLargeAlbumArtLayout = self.albumArtNode.asyncLayout()
             let applyLargeAlbumArt = makeLargeAlbumArtLayout(TransformImageArguments(corners: ImageCorners(radius: 4.0), imageSize: albumArtSize, boundingSize: albumArtSize, intrinsicInsets: UIEdgeInsets()))
             applyLargeAlbumArt()
+
+            self.rhythmGlowView.frame = self.albumArtNode.frame.insetBy(dx: -60.0, dy: -60.0)
+            self.rhythmGlowView.isHidden = !self.exteraMediaSettings.rhythmBackground
+            self.rhythmParticlesNode.frame = self.albumArtNode.frame
+
+            self.lyricsView.frame = self.albumArtNode.frame
+            if self.lyricsModeActive {
+                self.albumArtNode.view.isHidden = true
+                self.lyricsView.isHidden = false
+                self.lyricsView.setActive(true)
+            } else {
+                self.albumArtNode.view.isHidden = false
+                self.lyricsView.isHidden = true
+            }
             
             if animateIn {
                 self.controlsNode.albumArtNode.alpha = 0.0
@@ -1120,7 +1442,16 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
             }
         } else {
             self.controlsNode.albumArtNode.alpha = 1.0
-            
+
+            self.lyricsModeActive = false
+            self.lyricsFetchDisposable.set(nil)
+            self.lyricsView.isHidden = true
+            self.lyricsView.setActive(false)
+
+            self.rhythmGlowView.isHidden = true
+            self.rhythmGlowView.alpha = 0.0
+            self.rhythmParticlesNode.clear()
+
             if self.albumArtBackground.superview != nil {
                 let fadeTransition = ComponentTransition(transition)
                 fadeTransition.setBlur(layer: self.albumArtNode.layer, radius: 10.0)
@@ -1176,7 +1507,11 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
     
     @objc func albumArtTapped(_ recognizer: UITapGestureRecognizer) {
         if case .ended = recognizer.state, let layout = self.validLayout {
-            self.currentAlbumArt = nil
+            if self.lyricsModeActive {
+                self.setLyricsModeActive(false)
+            } else {
+                self.currentAlbumArt = nil
+            }
             self.containerLayoutUpdated(layout, transition: .animated(duration: 0.3, curve: .easeInOut))
         }
     }

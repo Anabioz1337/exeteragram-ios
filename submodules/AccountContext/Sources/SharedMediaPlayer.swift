@@ -237,6 +237,7 @@ public enum SharedMediaPlayerControlAction {
     case setOrder(MusicPlaybackSettingsOrder)
     case setLooping(MusicPlaybackSettingsLooping)
     case setBaseRate(AudioPlaybackRate)
+    case setPitch(Int32)
 }
 
 public enum SharedMediaPlaylistControlAction {

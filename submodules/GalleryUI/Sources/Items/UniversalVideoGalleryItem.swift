@@ -1,8 +1,10 @@
 import Foundation
 import UIKit
+import AVFoundation
 import AsyncDisplayKit
 import SwiftSignalKit
 import TelegramCore
+import TelegramUIPreferences
 import Display
 import Postbox
 import TelegramPresentationData
@@ -992,6 +994,18 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
     private let hasExpandedCaptionPromise = Promise<Bool>()
     private var hideControlsDisposable: Disposable?
     private var automaticPictureInPictureDisposable: Disposable?
+
+    private let exteraSettingsDisposable = MetaDisposable()
+    private let lifecycleDisposable = MetaDisposable()
+    private var doubleTapSeekSeconds: Int32 = 10
+    private var pauseOnMinimize = false
+    private var pausePlaybackOnVolumePress = false
+    private var pausedByAutoPause = false
+    private var previousInForeground = true
+    private var hasReceivedForegroundValue = false
+    private var volumeObserverAdded = false
+    private var volumePressCooldownElapsed = true
+    private var exteraSettingsTracked = false
     
     var playbackCompleted: (() -> Void)?
     
@@ -1206,6 +1220,67 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         self.scrubbingFrameDisposable?.dispose()
         self.hideControlsDisposable?.dispose()
         self.automaticPictureInPictureDisposable?.dispose()
+        self.exteraSettingsDisposable.dispose()
+        self.lifecycleDisposable.dispose()
+        if self.volumeObserverAdded {
+            AVAudioSession.sharedInstance().removeObserver(self, forKeyPath: "outputVolume")
+        }
+    }
+
+    private func startExteraSettingsTracking(_ context: AccountContext) {
+        self.exteraSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraMediaSettings])
+        |> deliverOnMainQueue).startStrict(next: { [weak self] sharedData in
+            guard let strongSelf = self else {
+                return
+            }
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
+            strongSelf.doubleTapSeekSeconds = settings.doubleTapSeekSeconds
+            strongSelf.pauseOnMinimize = settings.pauseOnMinimize
+            strongSelf.pausePlaybackOnVolumePress = settings.disableVolumeAutoplay
+        }))
+    }
+
+    private func startLifecycleTracking(_ context: AccountContext) {
+        if !self.volumeObserverAdded {
+            self.volumeObserverAdded = true
+            AVAudioSession.sharedInstance().addObserver(self, forKeyPath: "outputVolume", options: [], context: nil)
+        }
+        self.lifecycleDisposable.set((context.sharedContext.applicationBindings.applicationInForeground
+        |> deliverOnMainQueue).start(next: { [weak self] inForeground in
+            guard let strongSelf = self else {
+                return
+            }
+            if strongSelf.hasReceivedForegroundValue && strongSelf.previousInForeground != inForeground {
+                if !inForeground {
+                    if strongSelf.pauseOnMinimize, strongSelf.isPlaying {
+                        strongSelf.pausedByAutoPause = true
+                        strongSelf.videoNode?.pause()
+                    }
+                } else if strongSelf.pausedByAutoPause {
+                    strongSelf.pausedByAutoPause = false
+                    strongSelf.videoNode?.play()
+                }
+            }
+            strongSelf.previousInForeground = inForeground
+            strongSelf.hasReceivedForegroundValue = true
+        }))
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "outputVolume" {
+            Queue.mainQueue().async { [weak self] in
+                guard let strongSelf = self, strongSelf.pausePlaybackOnVolumePress, strongSelf.isPlaying, strongSelf.volumePressCooldownElapsed else {
+                    return
+                }
+                strongSelf.volumePressCooldownElapsed = false
+                strongSelf.videoNode?.pause()
+                Queue.mainQueue().after(0.5) { [weak strongSelf] in
+                    strongSelf?.volumePressCooldownElapsed = true
+                }
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
     }
     
     override func ready() -> Signal<Void, NoError> {
@@ -1228,10 +1303,11 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         }
         
         if case let .playback(_, seekable) = self.footerContentNode.content, seekable {
+            let seekDelta = Double(self.doubleTapSeekSeconds)
             if location.x >= self.bounds.width * 0.3 {
-                self.footerContentNode.seekForward?(15.0)
+                self.footerContentNode.seekForward?(seekDelta)
             } else {
-                self.footerContentNode.seekBackward?(15.0)
+                self.footerContentNode.seekBackward?(seekDelta)
             }
             return true
         }
@@ -1378,7 +1454,13 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
     }
 
     func setupItem(_ item: UniversalVideoGalleryItem) {
-        if self.item?.content.id != item.content.id {            
+        if self.item?.content.id != item.content.id {
+            if !self.exteraSettingsTracked {
+                self.exteraSettingsTracked = true
+                self.startExteraSettingsTracking(item.context)
+                self.startLifecycleTracking(item.context)
+            }
+
             var chapters = parseMediaPlayerChapters(item.caption)
             if chapters.isEmpty, let description = item.description {
                 chapters = parseMediaPlayerChapters(description)

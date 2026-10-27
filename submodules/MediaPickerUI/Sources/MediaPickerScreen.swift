@@ -2409,6 +2409,15 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
         if highQualityPhoto {
             self.interaction?.editingState.setHighQualityPhoto(highQualityPhoto)
         }
+
+        let _ = (self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraMediaSettings])
+        |> take(1)
+        |> deliverOnMainQueue).startStandalone(next: { [weak self] sharedData in
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
+            if settings.preferOriginalQuality, let editingState = self?.interaction?.editingState {
+                editingState.setHighQualityPhoto(true)
+            }
+        })
         
         self.interaction?.selectionState?.grouping = true
         
