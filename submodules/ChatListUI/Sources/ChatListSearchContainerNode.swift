@@ -40,6 +40,7 @@ import SectionTitleContextItem
 import EdgeEffect
 import ComponentFlow
 import ComponentDisplayAdapters
+import ExteraSearchToolkit
 
 private enum ChatListTokenId: Int32 {
     case archive
@@ -149,6 +150,12 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
     private var presentationData: PresentationData
     private var presentationDataDisposable: Disposable?
     
+    private let exteraInlineResultPanelNode: ExteraInlineResultPanelNode
+    private let exteraRatesCoordinator: ExteraSearchRatesCoordinator
+    private var exteraInlineSettings = ExteraInlineResultsSettings.defaultSettings
+    private var exteraLastQuery = ""
+    private let exteraSettingsDisposable = MetaDisposable()
+    
     private let suggestedDates = Promise<[(Date?, Date, String?)]>([])
     private var suggestedFilters: [ChatListSearchFilter]?
     private let suggestedFiltersDisposable = MetaDisposable()
@@ -206,6 +213,9 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.hasDownloads = hasDownloads
         self.navigationController = navigationController
         self.presentationData = updatedPresentationData?.initial ?? context.sharedContext.currentPresentationData.with { $0 }
+
+        self.exteraInlineResultPanelNode = ExteraInlineResultPanelNode(theme: self.presentationData.theme)
+        self.exteraRatesCoordinator = ExteraSearchRatesCoordinator()
         
         self.selectedFilter = .filter(initialFilter)
         self.selectedFilterPromise.set(.single(self.selectedFilter))
@@ -230,6 +240,38 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.backgroundColor = filter.contains(.excludeRecent) ? nil : self.presentationData.theme.chatList.backgroundColor
         
         self.addSubnode(self.paneContainerNode)
+        self.addSubnode(self.exteraInlineResultPanelNode)
+        self.exteraInlineResultPanelNode.resultTapped = { [weak self] result in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.setQuery?(nil, [], result)
+            HapticFeedback().tap()
+        }
+        self.exteraInlineResultPanelNode.settingsTapped = { [weak self] in
+            guard let strongSelf, let interaction = strongSelf.interaction else {
+                return
+            }
+            interaction.present(ExteraInlineResultsSettingsController(context: strongSelf.context), nil)
+        }
+
+        let exteraRatesChanged: () -> Void = { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.evaluateExteraInlineResult(text: strongSelf.exteraLastQuery)
+        }
+        let ratesCoordinator = self.exteraRatesCoordinator
+        ratesCoordinator.onChanged = exteraRatesChanged
+
+        self.exteraSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraInlineResultsSettings])
+        |> deliverOnMainQueue).start(next: { [weak self] sharedData in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.exteraInlineSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraInlineResultsSettings]?.get(ExteraInlineResultsSettings.self) ?? .defaultSettings
+            strongSelf.evaluateExteraInlineResult(text: strongSelf.exteraLastQuery)
+        }))
                 
         let interaction = ChatListSearchInteraction(openPeer: { peer, chatPeer, threadId, value in
             originalOpenPeer(peer, chatPeer, threadId, value)
@@ -704,6 +746,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
     
     private func updateTheme(theme: PresentationTheme) {
         self.backgroundColor = self.peersFilter.contains(.excludeRecent) ? nil : theme.chatList.backgroundColor
+        self.exteraInlineResultPanelNode.updateTheme(theme)
         
         if let (layout, navigationBarHeight) = self.validLayout {
             self.containerLayoutUpdated(layout, navigationBarHeight: navigationBarHeight, transition: .immediate)
@@ -721,6 +764,19 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.searchQueryValue = searchQuery
         
         self.suggestedDates.set(.single(suggestDates(for: text, strings: self.presentationData.strings, dateTimeFormat: self.presentationData.dateTimeFormat)))
+        
+        self.evaluateExteraInlineResult(text: text)
+    }
+    
+    private func evaluateExteraInlineResult(text: String) {
+        self.exteraLastQuery = text
+        let (layoutWidth, safeInsets) = self.validLayout.map { ($0.0.size.width, $0.0.safeInsets) } ?? (0.0, UIEdgeInsets())
+        let maximumWidth = max(0.0, layoutWidth - safeInsets.left - safeInsets.right)
+        guard self.exteraInlineSettings.showResults, !text.isEmpty, let result = ExteraInlineResultsEvaluator.evaluate(query: text, settings: self.exteraInlineSettings, rates: self.exteraRatesCoordinator.activateSnapshot()) else {
+            self.exteraInlineResultPanelNode.updateResult(nil, maximumWidth: maximumWidth)
+            return
+        }
+        self.exteraInlineResultPanelNode.updateResult(result.resultText, maximumWidth: maximumWidth)
     }
     
     private func currentPaneUpdated(_ key: ChatListSearchPaneKey, transitionFraction: CGFloat = 0.0, transition: ContainedViewLayoutTransition) {
@@ -861,6 +917,11 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.validLayout = (layout, navigationBarHeight)
         
         let topInset = navigationBarHeight
+        
+        let panelWidth = max(0.0, layout.size.width - layout.safeInsets.left - layout.safeInsets.right)
+        let panelFrame = CGRect(x: layout.safeInsets.left, y: topInset + 4.0, width: panelWidth, height: ExteraInlineResultsUI.panelHeight)
+        transition.updateFrame(node: self.exteraInlineResultPanelNode, frame: panelFrame)
+        self.exteraInlineResultPanelNode.updateLayout(size: panelFrame.size, transition: transition)
         
         transition.updateFrame(node: self.filterContainerNode, frame: self.filterContainerFrame(layout: layout))
         self.updateFilterContainerNode(layout: layout, transition: transition)

@@ -17,6 +17,8 @@ swift_library(
         "//submodules/TelegramUI/Components/ChatListTitleView",
         "//submodules/AccountContext",
         "//submodules/TelegramCore",
+        "//submodules/TelegramUIPreferences",
+        "//submodules/ExteraSearchToolkit",
         "//submodules/AppBundle",
         "//submodules/AsyncDisplayKit",
         "//submodules/AnimationUI",
