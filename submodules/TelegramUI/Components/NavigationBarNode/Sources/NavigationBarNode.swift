@@ -64,6 +64,7 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
     public let additionalContentNode: SparseNode
     public let customOverBackgroundContentView: UIView
     let edgeEffectViewImpl: EdgeEffectView
+    private var snowView: ExteraSnowView?
     private var backdropAlpha: CGFloat = 1.0
     private var edgeEffectExtension: CGFloat = 0.0
     private let glassContainer: GlassBackgroundContainerView
@@ -390,6 +391,23 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         return theme.buttonColor
     }
 
+    /// Falling snow over the bar, forced by the extera `forceSnow` option. Renders above the bar's
+    /// own content, ignores touches, and is torn down as soon as the option is off.
+    private func updateSnow(size: CGSize) {
+        if ExteraAppearanceSettings.shared.forceSnow {
+            let snowView = self.snowView ?? ExteraSnowView()
+            if snowView.superview == nil {
+                snowView.isUserInteractionEnabled = false
+                self.contentView.addSubview(snowView)
+            }
+            snowView.frame = CGRect(origin: CGPoint(), size: size)
+            self.snowView = snowView
+        } else if let snowView = self.snowView {
+            snowView.removeFromSuperview()
+            self.snowView = nil
+        }
+    }
+
     private func update(layout: Layout, transition: ContainedViewLayoutTransition, isContainerLayout: Bool) {
         let size = layout.size
         let contentFrame = CGRect(origin: CGPoint(), size: size)
@@ -435,6 +453,7 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         }
 
         let apparentAdditionalHeight: CGFloat = self.secondaryContentNode != nil ? (self.secondaryContentHeight) : 0.0
+        self.updateSnow(size: contentFrame.size)
 
         transition.updateFrame(node: self.clippingNode, frame: CGRect(origin: CGPoint(), size: size))
         transition.updateFrame(node: self.additionalContentNode, frame: CGRect(origin: CGPoint(), size: CGSize(width: size.width, height: size.height + layout.additionalBackgroundHeight)))

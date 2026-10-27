@@ -1,7 +1,7 @@
 import UIKit
 import AsyncDisplayKit
 
-final class ExteraSnowView: UIView {
+public final class ExteraSnowView: UIView {
     override class var layerClass: AnyClass {
         return CAEmitterLayer.self
     }
