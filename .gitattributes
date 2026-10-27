@@ -8,3 +8,5 @@ submodules/rlottie/rlottie/* linguist-vendored
 submodules/sqlcipher/* linguist-vendored
 submodules/Stripe/* linguist-vendored
 third-party/* linguist-vendored
+# shell scripts must be LF or bash fails "set: pipefail: invalid option name"
+*.sh text eol=lf
