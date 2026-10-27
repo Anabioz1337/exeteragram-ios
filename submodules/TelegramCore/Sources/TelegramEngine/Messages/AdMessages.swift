@@ -628,13 +628,13 @@ private class AdMessagesHistoryContextImpl {
     }
 }
 
-public class AdMessagesHistoryContext {
+open class AdMessagesHistoryContext {
     private let queue = Queue()
     private let impl: QueueLocalObject<AdMessagesHistoryContextImpl>
     public let peerId: EnginePeer.Id
     public let messageId: EngineMessage.Id?
     
-    public var state: Signal<(interPostInterval: Int32?, messages: [Message], startDelay: Int32?, betweenDelay: Int32?), NoError> {
+    open var state: Signal<(interPostInterval: Int32?, messages: [Message], startDelay: Int32?, betweenDelay: Int32?), NoError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
             

@@ -110,7 +110,30 @@ private func chatLinkContextMenuOpenMode(context: AccountContext, url: String) -
 }
 
 extension ChatControllerImpl {
+    func exteraAdblockCheckUrl(_ url: String, proceed: @escaping () -> Void) {
+        ExteraAdblockUrlFilter.shared.register(accountManager: self.context.sharedContext.accountManager)
+        guard ExteraAdblockUrlFilter.shared.isAllowed(url) else {
+            let filterUrl = url
+            let screen = ExteraPageBlockedScreen(theme: self.presentationData.theme, strings: self.presentationData.strings, url: url, onProceed: { [weak self] in
+                guard let self else {
+                    return
+                }
+                ExteraAdblockUrlFilter.shared.proceed(filterUrl)
+                proceed()
+            })
+            self.present(screen, in: .window(.root))
+            return
+        }
+        proceed()
+    }
+
     private func presentOpenLinkConfirmation(_ url: String, target: ChatLinkReverseOpenTarget) {
+        self.exteraAdblockCheckUrl(url, proceed: { [weak self] in
+            self?.presentOpenLinkConfirmationAfterUrlFilter(url, target: target)
+        })
+    }
+
+    private func presentOpenLinkConfirmationAfterUrlFilter(_ url: String, target: ChatLinkReverseOpenTarget) {
         var exceptionAdded = false
         let disposable = self.context.sharedContext.openUserGeneratedUrl(
             context: self.context,

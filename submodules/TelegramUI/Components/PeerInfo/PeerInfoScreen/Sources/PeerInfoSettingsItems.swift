@@ -278,6 +278,8 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
         interaction.openSettings(.exteraAbout)
     }))
 
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 10, label: .text(presentationData.strings.Extera_Adblock_Title), text: presentationData.strings.Extera_Feed_Title, icon: PresentationResourcesSettings.dataAndStorage, action: {
+        interaction.openSettings(.exteraFeed)
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 6, label: .text(data.isPowerSavingEnabled == true ? presentationData.strings.Settings_PowerSavingOn : presentationData.strings.Settings_PowerSavingOff), text: presentationData.strings.Settings_PowerSaving, icon: PresentationResourcesSettings.powerSaving, action: {
         interaction.openSettings(.powerSaving)
     }))

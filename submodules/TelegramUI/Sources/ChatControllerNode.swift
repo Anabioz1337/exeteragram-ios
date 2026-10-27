@@ -802,7 +802,7 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
             }
         }
         if let displayAdPeer {
-            self.adMessagesContext = context.engine.messages.adMessages(peerId: displayAdPeer, activateManually: true)
+            self.adMessagesContext = ExteraAdblockAdMessagesContext(account: context.account, accountManager: context.sharedContext.accountManager, peerId: displayAdPeer, activateManually: true)
         } else {
             self.adMessagesContext = nil
         }
