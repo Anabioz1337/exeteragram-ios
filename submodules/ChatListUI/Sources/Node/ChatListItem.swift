@@ -1374,12 +1374,18 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
         var message: EngineMessage
         var media: EngineMedia
         var size: CGSize
-        
+
         init(message: EngineMessage, media: EngineMedia, size: CGSize) {
             self.message = message
             self.media = media
             self.size = size
         }
+    }
+
+    /// Small round avatar of the last message's author, shown left of the preview text.
+    private struct SenderMiniAvatarSpec {
+        var peer: EnginePeer
+        var size: CGSize
     }
     
     public private(set) var item: ChatListItem?
@@ -1400,6 +1406,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
     var avatarVideoNode: AvatarVideoNode?
     var avatarTapRecognizer: UITapGestureRecognizer?
     private var avatarMediaNode: ChatListMediaPreviewNode?
+    var senderMiniAvatarNode: AvatarNode?
     
     private var inlineNavigationMarkLayer: SimpleLayer?
     
@@ -2682,6 +2689,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
             
             var contentImageSpecs: [ContentImageSpec] = []
             var avatarContentImageSpec: ContentImageSpec?
+            var senderMiniAvatarSpec: SenderMiniAvatarSpec?
             var forumThread: (id: Int64, title: String, iconId: Int64?, iconColor: Int32, threadPeer: EnginePeer?, isUnread: Bool)?
 
             enum MessageTypeIcon {
@@ -3186,6 +3194,12 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                             authorAttributedString = NSAttributedString(string: peerText, font: textFont, textColor: theme.authorNameColor)
                         }
                     }
+
+                    if ExteraProfileSettings.shared.current.senderMiniAvatars, contentImageSpecs.isEmpty,
+                       let message = messages.last, let author = message.author?._asPeer(), case .user = author,
+                       let chatPeer = itemPeer.chatMainPeer, author.id != chatPeer.id {
+                        senderMiniAvatarSpec = SenderMiniAvatarSpec(peer: EnginePeer(author), size: contentImageSize)
+                    }
                 case let .group(peers):
                     let textString = NSMutableAttributedString(string: "")
                     var isFirst = true
@@ -3275,6 +3289,10 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                 if i == contentImageSpecs.count - 1 {
                     textLeftCutout += contentImageTrailingSpace
                 }
+            }
+
+            if senderMiniAvatarSpec != nil {
+                textLeftCutout += (senderMiniAvatarSpec?.size.width ?? 0.0) + contentImageTrailingSpace
             }
             
             switch contentData {
@@ -5075,7 +5093,26 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     inputActivitiesApply?()
                     
                     var mediaPreviewOffset = textNodeFrame.origin.offsetBy(dx: 1.0, dy: 1.0 + floor((measureLayout.size.height - contentImageSize.height) / 2.0))
-                    
+
+                    if let senderMiniAvatarSpec = senderMiniAvatarSpec {
+                        let avatarNode: AvatarNode
+                        let avatarNodeTransition: ContainedViewLayoutTransition
+                        if let current = strongSelf.senderMiniAvatarNode {
+                            avatarNode = current
+                            avatarNodeTransition = transition
+                        } else {
+                            avatarNodeTransition = .immediate
+                            avatarNode = AvatarNode(font: avatarPlaceholderFont(size: floor(senderMiniAvatarSpec.size.height * 0.4)))
+                            strongSelf.senderMiniAvatarNode = avatarNode
+                            strongSelf.mainContentContainerNode.addSubnode(avatarNode)
+                        }
+                        avatarNodeTransition.updateFrame(node: avatarNode, frame: CGRect(origin: mediaPreviewOffset, size: senderMiniAvatarSpec.size))
+                        avatarNode.setPeerV2(context: item.context, theme: item.presentationData.theme, peer: senderMiniAvatarSpec.peer, overrideImage: nil, emptyColor: item.presentationData.theme.list.mediaPlaceholderColor, clipStyle: .round, synchronousLoad: synchronousLoads, displayDimensions: senderMiniAvatarSpec.size)
+                    } else if let previous = strongSelf.senderMiniAvatarNode {
+                        strongSelf.senderMiniAvatarNode = nil
+                        previous.removeFromSupernode()
+                    }
+
                     let messageTypeIconImage = currentMessageTypeIcon
                     let messageTypeIconOffset = CGPoint(x: mediaPreviewOffset.x + currentMessageTypeIconOffset.x, y: mediaPreviewOffset.y + currentMessageTypeIconOffset.y)
                     
