@@ -13,6 +13,7 @@ import DeviceAccess
 import TelegramStringFormatting
 import PeerNameColorItem
 import WalletContext
+import ExteraProfile
 
 enum SettingsSection: Int, CaseIterable {
     case edit
@@ -267,6 +268,9 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     }))
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 7, text: presentationData.strings.Extera_Speech_Settings_Title, icon: PresentationResourcesSettings.voices, action: {
         interaction.openSettings(.exteraSpeech)
+    }))
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 8, text: exteraProfileString("Extera.Profile.Title"), icon: PresentationResourcesSettings.voices, action: {
+        interaction.openSettings(.exteraProfile)
     }))
     
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 6, label: .text(data.isPowerSavingEnabled == true ? presentationData.strings.Settings_PowerSavingOn : presentationData.strings.Settings_PowerSavingOff), text: presentationData.strings.Settings_PowerSaving, icon: PresentationResourcesSettings.powerSaving, action: {
