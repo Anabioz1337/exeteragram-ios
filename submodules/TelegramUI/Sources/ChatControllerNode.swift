@@ -67,6 +67,7 @@ import ChatSearchNavigationContentNode
 import GroupCallHeaderPanelComponent
 import PresentationDataUtils
 import TextProcessingScreen
+import exteraAICore
 import Pasteboard
 import UndoUI
 import BrowserUI
@@ -4920,7 +4921,15 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
                 // can't express goes to the AI as a rich InstantPage; no trim, matching send.
                 composedInputText = .rich(instantPage: instantPage(from: effectiveInputContent))
             }
-            
+
+            if exteraAIPresentComposeReplacement(
+                controller: self.controller,
+                context: self.context,
+                composedInputText: composedInputText
+            ) {
+                return
+            }
+
             self.controller?.push(await TextProcessingScreen(
                 context: self.context,
                 mode: .edit(

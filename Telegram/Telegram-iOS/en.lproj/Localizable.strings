@@ -17266,3 +17266,10 @@ Error: %8$@";
 "Extera.Feed.Hide" = "Hide";
 "Extera.Feed.ShowInTabs" = "Show in Bottom Tabs";
 "Extera.Feed.Empty" = "No new posts from your channels.";
+
+"ExteraAI.ReplaceTelegramTitle" = "Replace Telegram AI Actions";
+"ExteraAI.ReplaceTelegramInfo" = "Use exteraAI services and on-device models for the compose button instead of Telegram Premium AI.";
+"ExteraAI.ServicesTitle" = "Services";
+"ExteraAI.UseService" = "Use This Service";
+"ExteraAI.UseRole" = "Use This Role";
+"ExteraAI.RoleUsedInfo" = "Roles apply to AI actions in chats.";

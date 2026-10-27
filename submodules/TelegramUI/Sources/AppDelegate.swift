@@ -49,6 +49,7 @@ import NavigationBarComponent
 import NavigationExpansionTransition
 import ContextUI
 import ContextControllerImpl
+import exteraAICore
 import ProxyServerPreviewScreen
 import WalletContext
 import WalletSendScreen
@@ -357,6 +358,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         precondition(!testIsLaunched)
         testIsLaunched = true
         CrashReportCollector.shared.start()
+        exteraAIEnsureCorrectionServiceRegistered()
         
         let _ = voipTokenPromise.get().start(next: { token in
             self.voipDeviceToken.set(.single(token))
