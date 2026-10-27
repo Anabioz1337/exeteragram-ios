@@ -43,7 +43,7 @@ public final class ExteraAppearanceSettings {
             "newSwitchStyle": true,
             "disableDividers": false,
             "hideActionBarStatus": false,
-            "centerTitle": false,
+            "centerTitle": true,
             "titleText": 0,
             "useSystemFonts": false
         ])
@@ -106,6 +106,8 @@ public final class ExteraAppearanceSettings {
         }
     }
 
+    /// Whether titles stay band-centered (the iOS base's own placement) or hug the left buttons.
+    /// `true` is the registered default so an account that never touches this suite keeps the stock layout.
     public var centerTitle: Bool {
         get { return self.defaults.bool(forKey: "centerTitle") }
         set {
@@ -122,6 +124,9 @@ public final class ExteraAppearanceSettings {
         }
     }
 
+    /// Retained for parity with exteraGram's option list: every face this port draws comes through
+    /// `Display.Font`/`UIFont.systemFont`, so system typography is already the only behaviour here.
+    /// Kept so the preferences surface can store the toggle without drifting from the other platforms.
     public var useSystemFonts: Bool {
         get { return self.defaults.bool(forKey: "useSystemFonts") }
         set {

@@ -557,13 +557,15 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         }
         (leftTitleInset, rightTitleInset) = navigationBarTitleInsets(leftInset: layout.leftInset, rightInset: layout.rightInset, leftTitleInset: leftTitleInset, rightTitleInset: rightTitleInset)
 
+        let centeredTitle = ExteraAppearanceSettings.shared.centerTitle
         if let titleView = titleView as? NavigationBarTitleView {
             var titleViewTransition = transition
             if titleView.frame.isEmpty {
                 titleViewTransition = .immediate
             }
-            let titleSize = titleView.updateLayout(availableSize: CGSize(width: size.width - leftTitleInset - rightTitleInset, height: nominalHeight), transition: titleViewTransition)
-            let titleX = navigationBarTitleViewOriginX(width: size.width, leftInset: layout.leftInset, rightInset: layout.rightInset, leftTitleInset: leftTitleInset, rightTitleInset: rightTitleInset, titleWidth: titleSize.width)
+            let availableWidth = centeredTitle ? size.width - leftTitleInset - rightTitleInset : size.width - leftTitleInset - layout.rightInset
+            let titleSize = titleView.updateLayout(availableSize: CGSize(width: availableWidth, height: nominalHeight), transition: titleViewTransition)
+            let titleX = centeredTitle ? navigationBarTitleViewOriginX(width: size.width, leftInset: layout.leftInset, rightInset: layout.rightInset, leftTitleInset: leftTitleInset, rightTitleInset: rightTitleInset, titleWidth: titleSize.width) : leftTitleInset
             let titleFrame = CGRect(origin: CGPoint(x: titleX, y: contentVerticalOrigin + floorToScreenPixels((nominalHeight - titleSize.height) / 2.0)), size: titleSize)
             titleViewTransition.updateFrame(view: titleView, frame: titleFrame)
         } else {
