@@ -198,6 +198,7 @@ enum PeerInfoSettingsSection {
     case ton
     case wallet
     case exteraSpeech
+    case exteraAbout
 }
 
 enum PeerInfoReportType {
