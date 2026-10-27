@@ -2,6 +2,7 @@ import UIKit
 
 public enum ExteraInlineResultsUI {
     public static let panelHeight: CGFloat = 38.0
+    public static let pillStackHeight: CGFloat = 34.0
 
     public static var weatherPageUrl: URL {
         return URL(string: "https://open-meteo.com")!
