@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import SwiftSignalKit
 import AsyncDisplayKit
 import TelegramCore
 import Display
@@ -17,6 +18,7 @@ import ChatInputContextPanelNode
 import ComponentFlow
 import ComponentDisplayAdapters
 import GlassBackgroundComponent
+import exteraSettingsCore
 
 private struct MentionChatInputContextPanelEntry: Comparable, Identifiable {
     let index: Int
@@ -70,7 +72,10 @@ final class MentionChatInputContextPanelNode: ChatInputContextPanelNode {
     
     private var currentResults: [EnginePeer] = []
     private var revealedPeerId: EnginePeer.Id?
-    
+    private var addCommaAfterMention = true
+
+    private let exteraSettingsDisposable = MetaDisposable()
+
     private var enqueuedTransitions: [(CommandChatInputContextPanelTransition, Bool)] = []
     private var validLayout: (CGSize, CGFloat, CGFloat, CGFloat)?
     
@@ -101,6 +106,14 @@ final class MentionChatInputContextPanelNode: ChatInputContextPanelNode {
         }
         
         self.backgroundView.isHidden = true
+
+        self.exteraSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> deliverOnMainQueue).start(next: { [weak self] sharedData in
+            if let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) {
+                self?.addCommaAfterMention = settings.addCommaAfterMention
+            }
+        }))
+
         self.listView.visibleContentOffsetChanged = { [weak self] offset, _ in
             guard let self else {
                 return
@@ -160,12 +173,13 @@ final class MentionChatInputContextPanelNode: ChatInputContextPanelNode {
                             }
                             
                             if let range = mentionQueryRange {
+                                let trailingSeparator = self.addCommaAfterMention ? ", " : " "
                                 if let addressName = peer.addressName, !addressName.isEmpty {
-                                    return (textInputState.replacingFlatRange(range, with: addressName + " "), inputMode)
+                                    return (textInputState.replacingFlatRange(range, with: addressName + trailingSeparator), inputMode)
                                 } else if !peer.compactDisplayTitle.isEmpty {
                                     let replacementText = NSMutableAttributedString()
                                     replacementText.append(NSAttributedString(string: peer.compactDisplayTitle, attributes: [ChatTextInputAttributes.textMention: ChatTextInputTextMentionAttribute(peerId: peer.id)]))
-                                    replacementText.append(NSAttributedString(string: " "))
+                                    replacementText.append(NSAttributedString(string: self.addCommaAfterMention ? ", " : " "))
 
                                     // The widened range eats the leading "@" as well as the query.
                                     let updatedRange = NSRange(location: range.location - 1, length: range.length + 1)

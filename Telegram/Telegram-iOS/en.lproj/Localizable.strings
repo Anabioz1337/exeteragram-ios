@@ -17274,3 +17274,6 @@ Error: %8$@";
 "extera.CopyPhoto" = "Copy Photo";
 "extera.PhotoCopied" = "Photo copied";
 "extera.SaveMessage" = "Save to Saved Messages";
+
+// exteraGram: Mentions
+"extera.AddCommaAfterMention" = "Add comma after mention";
