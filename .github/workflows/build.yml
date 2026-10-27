@@ -29,11 +29,17 @@ jobs:
           XCODE_VERSION=$(python3 -c 'import json;print(json.load(open("versions.json"))["xcode"])')
           echo "Required Xcode: $XCODE_VERSION"
           if [ ! -d "/Applications/Xcode_${XCODE_VERSION}.app" ]; then
-            echo "::notice::Xcode ${XCODE_VERSION} is not preinstalled, installing with xcodes"
-            brew install xcodes
-            sudo xcodes install "${XCODE_VERSION}"
+            echo "::warning::Xcode ${XCODE_VERSION} not preinstalled — falling back to the newest available"
+            AVAILABLE=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+            if [ -z "$AVAILABLE" ]; then
+              echo "No Xcode found on runner"; exit 1
+            fi
+            echo "Using $AVAILABLE"
+            XCODE_FULL=$AVAILABLE
+          else
+            XCODE_FULL="/Applications/Xcode_${XCODE_VERSION}.app"
           fi
-          sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app/Contents/Developer"
+          sudo xcode-select -s "$XCODE_FULL/Contents/Developer"
           xcodebuild -version
 
       - name: Show toolchain versions and disk space
