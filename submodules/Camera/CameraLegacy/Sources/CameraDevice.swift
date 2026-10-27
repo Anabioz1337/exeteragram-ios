@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import SwiftSignalKit
 import Camera
+import ExteraCamera
 import TelegramCore
 
 private let defaultFPS: Double = 30.0
@@ -35,14 +36,19 @@ final class CameraDevice {
         
         var selectedDevice: AVCaptureDevice?
         if #available(iOS 13.0, *), position != .front && !dual {
-            if let device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: position) {
+            switch exteraCameraPreferredVideoDevice(position: position) {
+            case .device(let device):
                 selectedDevice = device
-            } else if let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: position) {
-                selectedDevice = device
-            } else if let device = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: position) {
-                selectedDevice = device
-            } else if let device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInTelephotoCamera], mediaType: .video, position: position).devices.first {
-                selectedDevice = device
+            case .stock:
+                if let device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: position) {
+                    selectedDevice = device
+                } else if let device = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: position) {
+                    selectedDevice = device
+                } else if let device = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: position) {
+                    selectedDevice = device
+                } else if let device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInTelephotoCamera], mediaType: .video, position: position).devices.first {
+                    selectedDevice = device
+                }
             }
         } else {
             if selectedDevice == nil {

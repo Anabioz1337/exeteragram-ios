@@ -19,6 +19,7 @@ swift_library(
         "//submodules/ImageBlur:ImageBlur",
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/Utils/DeviceModel",
+        "//submodules/exteraCamera",
         "//submodules/LottieBinding:LottieBinding",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/AppBundle",

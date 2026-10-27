@@ -50,3 +50,21 @@ public func exteraCameraPreferredVideoDevice(position: AVCaptureDevice.Position,
 
 /// Extended frame rate ceiling used when the extended FPS range is enabled.
 public let exteraCameraExtendedMaxFramerate: Double = 60.0
+
+/// Resolves the extera mirror mode against the device position.
+public func exteraCameraMirror(deviceIsFront: Bool, settings: ExteraCameraSettings? = nil) -> Bool {
+    let settings = settings ?? ExteraCameraOptions.shared.current
+    switch settings.mirrorMode {
+    case .off:
+        return false
+    case .on:
+        return true
+    case .auto:
+        return deviceIsFront
+    }
+}
+
+/// Stabilization gate: whether the standard stabilization mode may be requested.
+public func exteraCameraStabilizationEnabled(settings: ExteraCameraSettings? = nil) -> Bool {
+    return (settings ?? ExteraCameraOptions.shared.current).stabilization
+}
