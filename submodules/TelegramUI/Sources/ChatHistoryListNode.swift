@@ -39,6 +39,7 @@ import TextFormat
 import ChatNewThreadInfoItem
 import PhoneNumberFormat
 import Postbox
+import exteraSettingsCore
 
 struct ChatTopVisibleMessageRange: Equatable {
     var lowerBound: MessageIndex
@@ -412,7 +413,8 @@ private func extractAssociatedData(
     isInline: Bool,
     showSensitiveContent: Bool,
     isSuspiciousPeer: Bool,
-    accountCountry: String?
+    accountCountry: String?,
+    exteraSettings: ExteraSettings
 ) -> ChatMessageItemAssociatedData {
     var automaticDownloadPeerId: EnginePeer.Id?
     var automaticMediaDownloadPeerType: MediaAutoDownloadPeerType = .channel
@@ -473,7 +475,7 @@ private func extractAssociatedData(
         automaticDownloadPeerId = message.peerId
     }
     
-    return ChatMessageItemAssociatedData(automaticDownloadPeerType: automaticMediaDownloadPeerType, automaticDownloadPeerId: automaticDownloadPeerId, automaticDownloadNetworkType: automaticDownloadNetworkType, preferredStoryHighQuality: preferredStoryHighQuality, isRecentActions: false, subject: subject, contactsPeerIds: contactsPeerIds, channelDiscussionGroup: channelDiscussionGroup, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, premiumGiftStickers: premiumGiftStickers, tonGiftStickers: tonGiftStickers, currentlyPlayingMessageId: currentlyPlayingMessageId, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction, areStarReactionsEnabled: areStarReactionsEnabled, isPremium: isPremium, accountPeer: accountPeer, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, topicAuthorId: topicAuthorId, hasBots: hasBots, translateToLanguage: translateToLanguage, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: isInline, showSensitiveContent: showSensitiveContent, isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry, isParticipant: isParticipant, invitedOn: invitedOn)
+    return ChatMessageItemAssociatedData(automaticDownloadPeerType: automaticMediaDownloadPeerType, automaticDownloadPeerId: automaticDownloadPeerId, automaticDownloadNetworkType: automaticDownloadNetworkType, preferredStoryHighQuality: preferredStoryHighQuality, isRecentActions: false, subject: subject, contactsPeerIds: contactsPeerIds, channelDiscussionGroup: channelDiscussionGroup, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, premiumGiftStickers: premiumGiftStickers, tonGiftStickers: tonGiftStickers, currentlyPlayingMessageId: currentlyPlayingMessageId, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction, areStarReactionsEnabled: areStarReactionsEnabled, isPremium: isPremium, accountPeer: accountPeer, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, topicAuthorId: topicAuthorId, hasBots: hasBots, translateToLanguage: translateToLanguage, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: isInline, showSensitiveContent: showSensitiveContent, isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry, isParticipant: isParticipant, invitedOn: invitedOn, exteraSettings: exteraSettings)
 }
 
 private extension ChatHistoryLocationInput {
@@ -1974,6 +1976,12 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
         )
         
         let contentSettings = self.context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ContentSettings())
+
+        let exteraSettings = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> map { sharedData -> ExteraSettings in
+            return sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings()
+        }
+        |> distinctUntilChanged
         
         let maxReadStoryId: Signal<Int32?, NoError>
         if let peerId = self.chatLocation.peerId, peerId.namespace == Namespaces.Peer.CloudUser {
@@ -2089,6 +2097,9 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
             audioTranscriptionTrial |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_audioTranscriptionTrial"),
             chatThemes |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_chatThemes"),
             deviceContactsNumbers |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_deviceContactsNumbers"),
+            contentSettings |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_contentSettings"),
+            exteraSettings |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_exteraSettings")
+        ) |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_firstChatHistoryTransition")).startStrict(next: { [weak self] update, chatPresentationData, selectedMessages, updatingMedia, networkType, preferredStoryHighQuality, animatedEmojiAndGiftStickers, additionalAnimatedEmojiStickers, customChannelDiscussionReadState, customThreadOutgoingReadState, availableReactions, availableMessageEffects, savedMessageTags, defaultReaction, accountPeer, accountCountry, suggestAudioTranscription, promises, topicAuthorId, translationState, maxReadStoryId, recommendedChannels, audioTranscriptionTrial, chatThemes, deviceContactsNumbers, contentSettings, exteraSettings in
             contentSettings |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_contentSettings"),
             exteraSpeechEnabled |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_exteraSpeechEnabled")
         ) |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_firstChatHistoryTransition")).startStrict(next: { [weak self] update, chatPresentationData, selectedMessages, updatingMedia, networkType, preferredStoryHighQuality, animatedEmojiAndGiftStickers, additionalAnimatedEmojiStickers, customChannelDiscussionReadState, customThreadOutgoingReadState, availableReactions, availableMessageEffects, savedMessageTags, defaultReaction, accountPeer, accountCountry, suggestAudioTranscription, promises, topicAuthorId, translationState, maxReadStoryId, recommendedChannels, audioTranscriptionTrial, chatThemes, deviceContactsNumbers, contentSettings, exteraSpeechEnabled in
@@ -2349,7 +2360,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                 }
                 self?.holdsReadsForSender.set(holdsReadsForSender)
                 
-                let associatedData = extractAssociatedData(chatLocation: chatLocation, view: view, automaticDownloadNetworkType: networkType, preferredStoryHighQuality: preferredStoryHighQuality, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, premiumGiftStickers: premiumGiftStickers, tonGiftStickers: tonGiftStickers, subject: subject, currentlyPlayingMessageId: currentlyPlayingMessageIdAndType?.0, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction.0, areStarReactionsEnabled: defaultReaction.1, isPremium: isPremium, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, accountPeer: accountPeer, topicAuthorId: topicAuthorId, hasBots: chatHasBots, translateToLanguage: translateToLanguage?.toLang, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: !rotated, showSensitiveContent: contentSettings.ignoreContentRestrictionReasons.contains("sensitive"), isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry)
+                let associatedData = extractAssociatedData(chatLocation: chatLocation, view: view, automaticDownloadNetworkType: networkType, preferredStoryHighQuality: preferredStoryHighQuality, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, premiumGiftStickers: premiumGiftStickers, tonGiftStickers: tonGiftStickers, subject: subject, currentlyPlayingMessageId: currentlyPlayingMessageIdAndType?.0, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction.0, areStarReactionsEnabled: defaultReaction.1, isPremium: isPremium, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, accountPeer: accountPeer, topicAuthorId: topicAuthorId, hasBots: chatHasBots, translateToLanguage: translateToLanguage?.toLang, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: !rotated, showSensitiveContent: contentSettings.ignoreContentRestrictionReasons.contains("sensitive"), isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry, exteraSettings: exteraSettings)
                 
                 var includeEmbeddedSavedChatInfo = false
                 if case let .replyThread(message) = chatLocation, message.peerId == context.account.peerId, !rotated {

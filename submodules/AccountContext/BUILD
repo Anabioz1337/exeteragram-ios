@@ -34,3 +34,19 @@ swift_library(
         "//visibility:public",
     ],
 )
+        "//submodules/exteraSettingsCore:exteraSettingsCore",
+        "//submodules/MusicAlbumArtResources:MusicAlbumArtResources",
+        "//submodules/Utils/RangeSet:RangeSet",
+        "//submodules/InAppPurchaseManager:InAppPurchaseManager",
+        "//submodules/TextFormat:TextFormat",
+        "//submodules/TelegramUI/Components/AnimationCache:AnimationCache",
+        "//submodules/TelegramUI/Components/MultiAnimationRenderer:MultiAnimationRenderer",
+        "//submodules/WalletContext",
+        "//submodules/LottieSettings:LottieSettings",
+        "//submodules/TelegramCore/FlatBuffers",
+        "//submodules/TelegramCore/FlatSerialization",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)

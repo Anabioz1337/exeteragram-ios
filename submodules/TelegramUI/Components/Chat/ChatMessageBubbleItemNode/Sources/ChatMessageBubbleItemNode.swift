@@ -5819,6 +5819,29 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         }
     }
     
+    private func performConfiguredDoubleTapAction(message: Message, controllerInteraction: ChatControllerInteraction) {
+        let configuredAction = message.flags.contains(.Outgoing)
+            ? self.item?.associatedData.exteraSettings.doubleTapActionOutOwner ?? 1
+            : self.item?.associatedData.exteraSettings.doubleTapAction ?? 1
+
+        switch configuredAction {
+            case 1:
+                if canAddMessageReactions(message: EngineMessage(message)) {
+                    controllerInteraction.updateMessageReaction(message, .default, false, nil)
+                }
+            case 2:
+                controllerInteraction.setupReply(message.id)
+            case 3:
+                if !message.text.isEmpty {
+                    controllerInteraction.copyText(message.text)
+                }
+            case 4:
+                controllerInteraction.openMessageShareMenu(message.id)
+            default:
+                break
+        }
+    }
+
     override public func shouldAnimateHorizontalFrameTransition() -> Bool {
         return false
     }
@@ -5841,7 +5864,9 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                     case let .optionalAction(f):
                         f()
                     case let .openContextMenu(openContextMenu):
-                        if canAddMessageReactions(message: EngineMessage(openContextMenu.tapMessage)) {
+                        if case .doubleTap = gesture {
+                            self.performConfiguredDoubleTapAction(message: openContextMenu.tapMessage, controllerInteraction: item.controllerInteraction)
+                        } else if canAddMessageReactions(message: EngineMessage(openContextMenu.tapMessage)) {
                             item.controllerInteraction.updateMessageReaction(openContextMenu.tapMessage, .default, false, nil)
                         } else {
                             item.controllerInteraction.openMessageContextMenu(openContextMenu.tapMessage, openContextMenu.selectAll, self, openContextMenu.subFrame, nil, nil)
@@ -5850,9 +5875,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                 } else if case .tap = gesture {
                     item.controllerInteraction.clickThroughMessage(self.view, location)
                 } else if case .doubleTap = gesture {
-                    if canAddMessageReactions(message: EngineMessage(item.message)) {
-                        item.controllerInteraction.updateMessageReaction(item.message, .default, false, nil)
-                    }
+                    self.performConfiguredDoubleTapAction(message: item.message, controllerInteraction: item.controllerInteraction)
                 }
             }
         default:

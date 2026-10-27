@@ -70,35 +70,14 @@
 "PUSH_CHANNEL_MESSAGE_GAME" = "%1$@|invited you to play %2$@";
 "PUSH_CHAT_MESSAGE_GAME" = "%2$@|%1$@ invited the group to play %3$@";
 
-"PUSH_MESSAGE_TEXT" = "%1$@|%2$@";
-"PUSH_MESSAGE_NOTEXT" = "%1$@|sent you a message";
-"PUSH_MESSAGE_PHOTO" = "%1$@|sent you a photo";
-"PUSH_MESSAGE_PHOTO_SECRET" = "%1$@|sent you a self-destructing photo";
-"PUSH_MESSAGE_VIDEO" = "%1$@|sent you a video";
-"PUSH_MESSAGE_VIDEO_SECRET" = "%1$@|sent you a self-destructing video";
-"PUSH_MESSAGE_SCREENSHOT" = "%1$@|took a screenshot";
-"PUSH_MESSAGE_ROUND" = "%1$@|sent you a video message";
-"PUSH_MESSAGE_DOC" = "%1$@|sent you a file";
-"PUSH_MESSAGE_STICKER" = "%1$@|sent you a %2$@sticker";
-"PUSH_MESSAGE_AUDIO" = "%1$@|sent you a voice message";
-"PUSH_MESSAGE_CONTACT" = "%1$@|shared a contact with you";
-"PUSH_MESSAGE_GEO" = "%1$@|sent you a map";
-"PUSH_MESSAGE_GEOLIVE" = "%1$@|started sharing their live location";
-"PUSH_MESSAGE_POLL" = "%1$@|sent you a poll";
-"PUSH_MESSAGE_QUIZ" = "%1$@|sent you a quiz";
-"PUSH_MESSAGE_GIF" = "%1$@|sent you a GIF";
-"PUSH_MESSAGE_GAME" = "%1$@|invited you to play %2$@";
 "PUSH_MESSAGE_INVOICE" = "%1$@|sent you an invoice for %2$@";
 "PUSH_MESSAGE_FWD" = "%1$@|forwarded you a message";
 "PUSH_MESSAGE_FWDS_TEXT_1" = "forwarded you a message";
 "PUSH_MESSAGE_FWDS_TEXT_any" = "forwarded you %d messages";
-"PUSH_MESSAGE_PHOTO" = "%1$@|sent you a photo";
 "PUSH_MESSAGE_PHOTOS_TEXT_1" = "sent you a photo";
 "PUSH_MESSAGE_PHOTOS_TEXT_any" = "sent you %d photos";
-"PUSH_MESSAGE_VIDEO" = "%1$@|sent you a video";
 "PUSH_MESSAGE_VIDEOS_TEXT_1" = "sent you a video";
 "PUSH_MESSAGE_VIDEOS_TEXT_any" = "sent you %d videos";
-"PUSH_MESSAGE_ROUND" = "%1$@|sent you a video message";
 "PUSH_MESSAGE" = "%1$@|sent you a message";
 "PUSH_MESSAGES_TEXT_1" = "sent you a message";
 "PUSH_MESSAGES_TEXT_any" = "sent you %d messages";
@@ -111,29 +90,11 @@
 "CHAT_MESSAGE_RECURRING_PAY" = "%1$@|You were charged %2$@";
 "PUSH_MESSAGE_PAID_MEDIA" = "%1$@sent you a paid post for %2$@ stars";
 
-"PUSH_CHANNEL_MESSAGE_TEXT" = "%1$@|%2$@";
-"PUSH_CHANNEL_MESSAGE_NOTEXT" = "%1$@|posted a message";
-"PUSH_CHANNEL_MESSAGE_PHOTO" = "%1$@|posted a photo";
-"PUSH_CHANNEL_MESSAGE_VIDEO" = "%1$@|posted a video";
-"PUSH_CHANNEL_MESSAGE_ROUND" = "%1$@|posted a video message";
-"PUSH_CHANNEL_MESSAGE_DOC" = "%1$@|posted a file";
-"PUSH_CHANNEL_MESSAGE_STICKER" = "%1$@|posted a %2$@sticker";
-"PUSH_CHANNEL_MESSAGE_AUDIO" = "%1$@|posted a voice message";
-"PUSH_CHANNEL_MESSAGE_CONTACT" = "%1$@|posted a contact";
-"PUSH_CHANNEL_MESSAGE_GEO" = "%1$@|posted a map";
-"PUSH_CHANNEL_MESSAGE_GEOLIVE" = "%1$@|posted a live location";
-"PUSH_CHANNEL_MESSAGE_POLL" = "%1$@|posted a poll";
-"PUSH_CHANNEL_MESSAGE_QUIZ" = "%1$@|posted a quiz";
-"PUSH_CHANNEL_MESSAGE_GIF" = "%1$@|posted a GIF";
-"PUSH_CHANNEL_MESSAGE_GAME" = "%1$@|invited you to play %2$@";
 "PUSH_CHANNEL_MESSAGE_FWD" = "%1$@|posted a forwarded message";
-"PUSH_CHANNEL_MESSAGE_PHOTO" = "%1$@|posted a photo";
 "PUSH_CHANNEL_MESSAGE_PHOTOS_TEXT_1" = "posted a photo";
 "PUSH_CHANNEL_MESSAGE_PHOTOS_TEXT_any" = "posted %d photos";
-"PUSH_CHANNEL_MESSAGE_VIDEO" = "%1$@|posted a video";
 "PUSH_CHANNEL_MESSAGE_VIDEOS_TEXT_1" = "posted a video";
 "PUSH_CHANNEL_MESSAGE_VIDEOS_TEXT_any" = "posted %d videos";
-"PUSH_CHANNEL_MESSAGE_ROUND" = "%1$@|posted a video message";
 "PUSH_CHANNEL_MESSAGE" = "%1$@|posted a message";
 "PUSH_CHANNEL_MESSAGES_TEXT_1" = "posted a message";
 "PUSH_CHANNEL_MESSAGES_TEXT_any" = "posted %d messages";
@@ -142,41 +103,17 @@
 "PUSH_CHANNEL_MESSAGE_DOCS_TEXT_any" = "posted %d files";
 "PUSH_CHANNEL_MESSAGE_PAID_MEDIA" = "%1$@ sent a paid post for %2$@ stars";
 
-"PUSH_CHAT_MESSAGE_TEXT" = "%2$@|%1$@:%3$@";
-"PUSH_CHAT_MESSAGE_NOTEXT" = "%2$@|%1$@ sent a message to the group";
-"PUSH_CHAT_MESSAGE_VIDEO" = "%2$@|%1$@ sent a video ";
-"PUSH_CHAT_MESSAGE_ROUND" = "%2$@|%1$@ sent a video message";
-"PUSH_CHAT_MESSAGE_DOC" = "%2$@|%1$@ sent a file";
-"PUSH_CHAT_MESSAGE_STICKER" = "%2$@|%1$@ sent a %3$@sticker";
-"PUSH_CHAT_MESSAGE_AUDIO" = "%2$@|%1$@ sent a voice message";
-"PUSH_CHAT_MESSAGE_CONTACT" = "%2$@|%1$@ shared a contact";
-"PUSH_CHAT_MESSAGE_GEO" = "%2$@|%1$@ sent a map";
-"PUSH_CHAT_MESSAGE_GEOLIVE" = "%2$@|%1$@ started sharing their live location";
 "PUSH_CHAT_MESSAGE_POLL" = "%2$@|%1$@ sent a poll %3$@ to the group";
 "PUSH_CHAT_MESSAGE_QUIZ" = "%2$@|%1$@ sent a quiz %3$@ to the group";
-"PUSH_CHAT_MESSAGE_GIF" = "%2$@|%1$@ sent a GIF";
-"PUSH_CHAT_MESSAGE_GAME" = "%2$@|%1$@ invited the group to play %3$@";
 "PUSH_CHAT_MESSAGE_INVOICE" = "%2$@|%1$@ sent an invoice for %3$@";
-"PUSH_CHAT_CREATED" = "%2$@|%1$@ invited you to the group";
-"PUSH_CHAT_TITLE_EDITED" = "%2$@|%1$@ edited the group\'s name";
-"PUSH_CHAT_PHOTO_EDITED" = "%2$@|%1$@ edited the group\'s photo";
-"PUSH_CHAT_ADD_MEMBER" = "%2$@|%1$@ invited %3$@ to the group";
-"PUSH_CHAT_ADD_YOU" = "%2$@|%1$@ invited you to the group";
-"PUSH_CHAT_DELETE_MEMBER" = "%2$@|%1$@ kicked %3$@ from the group";
-"PUSH_CHAT_DELETE_YOU" = "%2$@|%1$@ kicked you from the group ";
-"PUSH_CHAT_LEFT" = "%2$@|%1$@ has left the group";
-"PUSH_CHAT_RETURNED" = "%2$@|%1$@ has returned to the group";
 "PUSH_CHAT_JOINED" = "%2$@|%1$@ has joined the group";
 "PUSH_CHAT_MESSAGE_FWD" = "%2$@|%1$@ forwarded a message";
 "PUSH_CHAT_MESSAGE_FWDS_TEXT_1" = "{author} forwarded a message";
 "PUSH_CHAT_MESSAGE_FWDS_TEXT_any" = "{author} forwarded %d messages";
-"PUSH_CHAT_MESSAGE_PHOTO" = "%2$@|%1$@ sent a photo";
 "PUSH_CHAT_MESSAGE_PHOTOS_TEXT_1" = "{author} sent a photo";
 "PUSH_CHAT_MESSAGE_PHOTOS_TEXT_any" = "{author} sent %d photos";
-"PUSH_CHAT_MESSAGE_VIDEO" = "%2$@|%1$@ sent a video";
 "PUSH_CHAT_MESSAGE_VIDEOS_TEXT_1" = "{author} sent a video";
 "PUSH_CHAT_MESSAGE_VIDEOS_TEXT_any" = "{author} sent %d videos";
-"PUSH_CHAT_MESSAGE_ROUND" = "%2$@|%1$@ sent a video message";
 "PUSH_CHAT_MESSAGE" = "%2$@|%1$@ sent a message";
 "PUSH_CHAT_MESSAGES_TEXT_1" = "{author} sent a message";
 "PUSH_CHAT_MESSAGES_TEXT_any" = "{author} sent %d messages";
@@ -199,14 +136,11 @@
 "PUSH_PINNED_CONTACT" = "%1$@|pinned a %2$@ contact";
 "PUSH_PINNED_GEO" = "%1$@|pinned a map";
 "PUSH_PINNED_GEOLIVE" = "%1$@|pinned a live location";
-"PUSH_PINNED_POLL" = "|%1$@|pinned a poll %2$@";
-"PUSH_PINNED_QUIZ" = "|%1$@|pinned a quiz %2$@";
 "PUSH_PINNED_GAME" = "%1$@|pinned a game";
 "PUSH_PINNED_INVOICE" = "%1$@|pinned an invoice";
 "PUSH_PINNED_GIF" = "%1$@|pinned a GIF";
 "PUSH_PINNED_PAID_MEDIA" = "%1$@|pinned a paid post for %2$@";
 
-"PUSH_CONTACT_JOINED" = "%1$@|joined Telegram!";
 
 "PUSH_AUTH_UNKNOWN" = "New login|from unrecognized device %1$@";
 "PUSH_AUTH_REGION" = "New login|from unrecognized device %1$@, location: %2$@";
@@ -270,7 +204,6 @@
 "PUSH_REMINDER_TITLE" = "🗓 Reminder";
 "PUSH_SENDER_YOU" = "📅 You";
 
-"PUSH_CHAT_REQ_JOINED" = "%2$@|%1$@ was accepted into the group";
 
 "PUSH_STORY_NOTEXT" = "%1$@|posted a story";
 "PUSH_MESSAGE_STORY" = "%1$@|shared a story with you";
@@ -387,7 +320,6 @@
 "LastSeen.HoursAgo_3_10" = "last seen %@ hours ago";
 "LastSeen.HoursAgo_any" = "last seen %@ hours ago";
 "LastSeen.HoursAgo_many" = "last seen %@ hours ago";
-"LastSeen.HoursAgo_0" = "last seen %@ hours ago";
 "LastSeen.YesterdayAt" = "last seen yesterday at %@";
 "LastSeen.AtDate" = "last seen %@";
 "LastSeen.TodayAt" = "last seen today at %@";
@@ -1456,7 +1388,6 @@
 "Map.ETAMinutes_3_10" = "%@ min";
 "Map.ETAMinutes_any" = "%@ min";
 "Map.ETAMinutes_many" = "%@ min";
-"Map.ETAMinutes_0" = "%@ min";
 "Map.ETAHours_1" = "%@ h";
 "Map.ETAHours_2" = "%@ h";
 "Map.ETAHours_3_10" = "%@ h";
@@ -1465,7 +1396,6 @@
 
 "ChangePhone.ErrorOccupied" = "The number %@ is already connected to a Telegram account. Please delete that account before migrating to the new number.";
 
-"AccessDenied.LocationTracking" = "Telegram needs access to your location to show you on the map.\n\nPlease go to Settings > Privacy > Location Services and set it to ON.";
 
 "PrivacySettings.AuthSessions" = "Active Sessions";
 "AuthSessions.Title" = "Active Sessions";
@@ -1951,7 +1881,6 @@
 "PrivacyLastSeenSettings.WhoCanSeeMyTimestamp" = "WHO CAN SEE MY TIMESTAMP";
 
 "PrivacyLastSeenSettings.GroupsAndChannelsHelp" = "Change who can add you to groups and channels.";
-"MusicPlayer.VoiceNote" = "Voice Message";
 
 "Watch.Microphone.Access" = "Allow Telegram to access the microphone on your phone";
 
@@ -2568,7 +2497,6 @@ Unused sets are archived when you add more.";
 "PhotoEditor.QualityHigh" = "High";
 "PhotoEditor.QualityVeryHigh" = "Very High";
 
-"Settings.SaveEditedPhotos" = "Save Edited Photos";
 
 "Calls.NoCallsPlaceholder" = "Your recent calls will appear here";
 "Calls.NoMissedCallsPlacehoder" = "You have no missed calls";
@@ -3144,11 +3072,6 @@ Unused sets are archived when you add more.";
 "PasscodeSettings.HelpTop" = "When you set up an additional passcode, a lock icon will appear on the chats page. Tap it to lock and unlock the app.";
 "PasscodeSettings.HelpBottom" = "Note: if you forget the passcode, you'll need to delete and reinstall the app. All secret chats will be lost.";
 
-"Channel.Setup.TypePublicHelp" = "Public channels can be found in search, channel history is available to everyone and anyone can join.";
-"Channel.Setup.TypePrivateHelp" = "Private channels can only be joined if you were invited or have an invite link.";
-"Group.Username.InvalidTooShort" = "Group names must have at least 5 characters.";
-"Group.Username.InvalidStartsWithNumber" = "Group names can't start with a number.";
-"Group.Username.CreatePublicLinkHelp" = "People can share this link with others and find your group using Telegram search.";
 "Channel.TypeSetup.Title" = "Channel Type";
 
 "Group.Setup.TypePrivate" = "Private";
@@ -3169,7 +3092,6 @@ Unused sets are archived when you add more.";
 "InfoPlist.NSSiriUsageDescription" = "You can use Siri to send messages.";
 "InfoPlist.NSLocationAlwaysAndWhenInUseUsageDescription" = "When you choose to share your Live Location with friends in a chat, Telegram needs background access to your location to keep them updated for the duration of the live sharing.";
 "InfoPlist.NSLocationAlwaysUsageDescription" = "When you choose to share your live location with friends in a chat, Telegram needs background access to your location to keep them updated for the duration of the live sharing. You also need this to send locations from an Apple Watch.";
-"InfoPlist.NSLocationWhenInUseUsageDescription" = "When you send your location to your friends, Telegram needs access to show them a map.";
 "InfoPlist.NSFaceIDUsageDescription" = "You can use Face ID to unlock the app.";
 
 "Privacy.Calls.P2PNever" = "Never";
@@ -3841,9 +3763,7 @@ Unused sets are archived when you add more.";
 "TextFormat.Italic" = "Italic";
 "TextFormat.Monospace" = "Monospace";
 
-"TwoStepAuth.SetupPasswordTitle" = "Create a Password";
 "TwoStepAuth.SetupPasswordDescription" = "Please create a password which will be used to protect your data.";
-"TwoStepAuth.ChangePassword" = "Change Password";
 "TwoStepAuth.ChangePasswordDescription" = "Please enter a new password which will be used to protect your data.";
 "TwoStepAuth.ReEnterPasswordTitle" = "Re-enter your Password";
 "TwoStepAuth.ReEnterPasswordDescription" = "Please confirm your password.";
@@ -3853,7 +3773,6 @@ Unused sets are archived when you add more.";
 "TwoStepAuth.RecoveryEmailTitle" = "Recovery Email";
 "TwoStepAuth.RecoveryEmailAddDescription" = "Please add your valid e-mail. It is the only way to recover a forgotten password.";
 "TwoStepAuth.RecoveryEmailChangeDescription" = "Please enter your new recovery email. It is the only way to recover a forgotten password.";
-"TwoStepAuth.ChangeEmail" = "Change Email";
 "TwoStepAuth.ConfirmEmailDescription" = "Please enter the code we've just emailed at %1$@.";
 "TwoStepAuth.ConfirmEmailCodePlaceholder" = "Code";
 "TwoStepAuth.ConfirmEmailResendCode" = "Resend Code";
@@ -4488,7 +4407,6 @@ Sorry for the inconvenience.";
 
 "Conversation.PrivateChannelTooltip" = "This channel is private";
 
-"PasscodeSettings.PasscodeOptions" = "Passcode Options";
 "PasscodeSettings.AlphanumericCode" = "Custom Alphanumeric Code";
 "PasscodeSettings.4DigitCode" = "4-Digit Numeric Code";
 "PasscodeSettings.6DigitCode" = "6-Digit Numeric Code";
@@ -4599,7 +4517,6 @@ Sorry for the inconvenience.";
 "Notification.Exceptions.PreviewAlwaysOff" = "Hide Preview";
 "Notification.Exceptions.RemoveFromExceptions" = "Remove from Exceptions";
 "Conversation.Block" = "Block";
-"Conversation.BlockUser" = "Block User";
 "Conversation.ShareMyPhoneNumber" = "Share My Phone Number";
 "Conversation.ShareMyPhoneNumberConfirmation" = "Are you sure you want to share your phone number %1$@ with %2$@?";
 "Conversation.AddToContacts" = "Add to Contacts";
@@ -4727,7 +4644,6 @@ Sorry for the inconvenience.";
 "Chat.MultipleTextMessagesDisabled" = "Slowmode is enabled. You can't send multiple messages at once.";
 "Share.MultipleMessagesDisabled" = "Slowmode is enabled. You can't send multiple messages at once.";
 "Chat.SlowmodeSendError" = "Slowmode is enabled.";
-"StickerPacksSettings.AnimatedStickersInfo" = "Animated stickers in a chat will play continuously.";
 
 "Conversation.Owner" = "owner";
 
@@ -5080,8 +4996,6 @@ Sorry for the inconvenience.";
 
 "Appearance.ColorThemeNight" = "COLOR THEME — AUTO-NIGHT MODE";
 
-"UserInfo.StartSecretChatConfirmation" = "Are you sure you want to start a secret chat with\n%@?";
-"UserInfo.StartSecretChatStart" = "Start";
 
 "GroupInfo.ShowMoreMembers_0" = "%@ more";
 "GroupInfo.ShowMoreMembers_1" = "%@ more";
@@ -6658,7 +6572,6 @@ Sorry for the inconvenience.";
 "ScheduledIn.Years_2" = "%@ years";
 "ScheduledIn.Years_3_10" = "%@ years";
 "ScheduledIn.Years_any" = "%@ years";
-"ScheduledIn.Months_many" = "%@ years";
 
 "Checkout.PaymentLiabilityAlert" = "Neither Telegram, nor {target} will have access to your credit card information. Credit card details will be handled only by the payment system, {payment_system}.\n\nPayments will go directly to the developer of {target}. Telegram cannot provide any guarantees, so proceed at your own risk. In case of problems, please contact the developer of {target} or your bank.";
 
@@ -6780,7 +6693,6 @@ Sorry for the inconvenience.";
 "TwoFactorSetup.ResetDone.TextNoPassword" = "You can always set a new password in\n\n\nSettings>Privacy & Security>Two-Step Verification";
 
 "TwoFactorSetup.ResetFloodWait" = "You recently requested a password reset that was cancelled. Please wait %@ before making a new request.";
-"TwoFactorSetup.ResetFloodWait" = "You have recently requested a password reset that was canceled. Please wait for %@ before making a new request.";
 
 "TwoFactorRemember.Title" = "Enter Your Password";
 "TwoFactorRemember.Text" = "Do you still remeber your password?";
@@ -7141,7 +7053,6 @@ Sorry for the inconvenience.";
 "Time.HoursAgo_3_10" = "%@ hours ago";
 "Time.HoursAgo_any" = "%@ hours ago";
 "Time.HoursAgo_many" = "%@ hours ago";
-"Time.HoursAgo_0" = "%@ hours ago";
 "Time.AtDate" = "%@";
 "Time.AtPreciseDate" = "%@ at %@";
 
@@ -7664,7 +7575,6 @@ Sorry for the inconvenience.";
 "Share.UploadProgress" = "Uploading • %d%";
 "Share.UploadDone" = "Done";
 
-"StickerPack.Share" = "Share Stickers";
 "StickerPack.CopyLink" = "Copy Link";
 
 "Stickers.PremiumStickers" = "Premium Stickers";
@@ -8650,7 +8560,6 @@ Sorry for the inconvenience.";
 "Paint.Ellipse" = "Ellipse";
 "Paint.Bubble" = "Bubble";
 "Paint.Star" = "Star";
-"Paint.Arrow" = "Arrow";
 
 "Paint.MoveForward" = "Move Forward";
 
@@ -8881,7 +8790,6 @@ Sorry for the inconvenience.";
 
 "Settings.AutosaveMediaOn" = "On";
 "Settings.AutosaveMediaOff" = "Off";
-"Settings.AutosaveMediaOn" = "On";
 "Settings.AutosaveMediaAllMedia" = "All Media (%@)";
 "Settings.AutosaveMediaPhoto" = "Photos";
 "Settings.AutosaveMediaNoPhoto" = "No Photos";
@@ -9026,7 +8934,6 @@ Sorry for the inconvenience.";
 
 "MediaPicker.VoiceOver.Camera" = "Camera";
 
-"ChatList.ReadAll" = "Read All";
 
 "ChatList.ClearSavedMessagesConfirmation" = "Are you sure you want to delete all your saved messages?";
 
@@ -9427,12 +9334,8 @@ Sorry for the inconvenience.";
 "ChatList.PremiumRestoreDiscountTitle" = "Get Premium back with up to %@ off";
 "ChatList.PremiumRestoreDiscountText" = "Your Telegram Premium has recently expired. Tap here to extend it.";
 
-"Notification.LockScreenReactionPlaceholder" = "Reaction";
 
-"UserInfo.BotNamePlaceholder" = "Bot Name";
 
-"ChatList.PremiumRestoreDiscountTitle" = "Get Premium back with up to %@ off";
-"ChatList.PremiumRestoreDiscountText" = "Your Telegram Premium has recently expired. Tap here to extend it.";
 
 "Login.ErrorAppOutdated" = "Please update Telegram to the latest version to log in.";
 
@@ -9829,8 +9732,6 @@ Sorry for the inconvenience.";
 
 "Story.Privacy.SaveList" = "Save List";
 
-"StoryList.TooltipStoriesSavedToProfile_1" = "Story archived";
-"StoryList.TooltipStoriesSavedToProfile_any" = "%d stories archived.";
 
 "Premium.New" = "NEW";
 
@@ -9910,7 +9811,6 @@ Sorry for the inconvenience.";
 "Story.ViewList.TabTitleContacts" = "Contacts";
 "Story.ViewList.TitleViewers" = "Viewers";
 "Story.ViewList.TitleEmpty" = "No Views";
-"Story.Footer.NoViews" = "No Views";
 "Story.Footer.ViewCount_1" = "|%d| View";
 "Story.Footer.ViewCount_any" = "|%d| Views";
 "Story.StealthMode.Title" = "Stealth Mode";
@@ -9995,37 +9895,16 @@ Sorry for the inconvenience.";
 "WebApp.ShortcutsAdded" = "**%@** shortcut added in attachment menu.";
 "WebApp.ShortcutsSettingsAdded" = "**%@** shortcut added in attachment menu and Settings.";
 
-"WebApp.AllowWriteTitle" = "Allow Sending Messages?";
-"WebApp.AllowWriteConfirmation" = "This will allow the bot **%@** to message you on Telegram.";
 
-"AuthSessions.MessageApp" = "You allowed this bot to message you when you opened %@.";
 
 "Notification.BotWriteAllowedMenu" = "You allowed this bot to message you when you added it to your attachment menu.";
 "Notification.BotWriteAllowedRequest" = "You allowed this bot to message you in the app.";
 
-"WebApp.SharePhoneTitle" = "Share Phone Number?";
-"WebApp.SharePhoneConfirmation" = "**%@** will know your phone number. This can be useful for integration with other services.";
-"WebApp.SharePhoneConfirmationUnblock" = "**%@** will know your phone number. This can be useful for integration with other services.\n\nThis will also unblock the bot.";
 
-"SecretImage.ViewOnce.Title" = "Disappearing Photo";
-"SecretVideo.ViewOnce.Title" = "Disappearing Video";
 
-"MediaPicker.Timer.Description" = "Choose how long the media will be kept after opening.";
-"MediaPicker.Timer.ViewOnce" = "View Once";
-"MediaPicker.Timer.Seconds_1" = "%d Second";
-"MediaPicker.Timer.Seconds_any" = "%d Seconds";
-"MediaPicker.Timer.DoNotDelete" = "Do Not Delete";
 
-"MediaPicker.Timer.Photo.ViewOnceTooltip" = "Photo set to view once.";
-"MediaPicker.Timer.Photo.TimerTooltip" = "Photo will be deleted in\n%@ seconds after opening.";
-"MediaPicker.Timer.Photo.KeepTooltip" = "Photo will be kept in chat.";
 
-"MediaPicker.Timer.Video.ViewOnceTooltip" = "Video set to view once.";
-"MediaPicker.Timer.Video.TimerTooltip" = "Video will be deleted in\n%@ seconds after opening.";
-"MediaPicker.Timer.Video.KeepTooltip" = "Video will be kept in chat.";
 
-"Gallery.ViewOncePhotoTooltip" = "This photo can only be viewed once.";
-"Gallery.ViewOnceVideoTooltip" = "This video can only be viewed once.";
 
 "ChatList.SessionReview.ConfirmToastTitle" = "New Login Allowed";
 "ChatList.SessionReview.ConfirmToastText" = "You can check the list of your active logins in [Settings > Devices]().";
@@ -10950,10 +10829,7 @@ Sorry for the inconvenience.";
 "Call.EncryptedAlertTitle" = "This call is end-to-end encrypted";
 "Call.EncryptedAlertText" = "If the emoji on %@'s screen are the same, this call is 100% secure.";
 "Call.EncryptionKeyTooltip" = "Encryption key of this call";
-"Call.StatusBusy" = "Line Busy";
 "Call.StatusDeclined" = "Call Declined";
-"Call.StatusFailed" = "Call Failed";
-"Call.StatusEnded" = "Call Ended";
 "Call.StatusMissed" = "Call Missed";
 
 "Call.WaitingStatusRequesting" = "Requesting";
@@ -11398,12 +11274,7 @@ Sorry for the inconvenience.";
 "ChannelBoost.Header.Features" = "features";
 
 
-"GroupBoost.Table.Group.VoiceToText" = "Voice-to-Text Conversion";
-"GroupBoost.Table.Group.EmojiPack" = "Custom Emojipack";
 
-"ChannelBoost.Header.Boost" = "boost";
-"ChannelBoost.Header.Giveaway" = "giveaway";
-"ChannelBoost.Header.Features" = "features";
 
 "Premium.FolderTags" = "Folder Tags";
 "Premium.FolderTagsInfo" = "Add colorful labels to chats for faster access with Telegram Premium.";
@@ -11492,7 +11363,6 @@ Sorry for the inconvenience.";
 "ChatList.ItemMoreMessagesFormat_any" = "+%d MORE";
 "ChatList.ItemMenuEdit" = "Edit";
 "ChatList.ItemMenuDelete" = "Delete";
-"ChatList.PeerTypeNonContact" = "non-contact";
 "ChatList.PeerTypeNonContactUser" = "non-contact";
 
 "ChatListFilter.TagLabelNoTag" = "NO TAG";
@@ -11754,7 +11624,6 @@ Sorry for the inconvenience.";
 "Settings.About.PrivacyHelp" = "You can add a few lines about yourself. Choose who can see your bio in [Settings]().";
 
 "Attachment.Create" = "Create";
-"Attachment.SelectFromFiles" = "Select From Files";
 
 "Stats.Monetization" = "Monetization";
 
@@ -13193,7 +13062,6 @@ Sorry for the inconvenience.";
 "Stars.Transaction.Gift.Title" = "Gift";
 
 "ChatList.Search.Open" = "OPEN";
-"ChatList.Search.ShowMore" = "Show More";
 
 "AttachmentMenu.AddPhotoOrVideo" = "Add Photo or Video";
 "AttachmentMenu.AddDocument" = "Add Document";
@@ -13869,9 +13737,6 @@ Sorry for the inconvenience.";
 "PremiumNeeded.Title" = "Premium Needed";
 "PremiumNeeded.Subscribe" = "Subscribe";
 
-"Gift.Convert.Success.ChannelText" = "**%1$@** were sent to channel's balance.";
-"Gift.Convert.Success.ChannelText.Stars_1" = "%@ Star";
-"Gift.Convert.Success.ChannelText.Stars_any" = "%@ Stars";
 
 "GroupInfo.Permissions.ChargeForMessages" = "Charge for Messages";
 "GroupInfo.Permissions.ChargeForMessagesInfo" = "If you turn this on, regular members of the group will have to pay Stars to send messages.";
@@ -13905,8 +13770,6 @@ Sorry for the inconvenience.";
 "Notification.PaidMessageMany" = "%1$@ paid %2$@ to send %3$@";
 "Notification.PaidMessageYouMany" = "You paid %1$@ to send %2$@";
 
-"Stars.Transfer.Terms" = "By purchasing you agree to the [Terms of Service]().";
-"Stars.Transfer.Terms_URL" = "https://telegram.org/tos/stars";
 
 "StarsTransaction.Commission" = "Commission";
 
@@ -14854,7 +14717,6 @@ Sorry for the inconvenience.";
 "ChatList.GlobalSearch.SearchButtonPaidTitle" = "Search for  *  %@";
 "ChatList.GlobalSearch.SearchButtonPaidSubtitle" = "free search unlocks in %@";
 
-"Chat.ViewCollection" = "VIEW COLLECTION";
 "Chat.ViewAlbum" = "VIEW ALBUM";
 
 "PeerInfo.MenuAddStories" = "Add Stories";
@@ -15570,7 +15432,6 @@ Error: %8$@";
 "Login.PhoneWithPasskeySubtitle" = "Enter your phone number\nor [log in using Passkey >](passkey)";
 "PrivacySettings.Passkey" = "Passkey";
 "Attachment.SharedAudio" = "SHARED AUDIO";
-"Attachment.FilesSearchPlaceholder" = "Search shared audio";
 "Chat.GiftPurchaseOffer.Reject" = "Reject";
 "Chat.GiftPurchaseOffer.Accept" = "Accept";
 "Chat.GiftPurchaseOffer.RejectConfirmation.Title" = "Reject Offer";
@@ -15591,7 +15452,6 @@ Error: %8$@";
 "Passkeys.ButtonCreate" = "Create Passkey";
 "Passkeys.ButtonSkip" = "Skip";
 "Passkeys.Title" = "Passkeys";
-"Passkeys.Subtitle" = "Log in safely and keep your account secure.";
 "Passkeys.EmptyName" = "Passkey";
 "Passkeys.PasskeyCreatedPattern" = "created %@";
 "Passkeys.PasskeyCreatedAndUsedPattern" = "created %1$@ • used %2$@";
