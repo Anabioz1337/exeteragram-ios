@@ -7,6 +7,7 @@ import GlassBackgroundComponent
 import EdgeEffect
 import SideColumnLayout
 import NavigationBarComponent
+import exteraAppearance
 
 /// Presents the iPhone Duo side column's "…" menu: the buttons that did not fit. The app sets it where it creates its
 /// shared context (Display and this module cannot build a context menu); while it is nil the "…" button does nothing.
@@ -63,6 +64,7 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
     public let additionalContentNode: SparseNode
     public let customOverBackgroundContentView: UIView
     let edgeEffectViewImpl: EdgeEffectView
+    private var snowView: ExteraSnowView?
     private var backdropAlpha: CGFloat = 1.0
     private var edgeEffectExtension: CGFloat = 0.0
     private let glassContainer: GlassBackgroundContainerView
@@ -377,6 +379,35 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         )
     }
 
+    /// Themes and screens (the chat among them) disable the bar's blur by handing in a fully
+    /// transparent `edgeEffectColor`. When the extera `forceBlur` option is on, that colour is
+    /// substituted with `buttonColor` — the theme's own chrome colour carried by `NavigationBarTheme`,
+    /// the closest opaque bar material that survives the `.clear` override — so the blur renders on
+    /// every theme.
+    private func forcedBlurEdgeEffectColor(for theme: NavigationBarTheme) -> UIColor? {
+        guard ExteraAppearanceSettings.shared.forceBlur, let color = theme.edgeEffectColor, color.alpha == 0.0 else {
+            return theme.edgeEffectColor
+        }
+        return theme.buttonColor
+    }
+
+    /// Falling snow over the bar, forced by the extera `forceSnow` option. Renders above the bar's
+    /// own content, ignores touches, and is torn down as soon as the option is off.
+    private func updateSnow(size: CGSize) {
+        if ExteraAppearanceSettings.shared.forceSnow {
+            let snowView = self.snowView ?? ExteraSnowView()
+            if snowView.superview == nil {
+                snowView.isUserInteractionEnabled = false
+                self.contentView.addSubview(snowView)
+            }
+            snowView.frame = CGRect(origin: CGPoint(), size: size)
+            self.snowView = snowView
+        } else if let snowView = self.snowView {
+            snowView.removeFromSuperview()
+            self.snowView = nil
+        }
+    }
+
     private func update(layout: Layout, transition: ContainedViewLayoutTransition, isContainerLayout: Bool) {
         let size = layout.size
         let contentFrame = CGRect(origin: CGPoint(), size: size)
@@ -408,7 +439,8 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         transition.updateFrame(view: self.rowHost, frame: glassContentBounds)
         transition.updateFrame(view: self.titleHost, frame: glassContentBounds)
 
-        if let edgeEffectColor = theme.edgeEffectColor, edgeEffectColor.alpha == 0.0 {
+        let effectiveEdgeEffectColor = self.forcedBlurEdgeEffectColor(for: theme)
+        if let edgeEffectColor = effectiveEdgeEffectColor, edgeEffectColor.alpha == 0.0 {
             self.edgeEffectViewImpl.isHidden = true
         } else {
             self.edgeEffectViewImpl.isHidden = false
@@ -417,10 +449,11 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
             let edgeEffectFrame = CGRect(origin: CGPoint(x: 0.0, y: -20.0), size: CGSize(width: size.width, height: 20.0 + edgeEffectHeight))
             transition.updatePosition(layer: self.edgeEffectViewImpl.layer, position: edgeEffectFrame.center)
             transition.updateBounds(layer: self.edgeEffectViewImpl.layer, bounds: CGRect(origin: CGPoint(), size: edgeEffectFrame.size))
-            self.edgeEffectViewImpl.update(content: theme.edgeEffectColor ?? .white, blur: true, rect: CGRect(origin: CGPoint(), size: edgeEffectFrame.size), edge: .top, edgeSize: min(64.0, edgeEffectHeight), transition: ComponentTransition(transition))
+            self.edgeEffectViewImpl.update(content: effectiveEdgeEffectColor ?? .white, blur: true, rect: CGRect(origin: CGPoint(), size: edgeEffectFrame.size), edge: .top, edgeSize: min(64.0, edgeEffectHeight), transition: ComponentTransition(transition))
         }
 
         let apparentAdditionalHeight: CGFloat = self.secondaryContentNode != nil ? (self.secondaryContentHeight) : 0.0
+        self.updateSnow(size: contentFrame.size)
 
         transition.updateFrame(node: self.clippingNode, frame: CGRect(origin: CGPoint(), size: size))
         transition.updateFrame(node: self.additionalContentNode, frame: CGRect(origin: CGPoint(), size: CGSize(width: size.width, height: size.height + layout.additionalBackgroundHeight)))
@@ -524,13 +557,15 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         }
         (leftTitleInset, rightTitleInset) = navigationBarTitleInsets(leftInset: layout.leftInset, rightInset: layout.rightInset, leftTitleInset: leftTitleInset, rightTitleInset: rightTitleInset)
 
+        let centeredTitle = ExteraAppearanceSettings.shared.centerTitle
         if let titleView = titleView as? NavigationBarTitleView {
             var titleViewTransition = transition
             if titleView.frame.isEmpty {
                 titleViewTransition = .immediate
             }
-            let titleSize = titleView.updateLayout(availableSize: CGSize(width: size.width - leftTitleInset - rightTitleInset, height: nominalHeight), transition: titleViewTransition)
-            let titleX = navigationBarTitleViewOriginX(width: size.width, leftInset: layout.leftInset, rightInset: layout.rightInset, leftTitleInset: leftTitleInset, rightTitleInset: rightTitleInset, titleWidth: titleSize.width)
+            let availableWidth = centeredTitle ? size.width - leftTitleInset - rightTitleInset : size.width - leftTitleInset - layout.rightInset
+            let titleSize = titleView.updateLayout(availableSize: CGSize(width: availableWidth, height: nominalHeight), transition: titleViewTransition)
+            let titleX = centeredTitle ? navigationBarTitleViewOriginX(width: size.width, leftInset: layout.leftInset, rightInset: layout.rightInset, leftTitleInset: leftTitleInset, rightTitleInset: rightTitleInset, titleWidth: titleSize.width) : leftTitleInset
             let titleFrame = CGRect(origin: CGPoint(x: titleX, y: contentVerticalOrigin + floorToScreenPixels((nominalHeight - titleSize.height) / 2.0)), size: titleSize)
             titleViewTransition.updateFrame(view: titleView, frame: titleFrame)
         } else {
@@ -952,8 +987,8 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
             return nil
         }
         let theme = self.presentationData.theme
-        var backdropColor: UIColor? = theme.edgeEffectColor ?? .white
-        if let edgeEffectColor = theme.edgeEffectColor, edgeEffectColor.alpha == 0.0 {
+        var backdropColor: UIColor? = self.forcedBlurEdgeEffectColor(for: theme) ?? .white
+        if let edgeEffectColor = backdropColor, edgeEffectColor.alpha == 0.0 {
             backdropColor = nil
         }
         return NavigationBarComponentTransitionState(content: content, theme: theme, strings: self.presentationData.strings, rowFrame: self.currentRowFrame, rowAlpha: self.transitionRowAlpha, leftInset: layout.leftInset + 16.0, rightInset: layout.rightInset + 16.0, trailingButtonsInset: self.trailingButtonsInset, sideColumnFrame: self.appliedSideColumn?.frame, hidesSideColumnButtons: self.currentHidesSideColumnButtons, backdropHeight: layout.size.height + layout.additionalBackgroundHeight, backdropColor: backdropColor, backdropAlpha: self.backdropAlpha, backdropExtension: self.edgeEffectExtension, leadingPressScale: self.rowView?.detachedLeftPressScale ?? 1.0, leadingPressGlow: self.rowView?.detachedLeftPressGlow ?? 0.0, trailingPressScales: self.rowView?.detachedRightPressScales ?? [], trailingPressGlows: self.rowView?.detachedRightPressGlows ?? [], titlePill: self.transitionTitlePill)

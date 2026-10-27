@@ -3,6 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import TelegramCore
+import exteraAppearance
 import SwiftSignalKit
 import LegacyComponents
 import TelegramPresentationData
@@ -298,6 +299,8 @@ public final class ChatTitleView: UIView, NavigationBarTitleView {
                                 } else {
                                     if !peerView.isContact, let user = peer as? TelegramUser, !user.flags.contains(.isSupport), user.botInfo == nil, let phone = user.phone, !phone.isEmpty {
                                         segments = [.text(0, NSAttributedString(string: formatPhoneNumber(context: self.context, number: phone), font: titleFont, textColor: titleTheme.rootController.navigationBar.primaryTextColor))]
+                                    } else if ExteraAppearanceSettings.shared.titleText == .username, let username = peer.addressName, !username.isEmpty {
+                                        segments = [.text(0, NSAttributedString(string: "@\(username)", font: titleFont, textColor: titleTheme.rootController.navigationBar.primaryTextColor))]
                                     } else {
                                         segments = [.text(0, NSAttributedString(string: EnginePeer(peer).displayTitle(strings: self.strings, displayOrder: self.nameDisplayOrder), font: titleFont, textColor: titleTheme.rootController.navigationBar.primaryTextColor))]
                                     }
@@ -640,17 +643,21 @@ public final class ChatTitleView: UIView, NavigationBarTitleView {
                                         let string = NSAttributedString(string: statusText, font: subtitleFont, textColor: titleTheme.rootController.navigationBar.secondaryTextColor)
                                         state = .info(string, .generic)
                                     } else if let peer = peerView.peer {
-                                        let timestamp = CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970
-                                        let userPresence: TelegramUserPresence
-                                        if let presence = peerView.peerPresences[peer.id] as? TelegramUserPresence {
-                                            userPresence = presence
-                                            self.presenceManager?.reset(presence: EnginePeer.Presence(presence))
+                                        if ExteraAppearanceSettings.shared.hideActionBarStatus {
+                                            state = .none
                                         } else {
-                                            userPresence = TelegramUserPresence(status: .none, lastActivity: 0)
+                                            let timestamp = CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970
+                                            let userPresence: TelegramUserPresence
+                                            if let presence = peerView.peerPresences[peer.id] as? TelegramUserPresence {
+                                                userPresence = presence
+                                                self.presenceManager?.reset(presence: EnginePeer.Presence(presence))
+                                            } else {
+                                                userPresence = TelegramUserPresence(status: .none, lastActivity: 0)
+                                            }
+                                            let (string, activity) = stringAndActivityForUserPresence(strings: self.strings, dateTimeFormat: self.dateTimeFormat, presence: EnginePeer.Presence(userPresence), relativeTo: Int32(timestamp))
+                                            let attributedString = NSAttributedString(string: string, font: subtitleFont, textColor: activity ? titleTheme.rootController.navigationBar.accentTextColor : titleTheme.rootController.navigationBar.secondaryTextColor)
+                                            state = .info(attributedString, activity ? .online : .lastSeenTime)
                                         }
-                                        let (string, activity) = stringAndActivityForUserPresence(strings: self.strings, dateTimeFormat: self.dateTimeFormat, presence: EnginePeer.Presence(userPresence), relativeTo: Int32(timestamp))
-                                        let attributedString = NSAttributedString(string: string, font: subtitleFont, textColor: activity ? titleTheme.rootController.navigationBar.accentTextColor : titleTheme.rootController.navigationBar.secondaryTextColor)
-                                        state = .info(attributedString, activity ? .online : .lastSeenTime)
                                     } else {
                                         let string = NSAttributedString(string: "", font: subtitleFont, textColor: titleTheme.rootController.navigationBar.secondaryTextColor)
                                         state = .info(string, .generic)

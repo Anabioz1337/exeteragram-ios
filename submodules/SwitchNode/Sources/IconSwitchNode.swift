@@ -4,6 +4,7 @@ import UIKit
 import AsyncDisplayKit
 
 import LegacyComponents
+import exteraAppearance
 
 private final class IconSwitchNodeViewLayer: CALayer {
     override func setNeedsDisplay() {
@@ -18,11 +19,19 @@ private final class IconSwitchNodeView: TGIconSwitchView {
 
 open class IconSwitchNode: ASDisplayNode {
     public var valueUpdated: ((Bool) -> Void)?
-    
+
+    /// The extera MD3 style reads as a flat filled track, so the off state's border ring is
+    /// softened relative to the legacy solid outline.
+    private var effectiveFrameColor: UIColor {
+        if ExteraAppearanceSettings.shared.newSwitchStyle {
+            return self.frameColor.withAlphaComponent(0.45)
+        }
+        return self.frameColor
+    }
     public var frameColor = UIColor(rgb: 0xe0e0e0) {
         didSet {
             if self.isNodeLoaded {
-                (self.view as! UISwitch).tintColor = self.frameColor
+                (self.view as! UISwitch).tintColor = self.effectiveFrameColor
             }
         }
     }
@@ -83,7 +92,7 @@ open class IconSwitchNode: ASDisplayNode {
         super.didLoad()
         
         (self.view as! UISwitch).backgroundColor = self.backgroundColor
-        (self.view as! UISwitch).tintColor = self.frameColor
+        (self.view as! UISwitch).tintColor = self.effectiveFrameColor
         (self.view as! UISwitch).onTintColor = self.contentColor
         (self.view as? TGIconSwitchView)?.updateIsLocked(self._isLocked)
         (self.view as! IconSwitchNodeView).setNegativeContentColor(self.negativeContentColor)

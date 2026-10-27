@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Display
+import exteraAppearance
 import AsyncDisplayKit
 import SwiftSignalKit
 import TelegramPresentationData
@@ -721,7 +722,12 @@ public class ItemListDisclosureItemNode: ListViewItemNode, ItemListItemNode {
                         strongSelf.topStripeNode.frame = CGRect(origin: CGPoint(x: 0.0, y: -min(insets.top, separatorHeight)), size: CGSize(width: params.width, height: separatorHeight))
                         strongSelf.bottomStripeNode.frame = CGRect(origin: CGPoint(x: bottomStripeInset, y: contentSize.height - separatorHeight), size: CGSize(width: params.width - params.rightInset - bottomStripeInset - separatorRightInset, height: separatorHeight))
                     }
-                    
+
+                    if ExteraAppearanceSettings.shared.disableDividers {
+                        strongSelf.topStripeNode.isHidden = true
+                        strongSelf.bottomStripeNode.isHidden = true
+                    }
+
                     var centralContentHeight: CGFloat = titleLayout.size.height
                     switch item.labelStyle {
                     case .detailText, .multilineDetailText:
