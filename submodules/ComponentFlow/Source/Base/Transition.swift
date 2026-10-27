@@ -1,19 +1,10 @@
 import Foundation
 import UIKit
 import Display
-import UIKitRuntimeUtils
-
-#if targetEnvironment(simulator)
-@_silgen_name("UIAnimationDragCoefficient") func UIAnimationDragCoefficient() -> Float
-#endif
 
 public extension UIView {
     static var animationDurationFactor: Double {
-        #if targetEnvironment(simulator)
-        return Double(UIAnimationDragCoefficient())
-        #else
-        return 1.0
-        #endif
+        return UIView.animationDurationFactor()
     }
 }
 

@@ -2,6 +2,7 @@
 #import <Foundation/Foundation.h>
 
 double animationDurationFactorImpl();
+void setAnimationDurationFactorImpl(double value);
 
 CABasicAnimation * _Nonnull makeSpringAnimationImpl(NSString * _Nonnull keyPath, double duration);
 CABasicAnimation * _Nonnull make26SpringAnimationImpl(NSString * _Nonnull keyPath, double duration);

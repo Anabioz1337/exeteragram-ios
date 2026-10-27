@@ -6,6 +6,10 @@ public extension UIView {
     static func animationDurationFactor() -> Double {
         return animationDurationFactorImpl()
     }
+
+    static func setAnimationDurationFactor(_ value: Double) {
+        setAnimationDurationFactorImpl(value)
+    }
 }
 
 public func makeSpringAnimation(_ keyPath: String, duration: Double) -> CABasicAnimation {

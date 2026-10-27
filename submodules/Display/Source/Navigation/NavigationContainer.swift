@@ -439,7 +439,7 @@ public final class NavigationContainer: ASDisplayNode, ASGestureRecognizerDelega
         if transition.coordinator.isExpansion, case .push = transition.type {
             // A caught expanding push: the swipe turns it back, or it runs on to the pushed screen.
             let width = max(1.0, self.view.bounds.width)
-            if !isCancelled && navigationExpansionCommits(dx: travel, velocity: travelVelocity, width: width) {
+            if !isCancelled && navigationExpansionCommits(dx: travel, velocity: travelVelocity, width: width, intensity: navigationExpansionCommitIntensity) {
                 let leaving = self.state.top?.value
                 if let leaving {
                     // Heading for the chat: its status bar at once.
@@ -469,7 +469,7 @@ public final class NavigationContainer: ASDisplayNode, ASGestureRecognizerDelega
         }
         if transition.coordinator.isExpansion, case .pop = transition.type {
             let width = max(1.0, self.view.bounds.width)
-            if !isCancelled && navigationExpansionCommits(dx: travel, velocity: travelVelocity, width: width) {
+            if !isCancelled && navigationExpansionCommits(dx: travel, velocity: travelVelocity, width: width, intensity: navigationExpansionCommitIntensity) {
                 let leaving = self.state.top?.value
                 leaving?.viewWillLeaveNavigation()
                 transition.coordinator.commitExpansionPose(completion: { [weak self, weak transition] in
