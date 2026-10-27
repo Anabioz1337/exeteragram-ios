@@ -489,6 +489,23 @@ private func ephemeralReplacementContextMenuItems(chatPresentationInterfaceState
     }
 }
 
+private func copyPhotoToPasteboard(context: AccountContext, image: TelegramMediaImage, strings: PresentationStrings, controllerInteraction: ChatControllerInteraction) {
+    guard let largestRepresentation = largestImageRepresentation(image.representations) else {
+        return
+    }
+    let _ = (context.engine.resources.data(resource: EngineMediaResource(largestRepresentation.resource), incremental: true)
+    |> take(1)
+    |> deliverOnMainQueue).startStandalone(next: { data in
+        if data.isComplete, let imageData = try? Data(contentsOf: URL(fileURLWithPath: data.path)), let copiedImage = UIImage(data: imageData) {
+            UIPasteboard.general.image = copiedImage
+
+            Queue.mainQueue().after(0.2, {
+                controllerInteraction.displayUndo(.copy(text: strings.extera_PhotoCopied))
+            })
+        }
+    })
+}
+
 func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState: ChatPresentationInterfaceState, context: AccountContext, messages: [EngineRawMessage], controllerInteraction: ChatControllerInteraction?, selectAll: Bool, interfaceInteraction: ChatPanelInterfaceInteraction?, readStats: MessageReadStats? = nil, messageNode: ChatMessageItemView? = nil) -> Signal<ContextController.Items, NoError> {
     guard let interfaceInteraction = interfaceInteraction, let controllerInteraction = controllerInteraction else {
         return .single(ContextController.Items(content: .list([])))
@@ -1959,17 +1976,30 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             }
         }
 
-        if exteraSettings.showDetailsButton {
-            actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.extera_Details, icon: { theme in
-                return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Info"), color: theme.actionSheet.primaryTextColor)
+        if exteraSettings.showCopyPhotoButton, resourceAvailable && isImage && !isExpired, let imageMedia = message.effectiveMedia.first(where: { $0 is TelegramMediaImage }) as? TelegramMediaImage, let controllerInteraction {
+            actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.extera_CopyPhoto, icon: { theme in
+                return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Copy"), color: theme.actionSheet.primaryTextColor)
             }, action: { _, f in
                 f(.dismissWithoutContent)
-                guard let controllerInteraction = controllerInteraction else {
-                    return
-                }
-                if let navigationController = controllerInteraction.navigationController() {
-                    navigationController.pushViewController(exteraMessageDetailsController(context: context, message: message))
-                }
+                copyPhotoToPasteboard(context: context, image: imageMedia, strings: chatPresentationInterfaceState.strings, controllerInteraction: controllerInteraction)
+            })))
+        }
+
+        if exteraSettings.showSaveMessageButton, data.messageActions.options.contains(.forward), let controllerInteraction {
+            actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.extera_SaveMessage, icon: { theme in
+                return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Forward"), color: theme.actionSheet.primaryTextColor)
+            }, action: { _, f in
+                f(.dismissWithoutContent)
+                let correlationId = Int64.random(in: Int64.min ... Int64.max)
+                let _ = (enqueueMessages(
+                    account: context.account,
+                    peerId: context.account.peerId,
+                    messages: [.forward(source: message.id, threadId: nil, grouping: .auto, attributes: [], correlationId: correlationId)]
+                )
+                |> deliverOnMainQueue).startStandalone()
+                controllerInteraction.presentControllerInCurrent(UndoOverlayController(presentationData: chatPresentationInterfaceState.presentationData, content: .forward(savedMessages: true, text: chatPresentationInterfaceState.strings.Conversation_ForwardTooltip_SavedMessages_One), elevatedLayout: false, position: .top, animateInAsReplacement: true, action: { _ in
+                    return false
+                }), nil)
             })))
         }
 
@@ -2072,7 +2102,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             })))
         }
 
-        if !isReplyThreadHead, (!data.messageActions.options.intersection([.deleteLocally, .deleteGlobally]).isEmpty || clearCacheAsDelete) {
+        if !isReplyThreadHead, (!data.messageActions.options.intersection([.deleteLocally, .deleteGlobally]).isEmpty || clearCacheAsDelete || exteraSettings.showClearButton) {
             var autoremoveDeadline: Int32?
             for attribute in message.attributes {
                 if let attribute = attribute as? AutoremoveTimeoutMessageAttribute {

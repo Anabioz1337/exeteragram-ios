@@ -17269,3 +17269,8 @@ Error: %8$@";
 "extera.DateFormatOptionShortDate" = "Short Date";
 "extera.DateFormatOptionLongDate" = "Long Date";
 "extera.DateFormatOptionDayOfWeek" = "Day of week";
+
+// exteraGram: Context menu extras
+"extera.CopyPhoto" = "Copy Photo";
+"extera.PhotoCopied" = "Photo copied";
+"extera.SaveMessage" = "Save to Saved Messages";
