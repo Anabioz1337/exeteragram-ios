@@ -240,57 +240,57 @@ private final class ExteraSettingsArguments {
     }
 }
 
-private func exteraBoostLevelTitle(_ level: Int, strings: PresentationStrings) -> String {
+private func exteraBoostLevelTitle(_ level: Int, strings: ExteraStringsTable) -> String {
     switch level {
-        case 1: return strings.Extera_Settings_BoostFast
-        case 2: return strings.Extera_Settings_BoostUltra
-        default: return strings.Extera_Settings_BoostOff
+        case 1: return strings.boostFast
+        case 2: return strings.boostUltra
+        default: return strings.boostOff
     }
 }
 
 private func exteraLastCheckString(_ timestamp: Int64, presentationData: PresentationData) -> String {
     guard timestamp > 0 else {
-        return presentationData.strings.Extera_Settings_Never
+        return exteraStrings(presentationData: presentationData).never
     }
     let intTimestamp = Int32(timestamp)
     return stringForShortDate(timestamp: intTimestamp, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat) + " " + stringForMessageTimestamp(timestamp: intTimestamp, dateTimeFormat: presentationData.dateTimeFormat)
 }
 
-private func exteraUpdateStatusLabel(_ status: ExteraUpdaterStatus, strings: PresentationStrings) -> String {
+private func exteraUpdateStatusLabel(_ status: ExteraUpdaterStatus, strings: ExteraStringsTable) -> String {
     switch status {
-        case .idle: return strings.Extera_Settings_CheckNow
-        case .checking: return strings.Extera_Settings_Checking
-        case .upToDate: return strings.Extera_Settings_UpToDate
-        case .failed: return strings.Extera_Settings_CheckFailed
+        case .idle: return strings.checkForUpdates
+        case .checking: return strings.checkingForUpdates
+        case .upToDate: return strings.upToDate
+        case .failed: return strings.checkFailed
         case let .available(release): return release.version
     }
 }
 
 private func exteraSettingsEntries(presentationData: PresentationData, settings: ExteraSettings, status: ExteraUpdaterStatus) -> [ExteraSettingsEntry] {
-    let strings = presentationData.strings
+    let strings = exteraStrings(presentationData: presentationData)
     var entries: [ExteraSettingsEntry] = []
 
-    entries.append(.speedHeader(presentationData.theme, strings.Extera_Settings_SpeedHeader.uppercased()))
-    entries.append(.downloadBoost(presentationData.theme, strings.Extera_Settings_DownloadBoost, exteraBoostLevelTitle(settings.downloadSpeedBoostLevel, strings: strings)))
-    entries.append(.uploadBoost(presentationData.theme, strings.Extera_Settings_UploadBoost, settings.uploadSpeedBoost))
+    entries.append(.speedHeader(presentationData.theme, strings.speedHeader.uppercased()))
+    entries.append(.downloadBoost(presentationData.theme, strings.downloadBoost, exteraBoostLevelTitle(settings.downloadSpeedBoostLevel, strings: strings)))
+    entries.append(.uploadBoost(presentationData.theme, strings.uploadBoost, settings.uploadSpeedBoost))
 
-    entries.append(.interfaceHeader(presentationData.theme, strings.Extera_Settings_InterfaceHeader.uppercased()))
-    entries.append(.disableNumberRounding(presentationData.theme, strings.Extera_Settings_DisableNumberRounding, settings.disableNumberRounding))
-    entries.append(.formatTimeWithSeconds(presentationData.theme, strings.Extera_Settings_FormatTimeWithSeconds, settings.formatTimeWithSeconds))
+    entries.append(.interfaceHeader(presentationData.theme, strings.interfaceHeader.uppercased()))
+    entries.append(.disableNumberRounding(presentationData.theme, strings.disableNumberRounding, settings.disableNumberRounding))
+    entries.append(.formatTimeWithSeconds(presentationData.theme, strings.formatTimeWithSeconds, settings.formatTimeWithSeconds))
 
-    entries.append(.updatesHeader(presentationData.theme, strings.Extera_Settings_UpdatesHeader.uppercased()))
-    entries.append(.checkForUpdates(presentationData.theme, strings.Extera_Settings_CheckForUpdates, exteraUpdateStatusLabel(status, strings: strings)))
-    entries.append(.checkOnLaunch(presentationData.theme, strings.Extera_Settings_CheckOnLaunch, settings.checkUpdatesOnLaunch))
-    entries.append(.lastCheck(presentationData.theme, strings.Extera_Settings_LastCheck, exteraLastCheckString(settings.lastUpdateCheckTime, presentationData: presentationData)))
+    entries.append(.updatesHeader(presentationData.theme, strings.updatesHeader.uppercased()))
+    entries.append(.checkForUpdates(presentationData.theme, strings.checkForUpdates, exteraUpdateStatusLabel(status, strings: strings)))
+    entries.append(.checkOnLaunch(presentationData.theme, strings.checkOnLaunch, settings.checkUpdatesOnLaunch))
+    entries.append(.lastCheck(presentationData.theme, strings.lastCheck, exteraLastCheckString(settings.lastUpdateCheckTime, presentationData: presentationData)))
     if let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
-        entries.append(.currentVersion(presentationData.theme, strings.Extera_Settings_CurrentVersion, currentVersion))
+        entries.append(.currentVersion(presentationData.theme, strings.currentVersion, currentVersion))
     }
     if case let .available(release) = status {
-        entries.append(.latestVersion(presentationData.theme, strings.Extera_Settings_LatestVersion, release.version))
+        entries.append(.latestVersion(presentationData.theme, strings.latestVersion, release.version))
         if !release.changelog.isEmpty {
             entries.append(.changelog(presentationData.theme, release.changelog))
         }
-        entries.append(.downloadOnGitHub(presentationData.theme, strings.Extera_Settings_DownloadOnGitHub, release.pageUrl))
+        entries.append(.downloadOnGitHub(presentationData.theme, strings.downloadOnGitHub, release.pageUrl))
     }
 
     return entries
@@ -306,12 +306,13 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
                 return
             }
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
+            let strings = exteraStrings(presentationData: presentationData)
             let levels: [(Int, String)] = [
-                (0, presentationData.strings.Extera_Settings_BoostOff),
-                (1, presentationData.strings.Extera_Settings_BoostFast),
-                (2, presentationData.strings.Extera_Settings_BoostUltra)
+                (0, strings.boostOff),
+                (1, strings.boostFast),
+                (2, strings.boostUltra)
             ]
-            let alertController = textAlertController(context: context, title: presentationData.strings.Extera_Settings_DownloadBoost, text: "", actions: levels.map { level, title in
+            let alertController = textAlertController(context: context, title: strings.downloadBoost, text: "", actions: levels.map { level, title in
                 TextAlertAction(type: .genericAction, title: title, action: {
                     exteraApplyDownloadBoostLevel(context: context, level: level)
                 })
@@ -381,7 +382,8 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
         statusPromise.get()
     )
     |> map { presentationData, settings, status -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.Extera_Settings_Title), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back), animateChanges: false)
+        let strings = exteraStrings(presentationData: presentationData)
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(strings.settingsTitle), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back), animateChanges: false)
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraSettingsEntries(presentationData: presentationData, settings: settings, status: status), style: .blocks, ensureVisibleItemTag: nil, emptyStateItem: nil, animateChanges: false)
 
         return (controllerState, (listState, arguments))

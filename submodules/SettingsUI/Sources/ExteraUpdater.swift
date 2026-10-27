@@ -109,13 +109,14 @@ public enum ExteraUpdater {
 
     private static func presentUpdateAlert(sharedContext: SharedAccountContext, release: ExteraRelease) {
         let presentationData = sharedContext.currentPresentationData.with { $0 }
+        let strings = exteraStrings(presentationData: presentationData)
         let alert = textAlertController(
             sharedContext: sharedContext,
-            title: presentationData.strings.Extera_Settings_UpdateAvailable,
-            text: presentationData.strings.Extera_Settings_UpdateAvailableText(release.version) + "\n\n" + release.changelog,
+            title: strings.updateAvailable,
+            text: strings.updateAvailableText(release.version) + "\n\n" + release.changelog,
             actions: [
-                TextAlertAction(type: .genericAction, title: presentationData.strings.Extera_Settings_Later, action: {}),
-                TextAlertAction(type: .defaultAction, title: presentationData.strings.Extera_Settings_Download, action: {
+                TextAlertAction(type: .genericAction, title: strings.laterAction, action: {}),
+                TextAlertAction(type: .defaultAction, title: strings.downloadAction, action: {
                     if let url = URL(string: release.pageUrl) {
                         UIApplication.shared.open(url)
                     }
