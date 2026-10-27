@@ -22,14 +22,16 @@ private final class ExteraFeedArguments {
     let selectCategory: (Int64) -> Void
     let setAdblockEnabled: (Bool) -> Void
     let setIncludeArchived: (Bool) -> Void
+    let setFeedTabEnabled: (Bool) -> Void
     let markAllAsRead: () -> Void
     let openPost: (PeerId, MessageId) -> Void
     let requestHideChannel: (PeerId, String) -> Void
 
-    init(selectCategory: @escaping (Int64) -> Void, setAdblockEnabled: @escaping (Bool) -> Void, setIncludeArchived: @escaping (Bool) -> Void, markAllAsRead: @escaping () -> Void, openPost: @escaping (PeerId, MessageId) -> Void, requestHideChannel: @escaping (PeerId, String) -> Void) {
+    init(selectCategory: @escaping (Int64) -> Void, setAdblockEnabled: @escaping (Bool) -> Void, setIncludeArchived: @escaping (Bool) -> Void, setFeedTabEnabled: @escaping (Bool) -> Void, markAllAsRead: @escaping () -> Void, openPost: @escaping (PeerId, MessageId) -> Void, requestHideChannel: @escaping (PeerId, String) -> Void) {
         self.selectCategory = selectCategory
         self.setAdblockEnabled = setAdblockEnabled
         self.setIncludeArchived = setIncludeArchived
+        self.setFeedTabEnabled = setFeedTabEnabled
         self.markAllAsRead = markAllAsRead
         self.openPost = openPost
         self.requestHideChannel = requestHideChannel
@@ -61,6 +63,7 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
     case category(index: Int32, id: Int64, title: String, selected: Bool)
     case markAllAsRead(String)
     case includeArchived(title: String, value: Bool)
+    case feedTabSwitch(title: String, value: Bool)
     case emptyPosts(String)
     case post(index: Int32, post: ExteraFeedPostEntry)
 
@@ -70,7 +73,7 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
             return ExteraFeedSection.adblock.rawValue
         case .categoriesHeader, .category:
             return ExteraFeedSection.categories.rawValue
-        case .markAllAsRead, .includeArchived:
+        case .markAllAsRead, .includeArchived, .feedTabSwitch:
             return ExteraFeedSection.actions.rawValue
         case .emptyPosts, .post:
             return ExteraFeedSection.posts.rawValue
@@ -91,6 +94,8 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
             return 30
         case .includeArchived:
             return 31
+        case .feedTabSwitch:
+            return 32
         case .emptyPosts:
             return 40
         case let .post(index, _):
@@ -124,6 +129,10 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
         case let .includeArchived(title, value):
             return ItemListSwitchItem(presentationData: presentationData, title: title, value: value, sectionId: self.section, style: .blocks, updated: { updated in
                 arguments.setIncludeArchived(updated)
+            })
+        case let .feedTabSwitch(title, value):
+            return ItemListSwitchItem(presentationData: presentationData, title: title, value: value, sectionId: self.section, style: .blocks, updated: { updated in
+                arguments.setFeedTabEnabled(updated)
             })
         case let .emptyPosts(text):
             return ItemListMultilineTextItem(presentationData: presentationData, text: text, enabledEntityTypes: [], sectionId: self.section, style: .blocks, action: nil, longTapAction: nil)
@@ -203,6 +212,7 @@ private func exteraFeedEntries(model: ExteraFeedModel) -> [ExteraFeedEntry] {
     }
     entries.append(.markAllAsRead(strings.Extera_Feed_MarkAllAsRead))
     entries.append(.includeArchived(title: strings.Extera_Feed_IncludeArchived, value: model.settings.feedIncludeArchived))
+    entries.append(.feedTabSwitch(title: strings.Extera_Feed_ShowInTabs, value: model.settings.feedEnabled))
     if model.posts.isEmpty {
         entries.append(.emptyPosts(strings.Extera_Feed_Empty))
     } else {
@@ -270,6 +280,9 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
         },
         setIncludeArchived: { value in
             updateSettings { $0.withUpdatedFeedIncludeArchived(value) }
+        },
+        setFeedTabEnabled: { value in
+            updateSettings { $0.withUpdatedFeedEnabled(value) }
         },
         markAllAsRead: {
             let peers = activePeerIds.with({ $0 })

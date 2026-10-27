@@ -1298,12 +1298,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                 }
                 return true
             })
-            |> mapToSignal { context -> Signal<(AccountContext, CallListSettings)?, NoError> in
-                return sharedApplicationContext.sharedContext.accountManager.transaction { transaction -> CallListSettings? in
-                    return transaction.getSharedData(ApplicationSpecificSharedDataKeys.callListSettings)?.get(CallListSettings.self)
+            |> mapToSignal { context -> Signal<(AccountContext, CallListSettings, ExteraSettings)?, NoError> in
+                return sharedApplicationContext.sharedContext.accountManager.transaction { transaction -> (CallListSettings, ExteraSettings)? in
+                    let callListSettings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.callListSettings)?.get(CallListSettings.self) ?? .defaultSettings
+                    let exteraSettings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.exteraSettings)?.get(ExteraSettings.self) ?? .defaultSettings
+                    return (callListSettings, exteraSettings)
                 }
-                |> reduceLeft(value: nil) { current, updated -> CallListSettings? in
-                    var result: CallListSettings?
+                |> reduceLeft(value: nil) { current, updated -> (CallListSettings, ExteraSettings)? in
+                    var result: (CallListSettings, ExteraSettings)?
                     if let updated = updated {
                         result = updated
                     } else if let current = current {
@@ -1311,9 +1313,9 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                     }
                     return result
                 }
-                |> map { callListSettings -> (AccountContext, CallListSettings)? in
+                |> map { settings -> (AccountContext, CallListSettings, ExteraSettings)? in
                     if let context = context {
-                        return (context, callListSettings ?? .defaultSettings)
+                        return (context, settings.0, settings.1)
                     } else {
                         return nil
                     }
@@ -1321,8 +1323,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             }
             |> deliverOnMainQueue
             |> map { accountAndSettings -> AuthorizedApplicationContext? in
-                return accountAndSettings.flatMap { context, callListSettings in
-                    return AuthorizedApplicationContext(sharedApplicationContext: sharedApplicationContext, mainWindow: self.mainWindow, context: context as! AccountContextImpl, accountManager: sharedApplicationContext.sharedContext.accountManager, showCallsTab: callListSettings.showTab, reinitializedNotificationSettings: {
+                return accountAndSettings.flatMap { context, callListSettings, exteraSettings in
+                    return AuthorizedApplicationContext(sharedApplicationContext: sharedApplicationContext, mainWindow: self.mainWindow, context: context as! AccountContextImpl, accountManager: sharedApplicationContext.sharedContext.accountManager, showCallsTab: callListSettings.showTab, showFeedTab: exteraSettings.feedEnabled, reinitializedNotificationSettings: {
                         let _ = (self.context.get()
                         |> take(1)
                         |> deliverOnMainQueue).start(next: { context in

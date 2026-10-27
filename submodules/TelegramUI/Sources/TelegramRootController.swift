@@ -81,6 +81,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
     public var chatListController: ChatListController?
     public var accountSettingsController: PeerInfoScreen?
     public var newsController: NewsScreen?
+    public var exteraFeedScreen: ViewController?
     
     private var permissionsDisposable: Disposable?
     private var presentationDataDisposable: Disposable?
@@ -196,7 +197,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         super.containerLayoutUpdated(layout, transition: transition)
     }
     
-    public func addRootControllers(showCallsTab: Bool, showNewsTab: Bool) {
+    public func addRootControllers(showCallsTab: Bool, showNewsTab: Bool, showFeedTab: Bool = false) {
         let tabBarController = TabBarControllerImpl(theme: self.presentationData.theme, strings: self.presentationData.strings)
         tabBarController.navigationPresentation = .master
         let chatListController = self.context.sharedContext.makeChatListController(context: self.context, location: .chatList(groupId: .root), controlsHistoryPreload: true, hideNetworkActivityStatus: false, previewing: false, enableDebugActions: !GlobalExperimentalSettings.isAppStoreBuild)
@@ -218,9 +219,15 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         if showCallsTab {
             controllers.append(callListController)
         }
+        let exteraFeedScreen = exteraFeedController(context: self.context)
+        self.configureExteraFeedTabItem(exteraFeedScreen)
+
         controllers.append(chatListController)
         if showNewsTab {
             controllers.append(newsController)
+        }
+        if showFeedTab {
+            controllers.append(exteraFeedScreen)
         }
         
         var restoreSettignsController: (ViewController & SettingsController)?
@@ -248,13 +255,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         self.contactsController = contactsController
         self.callListController = callListController
         self.newsController = newsController
+        self.exteraFeedScreen = exteraFeedScreen
         self.chatListController = chatListController
         self.accountSettingsController = accountSettingsController
         self.rootTabController = tabBarController
         self.pushViewController(tabBarController, animated: false)
     }
         
-    public func updateRootControllers(showCallsTab: Bool, showNewsTab: Bool) {
+    public func updateRootControllers(showCallsTab: Bool, showNewsTab: Bool, showFeedTab: Bool = false) {
         guard let rootTabController = self.rootTabController as? TabBarControllerImpl else {
             return
         }
@@ -267,6 +275,9 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         if showNewsTab, let newsController = self.newsController {
             controllers.append(newsController)
         }
+        if showFeedTab, let exteraFeedScreen = self.exteraFeedScreen {
+            controllers.append(exteraFeedScreen)
+        }
         controllers.append(self.accountSettingsController!)
 
         // A removed selected tab would otherwise fall back to index 0 (Contacts): select Chats instead.
@@ -277,6 +288,12 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         rootTabController.setControllers(controllers, selectedIndex: selectedIndex)
     }
     
+    private func configureExteraFeedTabItem(_ controller: ViewController) {
+        controller.tabBarItem.title = self.presentationData.strings.Extera_Feed_Title
+        controller.tabBarItem.image = UIImage(bundleImageName: "Chat List/Tabs/IconNews")?.withRenderingMode(.alwaysTemplate)
+        controller.tabBarItem.selectedImage = UIImage(bundleImageName: "Chat List/Tabs/IconNews")?.withRenderingMode(.alwaysTemplate)
+    }
+
     public func openChatsController(activateSearch: Bool, filter: ChatListSearchFilter = .chats, query: String? = nil) {
         guard let rootTabController = self.rootTabController else {
             return

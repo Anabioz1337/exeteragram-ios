@@ -17258,4 +17258,5 @@ Error: %8$@";
 "Extera.Feed.IncludeArchived" = "Include Archived";
 "Extera.Feed.HideChannel" = "Hide channel from the feed?";
 "Extera.Feed.Hide" = "Hide";
+"Extera.Feed.ShowInTabs" = "Show in Bottom Tabs";
 "Extera.Feed.Empty" = "No new posts from your channels.";

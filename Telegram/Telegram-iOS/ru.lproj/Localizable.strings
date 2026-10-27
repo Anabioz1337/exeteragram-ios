@@ -13,4 +13,5 @@
 "Extera.Feed.IncludeArchived" = "Включая архив";
 "Extera.Feed.HideChannel" = "Скрыть канал из ленты?";
 "Extera.Feed.Hide" = "Скрыть";
+"Extera.Feed.ShowInTabs" = "Показывать внизу";
 "Extera.Feed.Empty" = "Новых постов из ваших каналов пока нет.";
