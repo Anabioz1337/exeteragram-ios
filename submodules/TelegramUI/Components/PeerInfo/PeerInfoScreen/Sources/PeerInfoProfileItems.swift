@@ -276,8 +276,8 @@ func infoItems(
             )
         }
 
-        if exteraPreferences.showIdAndDc, let userPeer = user._asPeer() as? TelegramUser {
-            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: userPeer, multiLine: true)))
+        if exteraPreferences.showIdAndDc {
+            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: user, multiLine: true)))
             if exteraPreferences.showCreationDate, let creationDate = exteraCreationDateString(peer: data.peer, presentationData: presentationData, values: exteraValues) {
                 items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraCreationDate, label: exteraProfileString("Extera.Profile.CreatedLabel"), text: creationDate))
             }
@@ -729,8 +729,8 @@ func infoItems(
                     )
                 )
             }
-            if exteraPreferences.showIdAndDc, let channelPeer = channel._asPeer() as? TelegramChannel {
-                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: channelPeer, multiLine: true)))
+            if exteraPreferences.showIdAndDc {
+                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: channel, multiLine: true)))
                 if exteraPreferences.showCreationDate {
                     items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraCreationDate, label: exteraProfileString("Extera.Profile.CreatedLabel"), text: stringForMediumDate(timestamp: channel.creationDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, withTime: false)))
                 }
@@ -897,7 +897,7 @@ func infoItems(
             }
         }
     } else if case let .legacyGroup(group) = data.peer {
-        let ItemExteraIdAndDc = 0
+        let ItemExteraIdAndDcLegacyGroup = 0
         if let cachedData = data.cachedData as? CachedGroupData {
             let aboutText: String?
             if group.isFake {
@@ -919,7 +919,7 @@ func infoItems(
             }
         }
         if exteraPreferences.showIdAndDc, let groupPeer = data.peer._asPeer() as? TelegramGroup {
-            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: groupPeer, multiLine: true)))
+            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDcLegacyGroup, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: groupPeer, multiLine: true)))
         }
     }
 
