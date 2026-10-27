@@ -128,12 +128,11 @@ public final class ExteraPluginsManager {
         }
         self.sharedContext = sharedContext
         self.settingsDisposable.set(
-            exteraPluginsSettings(accountManager: sharedContext.accountManager)
+            (exteraPluginsSettings(accountManager: sharedContext.accountManager)
             |> deliverOnMainQueue
             |> map { settings -> [InstalledExteraPlugin] in
                 return settings.enabledPlugins()
-            }
-            |> start(next: { [weak self] plugins in
+            }).start(next: { [weak self] plugins in
                 guard let self else {
                     return
                 }
