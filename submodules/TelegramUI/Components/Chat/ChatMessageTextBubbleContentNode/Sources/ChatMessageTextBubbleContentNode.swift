@@ -444,6 +444,14 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                 if incoming && item.associatedData.isSuspiciousPeer, let entities = messageEntities {
                     messageEntities = entities.filter(\.isShownFromSuspiciousPeer)
                 }
+
+                if incoming && item.associatedData.exteraSettings.filterZalgo && !rawText.isEmpty && textHasExcessiveCombiningMarkRun(rawText) {
+                    let (strippedText, utf16IndexMap) = stripExcessiveCombiningMarks(from: rawText)
+                    rawText = strippedText
+                    if let entities = messageEntities {
+                        messageEntities = remapEntitiesAfterTextTrimming(entities, utf16IndexMap: utf16IndexMap)
+                    }
+                }
                 
                 var formattedDateUpdatePeriod: Int32?
                 if let messageEntities {
