@@ -109,11 +109,15 @@ public struct ExteraSettings: Codable, Equatable {
     }
 }
 
+public let exteraAdBlockUserDefaults = UserDefaults(suiteName: "exteraAdBlock")
+
 public func updateExteraSettingsInteractively(accountManager: AccountManager<TelegramAccountManagerTypes>, _ f: @escaping (ExteraSettings) -> ExteraSettings) -> Signal<Void, NoError> {
     return accountManager.transaction { transaction -> Void in
         transaction.updateSharedData(ApplicationSpecificSharedDataKeys.exteraSettings, { entry in
             let currentSettings = entry?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
-            return SharedPreferencesEntry(f(currentSettings))
+            let updated = f(currentSettings)
+            exteraAdBlockUserDefaults?.set(updated.adBlockEnabled, forKey: "blockAdsEnabled")
+            return SharedPreferencesEntry(updated)
         })
     }
 }

@@ -346,7 +346,6 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
     var preloadAttachBotIconsDisposables: DisposableSet?
     var keepMessageCountersSyncrhonizedDisposable: Disposable?
     var keepSavedMessagesSyncrhonizedDisposable: Disposable?
-    var exteraAdblockDisposable: Disposable?
     var saveMediaDisposable: MetaDisposable?
     var giveawayStatusDisposable: MetaDisposable?
     var nameColorDisposable: Disposable?
@@ -7157,7 +7156,6 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
         self.preloadAttachBotIconsDisposables?.dispose()
         self.keepMessageCountersSyncrhonizedDisposable?.dispose()
         self.keepSavedMessagesSyncrhonizedDisposable?.dispose()
-        self.exteraAdblockDisposable?.dispose()
         self.translationStateDisposable?.dispose()
         self.premiumGiftSuggestionDisposable?.dispose()
         self.powerSavingMonitoringDisposable?.dispose()

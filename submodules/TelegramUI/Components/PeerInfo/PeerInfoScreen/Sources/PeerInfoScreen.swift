@@ -174,6 +174,7 @@ enum PeerInfoSettingsSection {
     case passwordSetup
     case dataAndStorage
     case appearance
+    case exteraFeed
     case language
     case stickers
     case premium

@@ -11,4 +11,6 @@
 "Extera.Feed.All" = "Все";
 "Extera.Feed.MarkAllAsRead" = "Отметить все как прочитанные";
 "Extera.Feed.IncludeArchived" = "Включая архив";
+"Extera.Feed.HideChannel" = "Скрыть канал из ленты?";
+"Extera.Feed.Hide" = "Скрыть";
 "Extera.Feed.Empty" = "Новых постов из ваших каналов пока нет.";

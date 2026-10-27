@@ -21,27 +21,18 @@ private struct ExteraBaseAdState: Equatable {
     }
 }
 
-public struct ExteraBlockedAd: Equatable {
-    public let opaqueId: Data
-    public let url: String
-}
-
 /// An `AdMessagesHistoryContext` that hides sponsored messages while Block Ads is enabled.
 ///
 /// Every intercepted ad is counted once (per opaque id, per context lifetime) in the account's
-/// extera settings and published through `blockedAdEvents`, which the chat presents as the
-/// PageBlocked screen. "Proceed" lets exactly that ad through for the rest of this chat session.
+/// extera settings, which is what the Block Ads row reports as Blocked Requests.
 public final class ExteraAdblockAdMessagesContext: AdMessagesHistoryContext {
     private let accountManager: AccountManager<TelegramAccountManagerTypes>
 
     private let filteredState = Promise<(interPostInterval: Int32?, messages: [Message], startDelay: Int32?, betweenDelay: Int32?)>()
-    public let blockedAdEvents = Promise<ExteraBlockedAd>()
 
     private let baseState = Atomic<ExteraBaseAdState?>(value: nil)
     private let adBlockEnabled = Atomic<Bool>(value: false)
-    private let hasSettings = Atomic<Bool>(value: false)
     private let countedIds = Atomic<Set<Data>>(value: Set())
-    private let allowedIds = Atomic<Set<Data>>(value: Set())
 
     private let stateDisposable = MetaDisposable()
     private let settingsDisposable = MetaDisposable()
@@ -67,8 +58,7 @@ public final class ExteraAdblockAdMessagesContext: AdMessagesHistoryContext {
             }
             let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
             let wasEnabled = self.adBlockEnabled.swap(settings.adBlockEnabled)
-            let isFirst = !self.hasSettings.swap(true)
-            if wasEnabled != settings.adBlockEnabled || isFirst {
+            if wasEnabled != settings.adBlockEnabled {
                 Queue.mainQueue().async {
                     self.republish()
                 }
@@ -85,32 +75,17 @@ public final class ExteraAdblockAdMessagesContext: AdMessagesHistoryContext {
         return self.filteredState.get()
     }
 
-    public func allowOnce(opaqueId: Data) {
-        let _ = self.allowedIds.with { ids in
-            var ids = ids
-            ids.insert(opaqueId)
-            return ids
-        }
-        Queue.mainQueue().async {
-            self.republish()
-        }
-    }
-
     private func republish() {
         guard let baseState = self.baseState.with({ $0 }) else {
             return
         }
         let enabled = self.adBlockEnabled.with({ $0 })
-        let allowed = self.allowedIds.with({ $0 })
 
         var messages = baseState.messages
-        var intercepted: [ExteraBlockedAd] = []
+        var interceptedCount: Int32 = 0
         if enabled {
             messages = baseState.messages.filter { message in
                 guard let adAttribute = message.adAttribute else {
-                    return true
-                }
-                if allowed.contains(adAttribute.opaqueId) {
                     return true
                 }
                 let counted = self.countedIds.with { ids -> Bool in
@@ -122,19 +97,17 @@ public final class ExteraAdblockAdMessagesContext: AdMessagesHistoryContext {
                     return false
                 }
                 if !counted {
-                    intercepted.append(ExteraBlockedAd(opaqueId: adAttribute.opaqueId, url: adAttribute.url))
+                    interceptedCount += 1
                 }
                 return false
             }
         }
 
-        if !intercepted.isEmpty {
+        if interceptedCount > 0 {
             let accountManager = self.accountManager
-            let increment = Int32(intercepted.count)
             let _ = updateExteraSettingsInteractively(accountManager: accountManager, { settings in
-                return settings.withUpdatedAdBlockBlockedRequests(settings.adBlockBlockedRequests.addingReportingOverflow(increment).partialValue)
+                return settings.withUpdatedAdBlockBlockedRequests(settings.adBlockBlockedRequests.addingReportingOverflow(interceptedCount).partialValue)
             }).startStandalone()
-            self.blockedAdEvents.set(.single(intercepted[0]))
         }
 
         self.filteredState.set(.single((baseState.interPostInterval, messages, baseState.startDelay, baseState.betweenDelay)))

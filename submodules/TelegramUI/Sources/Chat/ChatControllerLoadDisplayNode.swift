@@ -705,8 +705,6 @@ extension ChatControllerImpl {
             self.chatDisplayNode.historyNode.voicePlaylistItemChanged(nil, currentItem)
         }
 
-        self.setupExteraAdblock()
-        
         if case .peer(self.context.account.peerId) = self.chatLocation {
             var didDisplayTooltip = false
             if "".isEmpty {
