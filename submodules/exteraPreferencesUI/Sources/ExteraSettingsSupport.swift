@@ -23,10 +23,9 @@ final class ExteraSettingsEditor {
         self.update { $0.with(keyPath, value) }
     }
 
-    func cycle(_ keyPath: WritableKeyPath<ExteraSettings, Int32>, optionCount: Int32) {
-        self.update { settings in
-            settings.with(keyPath, (settings[keyPath: keyPath] + 1) % optionCount)
-        }
+    func cycle(_ keyPath: WritableKeyPath<ExteraSettings, Int32>, values: [Int32], currentValue: Int32) {
+        let index = values.firstIndex(of: currentValue) ?? values.indices.lowerBound
+        self.set(keyPath, values[(index + 1) % values.count])
     }
 
     func reset() {
@@ -50,15 +49,15 @@ final class ExteraSettingsArguments {
         self.editor.set(keyPath, value)
     }
 
-    func cycle(_ keyPath: WritableKeyPath<ExteraSettings, Int32>, optionCount: Int32) {
-        self.editor.cycle(keyPath, optionCount: optionCount)
+    func cycle(_ keyPath: WritableKeyPath<ExteraSettings, Int32>, values: [Int32], currentValue: Int32) {
+        self.editor.cycle(keyPath, values: values, currentValue: currentValue)
     }
 }
 
 enum ExteraSettingsEntry: ItemListNodeEntry {
     case header(id: Int32, sectionId: Int32, text: String)
     case toggle(id: Int32, sectionId: Int32, keyPath: WritableKeyPath<ExteraSettings, Bool>, title: String, value: Bool)
-    case option(id: Int32, sectionId: Int32, keyPath: WritableKeyPath<ExteraSettings, Int32>, title: String, value: Int32, optionTitles: [String])
+    case option(id: Int32, sectionId: Int32, keyPath: WritableKeyPath<ExteraSettings, Int32>, title: String, value: Int32, optionValues: [Int32], optionTitles: [String])
     case slider(id: Int32, sectionId: Int32, keyPath: WritableKeyPath<ExteraSettings, Int32>, title: String, value: Int32, maximumValue: Int32, leftText: String?, rightText: String?)
     case disclosure(id: Int32, sectionId: Int32, title: String)
     case footer(id: Int32, sectionId: Int32, text: String)
@@ -70,7 +69,7 @@ enum ExteraSettingsEntry: ItemListNodeEntry {
             return id
         case let .toggle(id, _, _, _, _):
             return id
-        case let .option(id, _, _, _, _, _):
+        case let .option(id, _, _, _, _, _, _):
             return id
         case let .slider(id, _, _, _, _, _, _):
             return id
@@ -89,7 +88,7 @@ enum ExteraSettingsEntry: ItemListNodeEntry {
             return sectionId
         case let .toggle(_, sectionId, _, _, _):
             return sectionId
-        case let .option(_, sectionId, _, _, _, _):
+        case let .option(_, sectionId, _, _, _, _, _):
             return sectionId
         case let .slider(_, sectionId, _, _, _, _, _):
             return sectionId
@@ -124,8 +123,8 @@ enum ExteraSettingsEntry: ItemListNodeEntry {
             } else {
                 return false
             }
-        case let .option(lhsId, lhsSectionId, lhsKeyPath, lhsTitle, lhsValue, lhsOptionTitles):
-            if case let .option(rhsId, rhsSectionId, rhsKeyPath, rhsTitle, rhsValue, rhsOptionTitles) = rhs, lhsId == rhsId, lhsSectionId == rhsSectionId, lhsKeyPath == rhsKeyPath, lhsTitle == rhsTitle, lhsValue == rhsValue, lhsOptionTitles == rhsOptionTitles {
+        case let .option(lhsId, lhsSectionId, lhsKeyPath, lhsTitle, lhsValue, lhsOptionValues, lhsOptionTitles):
+            if case let .option(rhsId, rhsSectionId, rhsKeyPath, rhsTitle, rhsValue, rhsOptionValues, rhsOptionTitles) = rhs, lhsId == rhsId, lhsSectionId == rhsSectionId, lhsKeyPath == rhsKeyPath, lhsTitle == rhsTitle, lhsValue == rhsValue, lhsOptionValues == rhsOptionValues, lhsOptionTitles == rhsOptionTitles {
                 return true
             } else {
                 return false
@@ -166,10 +165,10 @@ enum ExteraSettingsEntry: ItemListNodeEntry {
             return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: title, value: value, sectionId: self.section, style: .blocks, updated: { value in
                 arguments.set(keyPath, value)
             })
-        case let .option(_, _, keyPath, title, value, optionTitles):
-            let selectedIndex = max(0, min(optionTitles.count - 1, Int(value)))
+        case let .option(_, _, keyPath, title, value, optionValues, optionTitles):
+            let selectedIndex = max(0, min(optionTitles.count - 1, Int(optionValues.firstIndex(of: value) ?? 0)))
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: optionTitles[selectedIndex], labelStyle: .text, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
-                arguments.cycle(keyPath, optionCount: Int32(optionTitles.count))
+                arguments.cycle(keyPath, values: optionValues, currentValue: value)
             })
         case let .slider(_, _, keyPath, title, value, maximumValue, leftText, rightText):
             return ExteraValueSliderItem(presentationData: presentationData, title: title, leftText: leftText, rightText: rightText, value: value, maximumValue: maximumValue, sectionId: self.section, updated: { value in
