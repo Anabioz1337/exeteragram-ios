@@ -9,18 +9,24 @@ public struct ExteraSettings: Codable, Equatable {
     public var formatTimeWithSeconds: Bool
     public var checkUpdatesOnLaunch: Bool
     public var lastUpdateCheckTime: Int64
+    public var customSaveFolderName: String
+    public var useGoogleAnalytics: Bool
+    public var useGoogleCrashlytics: Bool
 
     public static var defaultSettings: ExteraSettings {
-        return ExteraSettings(downloadSpeedBoostLevel: 0, uploadSpeedBoost: false, disableNumberRounding: false, formatTimeWithSeconds: false, checkUpdatesOnLaunch: false, lastUpdateCheckTime: 0)
+        return ExteraSettings(downloadSpeedBoostLevel: 0, uploadSpeedBoost: false, disableNumberRounding: false, formatTimeWithSeconds: false, checkUpdatesOnLaunch: false, lastUpdateCheckTime: 0, customSaveFolderName: "", useGoogleAnalytics: false, useGoogleCrashlytics: false)
     }
 
-    public init(downloadSpeedBoostLevel: Int, uploadSpeedBoost: Bool, disableNumberRounding: Bool, formatTimeWithSeconds: Bool, checkUpdatesOnLaunch: Bool, lastUpdateCheckTime: Int64) {
+    public init(downloadSpeedBoostLevel: Int, uploadSpeedBoost: Bool, disableNumberRounding: Bool, formatTimeWithSeconds: Bool, checkUpdatesOnLaunch: Bool, lastUpdateCheckTime: Int64, customSaveFolderName: String, useGoogleAnalytics: Bool, useGoogleCrashlytics: Bool) {
         self.downloadSpeedBoostLevel = downloadSpeedBoostLevel
         self.uploadSpeedBoost = uploadSpeedBoost
         self.disableNumberRounding = disableNumberRounding
         self.formatTimeWithSeconds = formatTimeWithSeconds
         self.checkUpdatesOnLaunch = checkUpdatesOnLaunch
         self.lastUpdateCheckTime = lastUpdateCheckTime
+        self.customSaveFolderName = customSaveFolderName
+        self.useGoogleAnalytics = useGoogleAnalytics
+        self.useGoogleCrashlytics = useGoogleCrashlytics
     }
 
     public init(from decoder: Decoder) throws {
@@ -32,6 +38,9 @@ public struct ExteraSettings: Codable, Equatable {
         self.formatTimeWithSeconds = ((try? container.decode(Int32.self, forKey: "formatTimeWithSeconds")) ?? 0) != 0
         self.checkUpdatesOnLaunch = ((try? container.decode(Int32.self, forKey: "checkUpdatesOnLaunch")) ?? 0) != 0
         self.lastUpdateCheckTime = (try? container.decode(Int64.self, forKey: "lastUpdateCheckTime")) ?? 0
+        self.customSaveFolderName = (try? container.decode(String.self, forKey: "customSaveFolderName")) ?? ""
+        self.useGoogleAnalytics = ((try? container.decode(Int32.self, forKey: "useGoogleAnalytics")) ?? 0) != 0
+        self.useGoogleCrashlytics = ((try? container.decode(Int32.self, forKey: "useGoogleCrashlytics")) ?? 0) != 0
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -43,6 +52,9 @@ public struct ExteraSettings: Codable, Equatable {
         try container.encode((self.formatTimeWithSeconds ? 1 : 0) as Int32, forKey: "formatTimeWithSeconds")
         try container.encode((self.checkUpdatesOnLaunch ? 1 : 0) as Int32, forKey: "checkUpdatesOnLaunch")
         try container.encode(self.lastUpdateCheckTime, forKey: "lastUpdateCheckTime")
+        try container.encode(self.customSaveFolderName, forKey: "customSaveFolderName")
+        try container.encode((self.useGoogleAnalytics ? 1 : 0) as Int32, forKey: "useGoogleAnalytics")
+        try container.encode((self.useGoogleCrashlytics ? 1 : 0) as Int32, forKey: "useGoogleCrashlytics")
     }
 
     public static func ==(lhs: ExteraSettings, rhs: ExteraSettings) -> Bool {
@@ -51,7 +63,10 @@ public struct ExteraSettings: Codable, Equatable {
             lhs.disableNumberRounding == rhs.disableNumberRounding &&
             lhs.formatTimeWithSeconds == rhs.formatTimeWithSeconds &&
             lhs.checkUpdatesOnLaunch == rhs.checkUpdatesOnLaunch &&
-            lhs.lastUpdateCheckTime == rhs.lastUpdateCheckTime
+            lhs.lastUpdateCheckTime == rhs.lastUpdateCheckTime &&
+            lhs.customSaveFolderName == rhs.customSaveFolderName &&
+            lhs.useGoogleAnalytics == rhs.useGoogleAnalytics &&
+            lhs.useGoogleCrashlytics == rhs.useGoogleCrashlytics
     }
 }
 

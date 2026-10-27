@@ -21,16 +21,22 @@ private enum ExteraUpdaterStatus: Equatable {
 private enum ExteraSettingsSection: Int32 {
     case speed = 0
     case interface = 1
-    case updates = 2
+    case analytics = 2
+    case updates = 3
 }
 
 private enum ExteraSettingsEntry: ItemListNodeEntry {
     case speedHeader(PresentationTheme, String)
     case downloadBoost(PresentationTheme, String, String)
+    case ultraWarning(PresentationTheme, String)
     case uploadBoost(PresentationTheme, String, Bool)
     case interfaceHeader(PresentationTheme, String)
     case disableNumberRounding(PresentationTheme, String, Bool)
     case formatTimeWithSeconds(PresentationTheme, String, Bool)
+    case analyticsHeader(PresentationTheme, String)
+    case useGoogleAnalytics(PresentationTheme, String, Bool)
+    case useGoogleCrashlytics(PresentationTheme, String, Bool)
+    case analyticsInfo(PresentationTheme, String)
     case updatesHeader(PresentationTheme, String)
     case checkForUpdates(PresentationTheme, String, String)
     case checkOnLaunch(PresentationTheme, String, Bool)
@@ -42,10 +48,12 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
 
     var section: ItemListSectionId {
         switch self {
-            case .speedHeader, .downloadBoost, .uploadBoost:
+            case .speedHeader, .downloadBoost, .ultraWarning, .uploadBoost:
                 return ExteraSettingsSection.speed.rawValue
             case .interfaceHeader, .disableNumberRounding, .formatTimeWithSeconds:
                 return ExteraSettingsSection.interface.rawValue
+            case .analyticsHeader, .useGoogleAnalytics, .useGoogleCrashlytics, .analyticsInfo:
+                return ExteraSettingsSection.analytics.rawValue
             case .updatesHeader, .checkForUpdates, .checkOnLaunch, .lastCheck, .currentVersion, .latestVersion, .changelog, .downloadOnGitHub:
                 return ExteraSettingsSection.updates.rawValue
         }
@@ -55,18 +63,23 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
         switch self {
             case .speedHeader: return 0
             case .downloadBoost: return 1
-            case .uploadBoost: return 2
-            case .interfaceHeader: return 3
-            case .disableNumberRounding: return 4
-            case .formatTimeWithSeconds: return 5
-            case .updatesHeader: return 6
-            case .checkForUpdates: return 7
-            case .checkOnLaunch: return 8
-            case .lastCheck: return 9
-            case .currentVersion: return 10
-            case .latestVersion: return 11
-            case .changelog: return 12
-            case .downloadOnGitHub: return 13
+            case .ultraWarning: return 2
+            case .uploadBoost: return 3
+            case .interfaceHeader: return 4
+            case .disableNumberRounding: return 5
+            case .formatTimeWithSeconds: return 6
+            case .analyticsHeader: return 7
+            case .useGoogleAnalytics: return 8
+            case .useGoogleCrashlytics: return 9
+            case .analyticsInfo: return 10
+            case .updatesHeader: return 11
+            case .checkForUpdates: return 12
+            case .checkOnLaunch: return 13
+            case .lastCheck: return 14
+            case .currentVersion: return 15
+            case .latestVersion: return 16
+            case .changelog: return 17
+            case .downloadOnGitHub: return 18
         }
     }
 
@@ -80,6 +93,12 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 }
             case let .downloadBoost(lhsTheme, lhsText, lhsValue):
                 if case let .downloadBoost(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                } else {
+                    return false
+                }
+            case let .ultraWarning(lhsTheme, lhsText):
+                if case let .ultraWarning(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
                 } else {
                     return false
@@ -104,6 +123,30 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 }
             case let .formatTimeWithSeconds(lhsTheme, lhsText, lhsValue):
                 if case let .formatTimeWithSeconds(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                } else {
+                    return false
+                }
+            case let .analyticsHeader(lhsTheme, lhsText):
+                if case let .analyticsHeader(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+                    return true
+                } else {
+                    return false
+                }
+            case let .useGoogleAnalytics(lhsTheme, lhsText, lhsValue):
+                if case let .useGoogleAnalytics(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                } else {
+                    return false
+                }
+            case let .useGoogleCrashlytics(lhsTheme, lhsText, lhsValue):
+                if case let .useGoogleCrashlytics(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                } else {
+                    return false
+                }
+            case let .analyticsInfo(lhsTheme, lhsText):
+                if case let .analyticsInfo(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
                 } else {
                     return false
@@ -172,6 +215,8 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: PresentationResourcesSettings.storageUsage, title: text, label: value, sectionId: self.section, style: .blocks, action: {
                     arguments.chooseDownloadBoost()
                 })
+            case let .ultraWarning(_, text):
+                return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
             case let .uploadBoost(_, text, value):
                 return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
                     arguments.toggleUploadBoost(value)
@@ -186,6 +231,18 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
                     arguments.toggleFormatTimeWithSeconds(value)
                 })
+            case let .analyticsHeader(_, text):
+                return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
+            case let .useGoogleAnalytics(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleUseGoogleAnalytics(value)
+                })
+            case let .useGoogleCrashlytics(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleUseGoogleCrashlytics(value)
+                })
+            case let .analyticsInfo(_, text):
+                return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
             case let .updatesHeader(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .checkForUpdates(_, text, value):
@@ -217,6 +274,8 @@ private final class ExteraSettingsArguments {
     let toggleUploadBoost: (Bool) -> Void
     let toggleDisableNumberRounding: (Bool) -> Void
     let toggleFormatTimeWithSeconds: (Bool) -> Void
+    let toggleUseGoogleAnalytics: (Bool) -> Void
+    let toggleUseGoogleCrashlytics: (Bool) -> Void
     let checkForUpdates: () -> Void
     let toggleCheckOnLaunch: (Bool) -> Void
     let openReleasePage: (String) -> Void
@@ -226,6 +285,8 @@ private final class ExteraSettingsArguments {
         toggleUploadBoost: @escaping (Bool) -> Void,
         toggleDisableNumberRounding: @escaping (Bool) -> Void,
         toggleFormatTimeWithSeconds: @escaping (Bool) -> Void,
+        toggleUseGoogleAnalytics: @escaping (Bool) -> Void,
+        toggleUseGoogleCrashlytics: @escaping (Bool) -> Void,
         checkForUpdates: @escaping () -> Void,
         toggleCheckOnLaunch: @escaping (Bool) -> Void,
         openReleasePage: @escaping (String) -> Void
@@ -234,6 +295,8 @@ private final class ExteraSettingsArguments {
         self.toggleUploadBoost = toggleUploadBoost
         self.toggleDisableNumberRounding = toggleDisableNumberRounding
         self.toggleFormatTimeWithSeconds = toggleFormatTimeWithSeconds
+        self.toggleUseGoogleAnalytics = toggleUseGoogleAnalytics
+        self.toggleUseGoogleCrashlytics = toggleUseGoogleCrashlytics
         self.checkForUpdates = checkForUpdates
         self.toggleCheckOnLaunch = toggleCheckOnLaunch
         self.openReleasePage = openReleasePage
@@ -272,11 +335,19 @@ private func exteraSettingsEntries(presentationData: PresentationData, settings:
 
     entries.append(.speedHeader(presentationData.theme, strings.speedHeader.uppercased()))
     entries.append(.downloadBoost(presentationData.theme, strings.downloadBoost, exteraBoostLevelTitle(settings.downloadSpeedBoostLevel, strings: strings)))
+    if settings.downloadSpeedBoostLevel == 2 || settings.uploadSpeedBoost {
+        entries.append(.ultraWarning(presentationData.theme, strings.ultraWarning))
+    }
     entries.append(.uploadBoost(presentationData.theme, strings.uploadBoost, settings.uploadSpeedBoost))
 
     entries.append(.interfaceHeader(presentationData.theme, strings.interfaceHeader.uppercased()))
     entries.append(.disableNumberRounding(presentationData.theme, strings.disableNumberRounding, settings.disableNumberRounding))
     entries.append(.formatTimeWithSeconds(presentationData.theme, strings.formatTimeWithSeconds, settings.formatTimeWithSeconds))
+
+    entries.append(.analyticsHeader(presentationData.theme, strings.analyticsHeader.uppercased()))
+    entries.append(.useGoogleAnalytics(presentationData.theme, strings.useGoogleAnalytics, settings.useGoogleAnalytics))
+    entries.append(.useGoogleCrashlytics(presentationData.theme, strings.useGoogleCrashlytics, settings.useGoogleCrashlytics))
+    entries.append(.analyticsInfo(presentationData.theme, strings.analyticsInfo))
 
     entries.append(.updatesHeader(presentationData.theme, strings.updatesHeader.uppercased()))
     entries.append(.checkForUpdates(presentationData.theme, strings.checkForUpdates, exteraUpdateStatusLabel(status, strings: strings)))
@@ -315,6 +386,7 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
             let alertController = textAlertController(context: context, title: strings.downloadBoost, text: "", actions: levels.map { level, title in
                 TextAlertAction(type: .genericAction, title: title, action: {
                     exteraApplyDownloadBoostLevel(context: context, level: level)
+                    exteraPresentRestartRequired(sharedContext: context.sharedContext)
                 })
             })
             context.sharedContext.presentGlobalController(alertController, nil)
@@ -324,6 +396,7 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
                 return
             }
             exteraApplyUploadBoost(context: context, enabled: value)
+            exteraPresentRestartRequired(sharedContext: context.sharedContext)
         },
         toggleDisableNumberRounding: { [weak context] value in
             guard let context = context else {
@@ -344,6 +417,28 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
                 settings.formatTimeWithSeconds = value
                 return settings
             }.start()
+        },
+        toggleUseGoogleAnalytics: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.useGoogleAnalytics = value
+                return settings
+            }.start()
+            exteraPresentRestartRequired(sharedContext: context.sharedContext)
+        },
+        toggleUseGoogleCrashlytics: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.useGoogleCrashlytics = value
+                return settings
+            }.start()
+            exteraPresentRestartRequired(sharedContext: context.sharedContext)
         },
         checkForUpdates: { [weak context] in
             guard let context = context else {
