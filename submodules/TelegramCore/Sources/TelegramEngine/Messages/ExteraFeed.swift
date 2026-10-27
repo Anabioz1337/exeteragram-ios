@@ -22,12 +22,12 @@ extension TelegramEngine.Messages {
             return .single([])
         }
         let postbox = self.account.postbox
-        let signals: [Signal<[(peerId: PeerId, messages: [EngineMessage])], NoError>] = peerIds.map { peerId in
+        let signals: [Signal<(peerId: PeerId, messages: [EngineMessage]), NoError>] = peerIds.map { peerId in
             return postbox.aroundMessageHistoryViewForLocation(
                 .peer(peerId: peerId, threadId: nil),
+                anchor: .upperBound,
                 ignoreMessagesInTimestampRange: nil,
                 ignoreMessageIds: Set(),
-                anchor: .upperBound,
                 count: countPerPeer,
                 fixedCombinedReadStates: nil,
                 topTaggedMessageIdNamespaces: [],
@@ -36,11 +36,11 @@ extension TelegramEngine.Messages {
                 namespaces: .not(Namespaces.Message.allNonRegular),
                 orderStatistics: []
             )
-            |> map { view, _, _ -> [(peerId: PeerId, messages: [EngineMessage])] in
+            |> map { view, _, _ -> (peerId: PeerId, messages: [EngineMessage]) in
                 let messages = view.entries.map { entry in
                     return EngineMessage(entry.message)
                 }
-                return [(peerId, messages)]
+                return (peerId, messages)
             }
         }
         return combineLatest(signals)
@@ -63,7 +63,7 @@ extension TelegramEngine.Messages {
     /// chat-list tables directly, so the result reflects whatever dialogs are stored at call time.
     public func exteraFeedChannels() -> Signal<[ExteraFeedChannel], NoError> {
         return self.account.postbox.transaction { transaction -> [ExteraFeedChannel] in
-            var candidates = transaction.chatListGetAllPeerIds(groupId: Namespaces.PeerGroup.root)
+            var candidates = transaction.chatListGetAllPeerIds(groupId: PeerGroupId.root)
             candidates += transaction.chatListGetAllPeerIds(groupId: Namespaces.PeerGroup.archive)
             var channels: [ExteraFeedChannel] = []
             var seenPeers = Set<PeerId>()
