@@ -65,10 +65,15 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
     private var currentAlbumArt: (FileMediaReference, SharedMediaPlaybackAlbumArt)?
     private let albumArtBackground: UIVisualEffectView
     private let albumArtNode = TransformImageNode()
-    
+    private let rhythmGlowView = RhythmGlowView()
+    private let rhythmParticlesNode = RhythmParticlesNode()
+    private(set) var exteraMediaSettings = ExteraMediaSettings.defaultSettings
+
     private var saveMediaDisposable: MetaDisposable?
     private let trackSaveChannelDisposable = MetaDisposable()
-    
+    private let rhythmLevelDisposable = MetaDisposable()
+    private let exteraMediaSettingsDisposable = MetaDisposable()
+
     private var validLayout: ContainerViewLayout?
     private var containerUsesCornerRadii = false
     
@@ -371,11 +376,14 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         self.collapseNode.setImage(generateCollapseIcon(theme: self.presentationData.theme), for: [])
         
         self.albumArtBackground = UIVisualEffectView()
+        self.albumArtBackground.contentView.addSubview(self.rhythmGlowView)
+        self.albumArtBackground.contentView.addSubview(self.rhythmParticlesNode.view)
         self.albumArtBackground.contentView.addSubview(self.albumArtNode.view)
         self.albumArtNode.isUserInteractionEnabled = false
-        
+        self.rhythmGlowView.isHidden = true
+
         super.init()
-        
+
         self.backgroundColor = nil
         self.isOpaque = false
         
@@ -442,6 +450,26 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
 
         self.controlsNode.requestPickSaveChannel = { [weak self] in
             self?.pickTrackSaveChannel()
+        }
+
+        self.controlsNode.requestToggleRhythm = { [weak self] in
+            guard let self else {
+                return
+            }
+            let isEnabled = self.exteraMediaSettings.rhythmBackground
+            let _ = updateExteraMediaSettingsInteractively(accountManager: self.context.sharedContext.accountManager, {
+                return $0.withUpdatedRhythmBackground(!isEnabled)
+            }).startStandalone()
+        }
+
+        self.controlsNode.requestToggleParticles = { [weak self] in
+            guard let self else {
+                return
+            }
+            let isEnabled = self.exteraMediaSettings.particles
+            let _ = updateExteraMediaSettingsInteractively(accountManager: self.context.sharedContext.accountManager, {
+                return $0.withUpdatedParticles(!isEnabled)
+            }).startStandalone()
         }
         
         self.controlsNode.requestSearchByArtist = { [weak self] artist in
@@ -610,15 +638,50 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         )
         
         self.setupReordering()
-        
+
+        self.exteraMediaSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraMediaSettings])
+        |> deliverOnMainQueue).startStrict(next: { [weak self] sharedData in
+            guard let self else {
+                return
+            }
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
+            self.exteraMediaSettings = settings
+            self.controlsNode.exteraMediaSettings = settings
+            self.rhythmGlowView.isHidden = !settings.rhythmBackground
+            if !settings.rhythmBackground {
+                self.rhythmGlowView.alpha = 0.0
+            }
+            if !settings.particles {
+                self.rhythmParticlesNode.clear()
+            }
+        }))
+
+        self.rhythmLevelDisposable.set((context.sharedContext.mediaManager.musicPlayerAudioLevel
+        |> deliverOnMainQueue).startStrict(next: { [weak self] level in
+            self?.updateRhythmLevel(level)
+        }))
+
         self.albumArtBackground.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.albumArtTapped(_:))))
     }
-    
+
+    private func updateRhythmLevel(_ level: Float) {
+        let clamped = CGFloat(max(0.0, min(level, 1.0)))
+        let isBigArtVisible = self.currentAlbumArt != nil
+        if self.exteraMediaSettings.rhythmBackground && isBigArtVisible {
+            self.rhythmGlowView.updateLevel(clamped)
+        }
+        if self.exteraMediaSettings.particles && isBigArtVisible {
+            self.rhythmParticlesNode.emit(level: clamped, color: self.presentationData.theme.list.itemPrimaryTextColor, boundsSize: self.rhythmParticlesNode.bounds.size)
+        }
+    }
+
     deinit {
         self.presentationDataDisposable?.dispose()
         self.replacementHistoryNodeReadyDisposable.dispose()
         self.dataDisposable?.dispose()
         self.saveMediaDisposable?.dispose()
+        self.rhythmLevelDisposable.dispose()
+        self.exteraMediaSettingsDisposable.dispose()
     }
     
     override func didLoad() {
@@ -1205,6 +1268,10 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
             let makeLargeAlbumArtLayout = self.albumArtNode.asyncLayout()
             let applyLargeAlbumArt = makeLargeAlbumArtLayout(TransformImageArguments(corners: ImageCorners(radius: 4.0), imageSize: albumArtSize, boundingSize: albumArtSize, intrinsicInsets: UIEdgeInsets()))
             applyLargeAlbumArt()
+
+            self.rhythmGlowView.frame = self.albumArtNode.frame.insetBy(dx: -60.0, dy: -60.0)
+            self.rhythmGlowView.isHidden = !self.exteraMediaSettings.rhythmBackground
+            self.rhythmParticlesNode.frame = self.albumArtNode.frame
             
             if animateIn {
                 self.controlsNode.albumArtNode.alpha = 0.0
@@ -1217,7 +1284,11 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
             }
         } else {
             self.controlsNode.albumArtNode.alpha = 1.0
-            
+
+            self.rhythmGlowView.isHidden = true
+            self.rhythmGlowView.alpha = 0.0
+            self.rhythmParticlesNode.clear()
+
             if self.albumArtBackground.superview != nil {
                 let fadeTransition = ComponentTransition(transition)
                 fadeTransition.setBlur(layer: self.albumArtNode.layer, radius: 10.0)

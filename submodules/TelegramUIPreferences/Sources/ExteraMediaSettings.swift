@@ -74,6 +74,14 @@ public struct ExteraMediaSettings: Codable, Equatable {
     public func withUpdatedTrackSavePeerIdRaw(_ trackSavePeerIdRaw: Int64) -> ExteraMediaSettings {
         return ExteraMediaSettings(doubleTapSeekSeconds: self.doubleTapSeekSeconds, pauseOnMinimize: self.pauseOnMinimize, disableVolumeAutoplay: self.disableVolumeAutoplay, preferOriginalQuality: self.preferOriginalQuality, pitchCents: self.pitchCents, trackSavePeerIdRaw: trackSavePeerIdRaw, lyricsOnlineSearch: self.lyricsOnlineSearch, rhythmBackground: self.rhythmBackground, particles: self.particles)
     }
+
+    public func withUpdatedRhythmBackground(_ rhythmBackground: Bool) -> ExteraMediaSettings {
+        return ExteraMediaSettings(doubleTapSeekSeconds: self.doubleTapSeekSeconds, pauseOnMinimize: self.pauseOnMinimize, disableVolumeAutoplay: self.disableVolumeAutoplay, preferOriginalQuality: self.preferOriginalQuality, pitchCents: self.pitchCents, trackSavePeerIdRaw: self.trackSavePeerIdRaw, lyricsOnlineSearch: self.lyricsOnlineSearch, rhythmBackground: rhythmBackground, particles: self.particles)
+    }
+
+    public func withUpdatedParticles(_ particles: Bool) -> ExteraMediaSettings {
+        return ExteraMediaSettings(doubleTapSeekSeconds: self.doubleTapSeekSeconds, pauseOnMinimize: self.pauseOnMinimize, disableVolumeAutoplay: self.disableVolumeAutoplay, preferOriginalQuality: self.preferOriginalQuality, pitchCents: self.pitchCents, trackSavePeerIdRaw: self.trackSavePeerIdRaw, lyricsOnlineSearch: self.lyricsOnlineSearch, rhythmBackground: self.rhythmBackground, particles: particles)
+    }
 }
 
 public func updateExteraMediaSettingsInteractively(accountManager: AccountManager<TelegramAccountManagerTypes>, _ f: @escaping (ExteraMediaSettings) -> ExteraMediaSettings) -> Signal<Void, NoError> {

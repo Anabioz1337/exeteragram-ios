@@ -205,7 +205,11 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
     var requestSaveToProfile: ((FileMediaReference) -> Void)?
     var requestRemoveFromProfile: ((FileMediaReference) -> Void)?
     var requestLayout: ((ContainedViewLayoutTransition) -> Void)?
-    
+    var requestToggleRhythm: (() -> Void)?
+    var requestToggleParticles: (() -> Void)?
+
+    var exteraMediaSettings = ExteraMediaSettings.defaultSettings
+
     var updateOrder: ((MusicPlaybackSettingsOrder) -> Void)?
     var control: ((SharedMediaPlayerControlAction) -> Void)?
     
@@ -1168,6 +1172,17 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
             presetItems.append(.action(ContextMenuActionItem(text: text, icon: { _ in return nil }, iconSource: ContextMenuActionItemIconSource(size: CGSize(width: 24.0, height: 24.0), signal: .single(isSelected ? generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.contextMenu.primaryColor) : UIImage()), action: { [weak self] _, f in
                 f(.default)
                 self?.control?(.setPitch(Int32(cents)))
+            }))))
+        }
+
+        let toggleItems: [(String, Bool, () -> Void)] = [
+            (self.presentationData.strings.Extera_RhythmBackground, self.exteraMediaSettings.rhythmBackground, { [weak self] in self?.requestToggleRhythm?() }),
+            (self.presentationData.strings.Extera_Particles, self.exteraMediaSettings.particles, { [weak self] in self?.requestToggleParticles?() })
+        ]
+        for (text, isSelected, toggle) in toggleItems {
+            presetItems.append(.action(ContextMenuActionItem(text: text, icon: { _ in return nil }, iconSource: ContextMenuActionItemIconSource(size: CGSize(width: 24.0, height: 24.0), signal: .single(isSelected ? generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.contextMenu.primaryColor) : UIImage()), action: { _, f in
+                f(.default)
+                toggle()
             }))))
         }
 

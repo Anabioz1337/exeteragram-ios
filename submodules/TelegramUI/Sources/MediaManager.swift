@@ -128,12 +128,34 @@ public final class MediaManagerImpl: NSObject, MediaManager {
                             return (account, .loading, type)
                         }
                     } |> deliverOnMainQueue)
+                    self.trackMusicPlayerAudioLevel(self.musicPlayerLevelDisposable, musicMediaPlayer.audioLevel)
                 } else {
                     self.musicMediaPlayerStateValue.set(.single(nil))
                     self.musicListenTracker?.playerClosed()
+                    self.musicPlayerLevelDisposable.set(nil)
+                    self.musicPlayerAudioLevelPipe.putNext(0.0)
                 }
             }
         }
+    }
+
+    /// Live output amplitude of the playing music track, feeding the rhythm background and the
+    /// particles effects. One global broadcast: the shared music player is unique per account and
+    /// the level signal already follows its playback item.
+    private let musicPlayerAudioLevelPipe = ValuePipe<Float>()
+    private let musicPlayerLevelDisposable = MetaDisposable()
+    public var musicPlayerAudioLevel: Signal<Float, NoError> {
+        return self.musicPlayerAudioLevelPipe.signal()
+    }
+
+    private func trackMusicPlayerAudioLevel(_ levelDisposable: MetaDisposable, _ audioLevel: Signal<Float, NoError>) {
+        let levelPipe = self.musicPlayerAudioLevelPipe
+        levelDisposable.set((audioLevel
+        |> deliverOnMainQueue).startStrict(next: { level in
+            levelPipe.putNext(level)
+        }, completed: {
+            levelPipe.putNext(0.0)
+        }))
     }
     private let musicMediaPlayerStateValue = Promise<(Account, SharedMediaPlayerItemPlaybackStateOrLoading, MediaManagerPlayerType)?>(nil)
     public var musicMediaPlayerState: Signal<(Account, SharedMediaPlayerItemPlaybackStateOrLoading, MediaManagerPlayerType)?, NoError> {
