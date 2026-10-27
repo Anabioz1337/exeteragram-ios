@@ -116,7 +116,7 @@ public final class ExteraCameraOptions {
     }
 
     public var settingsSignal: Signal<ExteraCameraSettings, NoError> {
-        return self.promise.signal()
+        return self.promise.get()
     }
 
     public var lastUsedCamera: ExteraCameraPosition? {
@@ -132,7 +132,7 @@ public final class ExteraCameraOptions {
     }
 
     public var lastUsedCameraSignal: Signal<ExteraCameraPosition?, NoError> {
-        return self.lastUsedCameraPromise.signal()
+        return self.lastUsedCameraPromise.get()
     }
 }
 

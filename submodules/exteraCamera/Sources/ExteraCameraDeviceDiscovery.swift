@@ -42,7 +42,7 @@ public func exteraCameraPreferredVideoDevice(position: AVCaptureDevice.Position,
         deviceTypes: [deviceType, .builtInWideAngleCamera],
         mediaType: .video,
         position: position
-    ).devices.first(where: { $0.deviceType == deviceType.rawValue }) {
+    ).devices.first(where: { $0.deviceType == deviceType }) {
         return .device(device)
     }
     return .stock

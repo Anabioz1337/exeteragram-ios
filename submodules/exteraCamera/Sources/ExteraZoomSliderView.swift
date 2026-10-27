@@ -146,6 +146,6 @@ public final class ExteraZoomSliderView: UIView {
 
 extension CGFloat {
     fileprivate func clampedToUnitRange() -> CGFloat {
-        return max(0.0, min(1.0, self))
+        return Swift.max(0.0, Swift.min(1.0, self))
     }
 }
