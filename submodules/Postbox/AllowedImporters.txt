@@ -8,7 +8,6 @@
 #
 # Not checked: test sources (directories named `Tests` or ending in `Tests`), and Postbox and
 # TelegramCore themselves. Keep the entries sorted (byte order, as `LC_ALL=C sort`).
-
 Telegram/NotificationService/Sources/NotificationService.swift
 Telegram/SiriIntents/IntentContacts.swift
 Telegram/SiriIntents/IntentHandler.swift
@@ -23,6 +22,8 @@ submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift
 submodules/ChatListUI/Sources/Node/ChatListNodeLocation.swift
 submodules/ChatPresentationInterfaceState/Sources/ChatPresentationInterfaceState.swift
 submodules/DirectMediaImageCache/Sources/DirectMediaImageCache.swift
+submodules/ExteraProfile/Sources/ExteraPeerStoredHistoryStats.swift
+submodules/ExteraProfile/Sources/ExteraProfilePeerInfo.swift
 submodules/FeaturedStickersScreen/Sources/FeaturedStickersScreen.swift
 submodules/FetchManagerImpl/Sources/FetchManagerImpl.swift
 submodules/GalleryUI/Sources/GalleryController.swift
