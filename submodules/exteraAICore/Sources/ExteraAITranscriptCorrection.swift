@@ -38,7 +38,7 @@ public final class ExteraAITranscriptCorrectionService: TranscriptCorrectionServ
                         action: .correctPunctuation,
                         input: text,
                         onEvent: { _ in }
-                    ).get()
+                    )
                     let trimmed = result.trimmingCharacters(in: .whitespacesAndNewlines)
                     if !trimmed.isEmpty {
                         subscriber.putNext(trimmed)

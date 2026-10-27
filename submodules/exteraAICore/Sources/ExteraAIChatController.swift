@@ -58,7 +58,7 @@ private final class ExteraAIChatController: ViewController, UITableViewDataSourc
     private let sendButton = UIButton(type: .system)
 
     private var isGenerating = false
-    private var generationTask: Task<Void, Never>?
+    private var generationTask: Task<Void>?
 
     init(context: AccountContext) {
         self.context = context
@@ -205,12 +205,15 @@ private final class ExteraAIChatController: ViewController, UITableViewDataSourc
                         }
                     }
                 case let .service(service):
-                    reply = try await self?.streamServiceReply(
+                    guard let streamingController = self else {
+                        return
+                    }
+                    reply = try await streamingController.streamServiceReply(
                         service: service,
                         role: role,
                         settings: settings,
                         userText: text
-                    ).get() ?? ""
+                    )
                 }
                 if reply.isEmpty {
                     throw ExteraAIGenerationFailure.request(.emptyResponse)

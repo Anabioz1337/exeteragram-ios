@@ -42,39 +42,37 @@ public func exteraAIGenerate(
     action: ExteraAIActionKind,
     input: String,
     onEvent: @escaping (ExteraAIStreamEvent) -> Void
-) -> Task<String, Error> {
+) async throws -> String {
     let system = exteraAISystemPrompt(role: role, action: action)
-    return Task {
-        switch backend {
-        case .onDevice:
-            do {
-                return try await ExteraAIOnDeviceModel.respond(system: system, user: input, temperature: settings.temperature) { delta in
-                    onEvent(.content(delta))
-                }
-            } catch {
-                throw ExteraAIGenerationFailure.onDeviceUnavailable
+    switch backend {
+    case .onDevice:
+        do {
+            return try await ExteraAIOnDeviceModel.respond(system: system, user: input, temperature: settings.temperature) { delta in
+                onEvent(.content(delta))
             }
-        case let .service(service):
-            let client = ExteraAIChatClient()
-            do {
-                var produced = ""
-                for try await event in client.stream(service: service, system: system, user: input, settings: settings) {
-                    switch event {
-                    case .reasoning(let reasoning):
-                        onEvent(.reasoning(reasoning))
-                    case .content(let content):
-                        produced += content
-                        onEvent(.content(content))
-                    }
+        } catch {
+            throw ExteraAIGenerationFailure.onDeviceUnavailable
+        }
+    case let .service(service):
+        let client = ExteraAIChatClient()
+        do {
+            var produced = ""
+            for try await event in client.stream(service: service, system: system, user: input, settings: settings) {
+                switch event {
+                case .reasoning(let reasoning):
+                    onEvent(.reasoning(reasoning))
+                case .content(let content):
+                    produced += content
+                    onEvent(.content(content))
                 }
-                return produced
-            } catch let failure as ExteraAIRequestFailure {
-                throw ExteraAIGenerationFailure.request(failure)
-            } catch is CancellationError {
-                throw CancellationError()
-            } catch {
-                throw ExteraAIGenerationFailure.request(.network)
             }
+            return produced
+        } catch let failure as ExteraAIRequestFailure {
+            throw ExteraAIGenerationFailure.request(failure)
+        } catch is CancellationError {
+            throw CancellationError()
+        } catch {
+            throw ExteraAIGenerationFailure.request(.network)
         }
     }
 }

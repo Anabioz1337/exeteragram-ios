@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/exteraTranslator:ExteraTranslator",
+        "//submodules/exteraAICore:exteraAICore",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/CrashReporting:CrashReporting",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",

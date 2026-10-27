@@ -765,6 +765,8 @@ private enum DebugControllerEntry: ItemListNodeEntry {
     case logTranslationRecognition(Bool)
     case resetTranslationStates
     case exteraTranslator
+    case exteraAI
+    case exteraAIChat
     case hostInfo(PresentationTheme, String)
     case versionInfo(PresentationTheme)
     case collectCpuProfile
@@ -792,7 +794,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return DebugControllerSection.experiments.rawValue
         case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers:
             return DebugControllerSection.experiments.rawValue
-        case .logTranslationRecognition, .resetTranslationStates, .exteraTranslator:
+        case .logTranslationRecognition, .resetTranslationStates, .exteraTranslator, .exteraAI, .exteraAIChat:
             return DebugControllerSection.translation.rawValue
         case .disableVideoAspectScaling, .enableNetworkFramework, .enableNetworkExperiments, .rustMTProtoEngine, .networkEngineInfo:
             return DebugControllerSection.videoExperiments2.rawValue
@@ -913,6 +915,12 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return 69
         case .exteraTranslator:
             return 70
+        case .exteraAI:
+            // Appended right after `exteraTranslator`; see the ordering note at `inputDecTextBackend`.
+            return 75
+        case .exteraAIChat:
+            // Appended right after `exteraAI`; see the ordering note at `inputDecTextBackend`.
+            return 76
         case .compressedEmojiCache:
             return 55
         case .storiesJpegExperiment:
@@ -1138,6 +1146,18 @@ private enum DebugControllerEntry: ItemListNodeEntry {
         case .exteraTranslator:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Translator", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
                 arguments.pushController(ExteraTranslatorScreen())
+            })
+        case .exteraAI:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera AI", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                if let context = arguments.context {
+                    arguments.pushController(exteraAISettingsController(context: context))
+                }
+            })
+        case .exteraAIChat:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera AI Chat", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                if let context = arguments.context {
+                    arguments.pushController(exteraAIChatController(context: context))
+                }
             })
         case .resetNotifications:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Reset Notifications", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
@@ -2000,6 +2020,8 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
         entries.append(.logTranslationRecognition(experimentalSettings.logLanguageRecognition))
         entries.append(.resetTranslationStates)
         entries.append(.exteraTranslator)
+        entries.append(.exteraAI)
+        entries.append(.exteraAIChat)
     }
 
     if isMainApp {

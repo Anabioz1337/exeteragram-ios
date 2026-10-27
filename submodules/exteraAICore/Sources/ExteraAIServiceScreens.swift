@@ -358,7 +358,7 @@ private func exteraAIServiceEditEntries(state: ExteraAIServiceEditState, present
 public func exteraAIServiceEditController(context: AccountContext, service: ExteraAIServiceConfig, refreshed: @escaping () -> Void) -> ItemListController {
     let isNew = !ExteraAIStore.shared.services.contains(where: { $0.id == service.id })
     let statePromise = Promise<ExteraAIServiceEditState>(ExteraAIServiceEditState(name: service.name, url: service.url, model: service.model, apiKey: service.apiKey, testState: .idle))
-    var testTask: Task<Void, Never>?
+    var testTask: Task<Void>?
     var dismissImpl: (() -> Void)?
 
     let refreshState: (ExteraAIServiceEditState) -> Void = { state in

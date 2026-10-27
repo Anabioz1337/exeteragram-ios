@@ -74,8 +74,13 @@ struct ExteraAIChatResponse: Decodable {
         }
     }
 
+    struct MessagePayload: Decodable {
+        let content: String?
+    }
+
     struct Choice: Decodable {
-        let delta: Delta
+        let delta: Delta?
+        let message: MessagePayload?
     }
 
     let choices: [Choice]
@@ -93,11 +98,9 @@ final class ExteraAIChatClient {
         guard var components = URLComponents(string: trimmed), components.host != nil else {
             return nil
         }
-        if components.path.hasSuffix("/chat/completions") {
-        } else if components.path.hasSuffix("/") {
-            components.path += "chat/completions"
-        } else {
-            components.path += "/chat/completions"
+        let path = components.path
+        if !path.hasSuffix("/chat/completions") {
+            components.path = (path.hasSuffix("/") ? path : path + "/") + "chat/completions"
         }
         return components.url
     }
@@ -130,15 +133,16 @@ final class ExteraAIChatClient {
 
     /// Full OpenAI-compatible chat turn: a system message plus alternating history.
     func chatStream(service: ExteraAIServiceConfig, messages: [ExteraAIChatMessage], settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
+        let session = self.session
         return AsyncThrowingStream { continuation in
             let task = Task {
                 do {
                     let body = try Self.requestBody(service: service, messages: messages, settings: settings, stream: settings.responseStreaming)
                     let urlRequest = try Self.urlRequest(service: service, body: body)
                     if settings.responseStreaming {
-                        try await Self.stream(urlRequest: urlRequest, session: self.session, continuation: continuation)
+                        try await Self.stream(urlRequest: urlRequest, session: session, continuation: continuation)
                     } else {
-                        try await Self.complete(urlRequest: urlRequest, session: self.session, continuation: continuation)
+                        try await Self.complete(urlRequest: urlRequest, session: session, continuation: continuation)
                     }
                     continuation.finish()
                 } catch {
@@ -171,7 +175,7 @@ final class ExteraAIChatClient {
         guard let decoded = try? JSONDecoder().decode(ExteraAIChatResponse.self, from: data) else {
             throw ExteraAIRequestFailure.parse
         }
-        let content = decoded.choices.compactMap { $0.delta.content }.joined()
+        let content = decoded.choices.compactMap { $0.message?.content }.joined()
         if content.isEmpty {
             throw ExteraAIRequestFailure.emptyResponse
         }
