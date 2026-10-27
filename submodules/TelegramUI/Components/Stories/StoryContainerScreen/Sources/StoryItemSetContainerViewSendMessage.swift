@@ -2232,9 +2232,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
             guard let self, let view else {
                 return
             }
-            if let cameraView = cameraView as? TGAttachmentCameraView {
-                self.openCamera(view: view, peer: peer, replyToMessageId: replyToMessageId, replyToStoryId: replyToStoryId, cameraView: cameraView)
-            }
+            self.openCamera(view: view, peer: peer, replyToMessageId: replyToMessageId, replyToStoryId: replyToStoryId, cameraView: cameraView as? TGAttachmentCameraView)
         }
         controller.presentSchedulePicker = { [weak self, weak view] media, done in
             guard let self, let view else {

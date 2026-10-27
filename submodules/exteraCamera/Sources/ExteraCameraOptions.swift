@@ -31,7 +31,6 @@ public struct ExteraCameraSettings: Codable, Equatable {
     public var rememberLastUsedCamera: Bool
     public var alwaysSendHD: Bool
     public var hideCameraTile: Bool
-    public var hideInstantCameraTile: Bool
 
     public static let `default` = ExteraCameraSettings(
         cameraTypeLens: .auto,
@@ -44,8 +43,7 @@ public struct ExteraCameraSettings: Codable, Equatable {
         videoMessagesCamera: .ask,
         rememberLastUsedCamera: false,
         alwaysSendHD: false,
-        hideCameraTile: false,
-        hideInstantCameraTile: false
+        hideCameraTile: false
     )
 
     public init(
@@ -59,8 +57,7 @@ public struct ExteraCameraSettings: Codable, Equatable {
         videoMessagesCamera: ExteraVideoMessagesCamera,
         rememberLastUsedCamera: Bool,
         alwaysSendHD: Bool,
-        hideCameraTile: Bool,
-        hideInstantCameraTile: Bool
+        hideCameraTile: Bool
     ) {
         self.cameraTypeLens = cameraTypeLens
         self.extendedFpsRange = extendedFpsRange
@@ -73,7 +70,6 @@ public struct ExteraCameraSettings: Codable, Equatable {
         self.rememberLastUsedCamera = rememberLastUsedCamera
         self.alwaysSendHD = alwaysSendHD
         self.hideCameraTile = hideCameraTile
-        self.hideInstantCameraTile = hideInstantCameraTile
     }
 }
 

@@ -1,6 +1,7 @@
 import Foundation
 import LottieSettings
 import UIKit
+import UniformTypeIdentifiers
 import Display
 import AsyncDisplayKit
 import TelegramCore
@@ -22,6 +23,7 @@ import PresentationDataUtils
 import MoreButtonNode
 import Camera
 import CameraLegacy
+import ExteraCamera
 import MediaEditor
 import ImageObjectSeparation
 import ChatSendMessageActionUI
@@ -369,6 +371,9 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
         fileprivate var modernCamera: CameraProtocol?
         fileprivate var modernCameraView: CameraSimplePreviewView?
         fileprivate var modernCameraTapGestureRecognizer: UITapGestureRecognizer?
+
+        private var floatingCameraButton: FloatingCameraButton?
+        private var systemCameraDelegate: SystemCameraPickerDelegate?
         
         fileprivate var avatarEditorPreviewView: AvatarEditorPreviewView?
         
@@ -762,7 +767,10 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
                 }
             }
             
-            if useLegacyCamera {
+            let cameraTileHidden = useLegacyCamera && ExteraCameraOptions.shared.current.hideCameraTile
+            if cameraTileHidden {
+                self.setupFloatingCameraButton()
+            } else if useLegacyCamera {
                 let enableAnimations = self.controller?.context.sharedContext.energyUsageSettings.fullTranslucency ?? true
   
                 let cameraView = TGAttachmentCameraView(forSelfPortrait: false, videoModeByDefault: controller.bannedSendPhotos != nil && controller.bannedSendVideos == nil)!
@@ -921,6 +929,30 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
             self.selectionGesture = selectionGesture
         }
         
+        private func setupFloatingCameraButton() {
+            guard self.floatingCameraButton == nil else {
+                return
+            }
+            let button = FloatingCameraButton()
+            button.openTelegramCamera = { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.dismissInput()
+                strongSelf.controller?.openCamera?(nil)
+            }
+            button.openSystemCamera = { [weak self] in
+                guard let strongSelf = self, let controller = strongSelf.controller else {
+                    return
+                }
+                let delegate = SystemCameraPickerDelegate()
+                strongSelf.systemCameraDelegate = delegate
+                controller.present(delegate.makePicker(), animated: true)
+            }
+            self.gridNode.scrollView.addSubview(button)
+            self.floatingCameraButton = button
+        }
+
         @objc private func cameraTapped() {
             guard let camera = self.modernCamera, let previewView = self.modernCameraView else {
                 return
@@ -1774,7 +1806,7 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
             
             var cutoutRects: [CGRect] = []
             var cameraRect: CGRect? = CGRect(origin: CGPoint(x: layout.safeInsets.left, y: 0.0), size: CGSize(width: itemWidth, height: itemWidth * 2.0 + 1.0))
-            if self.cameraView == nil && self.modernCameraView == nil {
+            if self.cameraView == nil && self.modernCameraView == nil && self.floatingCameraButton?.superview == nil {
                 cameraRect = nil
             }
                         
@@ -1972,6 +2004,24 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
                 } else {
                     self.cameraWrapperView.isHidden = true
                     cameraView.isHidden = true
+                }
+            }
+
+            if let floatingCameraButton = self.floatingCameraButton {
+                floatingCameraButton.updateTheme(self.presentationData.theme)
+                floatingCameraButton.accessibilityLabel = self.presentationData.strings.Attachment_OpenCamera
+                floatingCameraButton.isAccessibilityElement = true
+                if let cameraRect = cameraRect {
+                    let buttonFrame = CGRect(
+                        x: cameraRect.minX + floor((cameraRect.width - FloatingCameraButton.side) / 2.0),
+                        y: cameraRect.minY + floor((cameraRect.height - FloatingCameraButton.side) / 2.0),
+                        width: FloatingCameraButton.side,
+                        height: FloatingCameraButton.side
+                    )
+                    floatingCameraButton.isHidden = false
+                    transition.updateFrame(view: floatingCameraButton, frame: buttonFrame)
+                } else {
+                    floatingCameraButton.isHidden = true
                 }
             }
             
@@ -4432,5 +4482,109 @@ private class SelectedButtonNode: ASDisplayNode {
         self.button.frame = CGRect(origin: .zero, size: size)
 
         return size
+    }
+}
+
+private final class FloatingCameraButton: UIView {
+    static let side: CGFloat = 44.0
+
+    var openTelegramCamera: () -> Void = {}
+    var openSystemCamera: () -> Void = {}
+
+    private let iconView = UIImageView()
+
+    init() {
+        super.init(frame: CGRect())
+
+        self.isUserInteractionEnabled = true
+        self.iconView.contentMode = .center
+        self.addSubview(self.iconView)
+
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.tapped)))
+        self.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(self.longPressed)))
+    }
+
+    required init?(coder: NSCoder) {
+        preconditionFailure()
+    }
+
+    func updateTheme(_ theme: PresentationTheme) {
+        self.backgroundColor = theme.list.itemAccentColor
+        if self.iconView.image == nil {
+            self.iconView.image = generateTintedImage(image: UIImage(bundleImageName: "Chat/Attach Menu/OpenCamera"), color: .white)
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.layer.cornerRadius = self.bounds.width / 2.0
+        self.iconView.frame = self.bounds
+    }
+
+    @objc private func tapped() {
+        self.openTelegramCamera()
+    }
+
+    @objc private func longPressed(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else {
+            return
+        }
+        self.openSystemCamera()
+    }
+}
+
+private final class SystemCameraPickerDelegate: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    private static let imageType = UTType.image.identifier
+    private static let movieType = UTType.movie.identifier
+
+    func makePicker() -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.mediaTypes = [SystemCameraPickerDelegate.imageType, SystemCameraPickerDelegate.movieType]
+        picker.delegate = self
+        return picker
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true)
+
+        switch info[.mediaType] as? String {
+        case SystemCameraPickerDelegate.imageType:
+            guard let image = info[.originalImage] as? UIImage else {
+                return
+            }
+            addAssetToLibrary { PHAssetChangeRequest.creationRequestForAsset(from: image) }
+        case SystemCameraPickerDelegate.movieType:
+            guard let fileURL = info[.mediaURL] as? URL else {
+                return
+            }
+            addAssetToLibrary { PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileURL) }
+        default:
+            break
+        }
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+
+    private func addAssetToLibrary(_ change: @escaping () -> PHAssetChangeRequest?) {
+        switch PHPhotoLibrary.authorizationStatus(for: .addOnly) {
+        case .authorized:
+            performChange(change)
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
+                if status == .authorized {
+                    self.performChange(change)
+                }
+            }
+        default:
+            break
+        }
+    }
+
+    private func performChange(_ change: @escaping () -> PHAssetChangeRequest?) {
+        PHPhotoLibrary.shared().performChanges(change)
     }
 }
