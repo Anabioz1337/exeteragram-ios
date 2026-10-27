@@ -23,7 +23,7 @@
 "extera_WeatherLocationServicesEnable" = "Enable Location";
 "extera_WeatherPillTopInfo" = "Weather widget settings for Pill Stack.";
 "extera_CurrentLocation" = "Current Location";
-"extera_SelectLocation" = "Select on Map";
+"extera_SelectLocation" = "Enter manually";
 
 "extera_InlineMathResult" = "Inline Results";
 "extera_InlineMathResultInfo" = "Calculator, Currencies, Units, and Time Zones";
@@ -59,3 +59,6 @@
 "extera_InlineDocTimeInfo" = "Cities, abbreviations and UTC offsets";
 "extera_InlineDocTimeText" = "A time in another zone converts to yours.";
 "extera_InlineDocCurrentTimeText" = "Add \"in\" and a city to convert there. \"now\" shows the current time.";
+"extera_CryptoCoin" = "Crypto";
+"extera_SelectCity" = "Enter City";
+"extera_WeatherCityNotFound" = "No city found. Try another spelling.";

@@ -23,7 +23,7 @@
 "extera_WeatherLocationServicesEnable" = "Включить геолокацию";
 "extera_WeatherPillTopInfo" = "Настройки погодной пилюли Pill Stack.";
 "extera_CurrentLocation" = "Текущая локация";
-"extera_SelectLocation" = "Выбрать на карте";
+"extera_SelectLocation" = "Ввести вручную";
 
 "extera_InlineMathResult" = "Инлайн-результаты";
 "extera_InlineMathResultInfo" = "Калькулятор, валюты, единицы измерения и часовые пояса";
@@ -59,3 +59,6 @@
 "extera_InlineDocTimeInfo" = "Города, аббревиатуры и смещения UTC";
 "extera_InlineDocTimeText" = "Время в другом часовом поясе конвертируется в ваш.";
 "extera_InlineDocCurrentTimeText" = "Добавьте \"in\" и город, чтобы сконвертировать туда. \"now\" показывает текущее время.";
+"extera_CryptoCoin" = "Крипто";
+"extera_SelectCity" = "Указать город";
+"extera_WeatherCityNotFound" = "Город не найден. Попробуйте другое написание.";
