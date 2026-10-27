@@ -1514,6 +1514,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
     private var nextHasActiveRevealControls: Bool = false
     private var skipFadeout: Bool = false
     private var customAnimationInProgress: Bool = false
+    var gooeyAvatarOnEnter = false
     
     private var onlineIsVoiceChat: Bool = false
     private var currentOnline: Bool?
@@ -5500,6 +5501,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     } else {
                         let configured = exteraConfiguredRevealOptions((left: peerLeftRevealOptions, right: peerRevealOptions), settings: item.presentationData.exteraSwipeSettings)
                         strongSelf.loopRevealActions = item.presentationData.exteraSwipeSettings.loopSwipeActions
+                        strongSelf.gooeyAvatarOnEnter = item.presentationData.exteraSwipeSettings.gooeyAvatars
                         strongSelf.setRevealOptions(configured, enableAnimations: item.context.sharedContext.energyUsageSettings.fullTranslucency)
                     }
                     if !strongSelf.customAnimationInProgress {
@@ -5603,7 +5605,22 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
     override public func animateInsertion(_ currentTimestamp: Double, duration: Double, options: ListViewItemAnimationOptions) {
         self.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.25)
     }
-    
+
+    override public func didEnterHierarchy() {
+        super.didEnterHierarchy()
+        guard self.gooeyAvatarOnEnter else {
+            return
+        }
+        guard !self.customAnimationInProgress, let item = self.layoutParams?.0, case .peer = item.content else {
+            return
+        }
+        self.avatarNode.layer.removeAnimation(forKey: "extera_gooey_scale")
+        let bounceCurve = ContainedViewLayoutTransitionCurve.customSpring(mass: 2.5, stiffness: 350.0, damping: 14.0, initialVelocity: -5.5)
+        let bounce = self.avatarNode.layer.makeAnimation(from: 0.72 as NSNumber, to: 1.0 as NSNumber, keyPath: "transform.scale", timingFunction: bounceCurve.timingFunction, duration: 1.0)
+        bounce.isRemovedOnCompletion = true
+        self.avatarNode.layer.add(bounce, forKey: "extera_gooey_scale")
+    }
+
     override public func animateRemoved(_ currentTimestamp: Double, duration: Double) {
         self.clipsToBounds = true
         if self.skipFadeout {
