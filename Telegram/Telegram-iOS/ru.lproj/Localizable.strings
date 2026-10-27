@@ -1,0 +1,14 @@
+
+"Extera.Adblock.Title" = "Блокировать рекламу";
+"Extera.Adblock.BlockedRequests" = "Заблокированные запросы";
+"Extera.Adblock.PageBlocked" = "Страница заблокирована";
+"Extera.Adblock.PageBlockedDescription" = "Эта ссылка есть в списках блокировки вашего блокировщика рекламы.";
+"Extera.Adblock.PageBlockedGoBack" = "Назад";
+"Extera.Adblock.PageBlockedProceed" = "Всё равно открыть";
+
+"Extera.Feed.Title" = "Лента";
+"Extera.Feed.Categories" = "Категории";
+"Extera.Feed.All" = "Все";
+"Extera.Feed.MarkAllAsRead" = "Отметить все как прочитанные";
+"Extera.Feed.IncludeArchived" = "Включая архив";
+"Extera.Feed.Empty" = "Новых постов из ваших каналов пока нет.";
