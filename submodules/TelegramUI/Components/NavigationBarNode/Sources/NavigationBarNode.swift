@@ -7,6 +7,7 @@ import GlassBackgroundComponent
 import EdgeEffect
 import SideColumnLayout
 import NavigationBarComponent
+import exteraAppearance
 
 /// Presents the iPhone Duo side column's "…" menu: the buttons that did not fit. The app sets it where it creates its
 /// shared context (Display and this module cannot build a context menu); while it is nil the "…" button does nothing.
@@ -377,6 +378,18 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         )
     }
 
+    /// Themes and screens (the chat among them) disable the bar's blur by handing in a fully
+    /// transparent `edgeEffectColor`. When the extera `forceBlur` option is on, that colour is
+    /// substituted with `buttonColor` — the theme's own chrome colour carried by `NavigationBarTheme`,
+    /// the closest opaque bar material that survives the `.clear` override — so the blur renders on
+    /// every theme.
+    private func forcedBlurEdgeEffectColor(for theme: NavigationBarTheme) -> UIColor? {
+        guard ExteraAppearanceSettings.shared.forceBlur, let color = theme.edgeEffectColor, color.alpha == 0.0 else {
+            return theme.edgeEffectColor
+        }
+        return theme.buttonColor
+    }
+
     private func update(layout: Layout, transition: ContainedViewLayoutTransition, isContainerLayout: Bool) {
         let size = layout.size
         let contentFrame = CGRect(origin: CGPoint(), size: size)
@@ -408,7 +421,8 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
         transition.updateFrame(view: self.rowHost, frame: glassContentBounds)
         transition.updateFrame(view: self.titleHost, frame: glassContentBounds)
 
-        if let edgeEffectColor = theme.edgeEffectColor, edgeEffectColor.alpha == 0.0 {
+        let effectiveEdgeEffectColor = self.forcedBlurEdgeEffectColor(for: theme)
+        if let edgeEffectColor = effectiveEdgeEffectColor, edgeEffectColor.alpha == 0.0 {
             self.edgeEffectViewImpl.isHidden = true
         } else {
             self.edgeEffectViewImpl.isHidden = false
@@ -417,7 +431,7 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
             let edgeEffectFrame = CGRect(origin: CGPoint(x: 0.0, y: -20.0), size: CGSize(width: size.width, height: 20.0 + edgeEffectHeight))
             transition.updatePosition(layer: self.edgeEffectViewImpl.layer, position: edgeEffectFrame.center)
             transition.updateBounds(layer: self.edgeEffectViewImpl.layer, bounds: CGRect(origin: CGPoint(), size: edgeEffectFrame.size))
-            self.edgeEffectViewImpl.update(content: theme.edgeEffectColor ?? .white, blur: true, rect: CGRect(origin: CGPoint(), size: edgeEffectFrame.size), edge: .top, edgeSize: min(64.0, edgeEffectHeight), transition: ComponentTransition(transition))
+            self.edgeEffectViewImpl.update(content: effectiveEdgeEffectColor ?? .white, blur: true, rect: CGRect(origin: CGPoint(), size: edgeEffectFrame.size), edge: .top, edgeSize: min(64.0, edgeEffectHeight), transition: ComponentTransition(transition))
         }
 
         let apparentAdditionalHeight: CGFloat = self.secondaryContentNode != nil ? (self.secondaryContentHeight) : 0.0
@@ -952,8 +966,8 @@ public final class NavigationBarNode: ASDisplayNode, NavigationBar, NavigationBa
             return nil
         }
         let theme = self.presentationData.theme
-        var backdropColor: UIColor? = theme.edgeEffectColor ?? .white
-        if let edgeEffectColor = theme.edgeEffectColor, edgeEffectColor.alpha == 0.0 {
+        var backdropColor: UIColor? = self.forcedBlurEdgeEffectColor(for: theme) ?? .white
+        if let edgeEffectColor = backdropColor, edgeEffectColor.alpha == 0.0 {
             backdropColor = nil
         }
         return NavigationBarComponentTransitionState(content: content, theme: theme, strings: self.presentationData.strings, rowFrame: self.currentRowFrame, rowAlpha: self.transitionRowAlpha, leftInset: layout.leftInset + 16.0, rightInset: layout.rightInset + 16.0, trailingButtonsInset: self.trailingButtonsInset, sideColumnFrame: self.appliedSideColumn?.frame, hidesSideColumnButtons: self.currentHidesSideColumnButtons, backdropHeight: layout.size.height + layout.additionalBackgroundHeight, backdropColor: backdropColor, backdropAlpha: self.backdropAlpha, backdropExtension: self.edgeEffectExtension, leadingPressScale: self.rowView?.detachedLeftPressScale ?? 1.0, leadingPressGlow: self.rowView?.detachedLeftPressGlow ?? 0.0, trailingPressScales: self.rowView?.detachedRightPressScales ?? [], trailingPressGlows: self.rowView?.detachedRightPressGlows ?? [], titlePill: self.transitionTitlePill)
