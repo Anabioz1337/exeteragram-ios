@@ -15,6 +15,7 @@ import TelegramStringFormatting
 import SettingsUI
 import PeerNameColorItem
 import WalletContext
+import ExteraProfile
 import exteraPreferencesUI
 
 enum SettingsSection: Int, CaseIterable {

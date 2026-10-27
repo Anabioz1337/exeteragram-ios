@@ -10,6 +10,7 @@ import TelegramUIPreferences
 import TelegramBaseController
 import OverlayStatusController
 import AccountContext
+import ExteraProfile
 import AlertUI
 import PresentationDataUtils
 import UndoUI
@@ -93,8 +94,29 @@ private final class ContextControllerContentSourceImpl: ContextControllerContent
     }
 }
 
+/// The root chat list's bar title, when the extera preference replaces it with the account's
+/// username or first name; nil keeps the stock title.
+private func exteraChatListTitle(preferences: ExteraProfilePreferences, peer: EnginePeer?) -> String? {
+    guard case let .user(user) = peer else {
+        return nil
+    }
+    switch preferences.actionBarTitle {
+    case .appName:
+        return nil
+    case .username:
+        if let addressName = user.addressName, !addressName.isEmpty {
+            return "@\(addressName)"
+        }
+        return nil
+    case .name:
+        if let firstName = user.firstName, !firstName.isEmpty {
+            return firstName
+        }
+        return nil
+    }
+}
+
 public class ChatListControllerImpl: TelegramBaseController, ChatListController {
-    /// iPhone Duo: this screen lays out its own side column, back button included.
     override public var placesNavigationButtonInSideColumn: Bool {
         return false
     }
@@ -6918,6 +6940,22 @@ private final class ChatListLocationContext {
         default:
             peerStatus = .single(nil)
         }
+
+        let exteraActionBarTitle: Signal<String?, NoError>
+        switch self.location {
+        case .chatList(.root):
+            exteraActionBarTitle = combineLatest(
+                queue: .mainQueue(),
+                ExteraProfileSettings.shared.preferencesSignal,
+                context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+            )
+            |> map { preferences, peer -> String? in
+                return exteraChatListTitle(preferences: preferences, peer: peer)
+            }
+            |> distinctUntilChanged
+        default:
+            exteraActionBarTitle = .single(nil)
+        }
         
         let networkState: Signal<AccountNetworkState, NoError>
         #if DEBUG && false
@@ -6966,13 +7004,14 @@ private final class ChatListLocationContext {
                     containerNode.currentItemState,
                     isReorderingTabs,
                     peerStatus,
+                    exteraActionBarTitle,
                     parentController.updatedPresentationData.1,
                     storyPostingAvailable
-                ).startStrict(next: { [weak self] networkState, proxy, passcode, stateAndFilterId, isReorderingTabs, peerStatus, presentationData, storyPostingAvailable in
+                ).startStrict(next: { [weak self] networkState, proxy, passcode, stateAndFilterId, isReorderingTabs, peerStatus, exteraActionTitle, presentationData, storyPostingAvailable in
                     guard let self else {
                         return
                     }
-                    
+
                     self.updateChatList(
                         networkState: networkState,
                         proxy: proxy,
@@ -6980,6 +7019,7 @@ private final class ChatListLocationContext {
                         stateAndFilterId: stateAndFilterId,
                         isReorderingTabs: isReorderingTabs,
                         peerStatus: peerStatus,
+                        exteraActionTitle: exteraActionTitle,
                         presentationData: presentationData,
                         storyPostingAvailable: storyPostingAvailable
                     )
@@ -7207,6 +7247,7 @@ private final class ChatListLocationContext {
         stateAndFilterId: (state: ChatListNodeState, filterId: Int32?),
         isReorderingTabs: Bool,
         peerStatus: NetworkStatusTitle.Status?,
+        exteraActionTitle: String?,
         presentationData: PresentationData,
         storyPostingAvailable: Bool
     ) {
@@ -7214,7 +7255,11 @@ private final class ChatListLocationContext {
         switch location {
         case let .chatList(groupId):
             if groupId == .root {
-                defaultTitle = presentationData.strings.DialogList_Title
+                if let exteraActionTitle = exteraActionTitle {
+                    defaultTitle = exteraActionTitle
+                } else {
+                    defaultTitle = presentationData.strings.DialogList_Title
+                }
             } else {
                 defaultTitle = presentationData.strings.ChatList_ArchivedChatsTitle
             }

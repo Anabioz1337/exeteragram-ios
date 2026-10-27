@@ -1,0 +1,31 @@
+"Extera.Profile.Title" = "extera Profile";
+
+"Extera.Profile.SectionInfo" = "Info";
+
+"Extera.Profile.HidePhoneNumber" = "Hide Phone Number";
+"Extera.Profile.ShowIdAndDc" = "Show ID and DC";
+"Extera.Profile.ShowIdAndDcInfo" = "Telegram API shows IDs as they are, while the Bot API adds a minus sign for groups and -100 for supergroups and channels.";
+"Extera.Profile.ShowCreationDate" = "Creation Date";
+"Extera.Profile.ShowCreationDateInfo" = "The exact date is shown for chats. For users the date of the oldest stored message in the chat is used as an approximation.";
+"Extera.Profile.ShowRegistrationDates" = "Registration Dates";
+"Extera.Profile.ShowRegistrationDatesInfo" = "An approximate registration year estimated from the user id.";
+"Extera.Profile.ShowOnlineIndicator" = "Show Online Indicator";
+"Extera.Profile.ShowForwardsCount" = "Show Forwards Count";
+
+"Extera.Profile.SectionChatList" = "Chat List";
+
+"Extera.Profile.HideArchiveFolder" = "Hide Archive Folder";
+"Extera.Profile.ArchiveOnPull" = "Open Archive on Pull-down";
+"Extera.Profile.DisableUnarchiveSwipe" = "Disable \"Unarchive\" Swipe";
+"Extera.Profile.DisableUnarchiveSwipeInfo" = "Swiping left will not remove chats from the archive.";
+"Extera.Profile.ActionBarTitle" = "Title Text";
+"Extera.Profile.ActionBarTitleAppName" = "App Name";
+"Extera.Profile.ActionBarTitleUsername" = "Username";
+"Extera.Profile.ActionBarTitleName" = "First Name";
+"Extera.Profile.SenderMiniAvatars" = "Sender Mini Avatars";
+
+"Extera.Profile.IdLabel" = "ID";
+"Extera.Profile.CreatedLabel" = "Created";
+"Extera.Profile.RegisteredLabel" = "Registered";
+"Extera.Profile.RegisteredApproximately" = "≈ %d";
+"Extera.Profile.ForwardsLabel" = "Forwards";

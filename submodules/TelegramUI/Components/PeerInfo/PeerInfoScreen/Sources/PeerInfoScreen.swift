@@ -201,6 +201,7 @@ enum PeerInfoSettingsSection {
     case ton
     case wallet
     case exteraSpeech
+    case exteraProfile
     case exteraSwipe
     case exteraAbout
 }

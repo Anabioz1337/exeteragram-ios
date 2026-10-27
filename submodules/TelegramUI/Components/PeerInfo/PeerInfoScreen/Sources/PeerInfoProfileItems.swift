@@ -16,9 +16,40 @@ import WebUI
 import AvatarNode
 import PeerNameColorItem
 import BoostLevelIconComponent
+import ExteraProfile
 
 private let enabledPublicBioEntities: EnabledEntityTypes = [.allUrl, .mention, .hashtag]
 private let enabledPrivateBioEntities: EnabledEntityTypes = [.internalUrl, .mention, .hashtag]
+
+/// Peer facts the profile shows on top of what the server exposes, filled asynchronously while
+/// the screen is open.
+struct PeerInfoExteraValues: Equatable {
+    var preferences: ExteraProfilePreferences
+    var storedHistoryStats: ExteraPeerStoredHistoryStats?
+
+    static func empty() -> PeerInfoExteraValues {
+        return PeerInfoExteraValues(preferences: .default, storedHistoryStats: nil)
+    }
+}
+
+/// Creation date: exact for channels and supergroups, otherwise the timestamp of the oldest
+/// locally stored message, marked as approximate.
+private func exteraCreationDateString(peer: EnginePeer?, presentationData: PresentationData, values: PeerInfoExteraValues) -> String? {
+    if case let .channel(channel) = peer?._asPeer(), let creationDate = ExteraProfilePeerInfo.exactCreationDate(channel: channel) {
+        return stringForMediumDate(timestamp: creationDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, withTime: false)
+    }
+    guard let timestamp = values.storedHistoryStats?.earliestTimestamp else {
+        return nil
+    }
+    return "≈ " + stringForMediumDate(timestamp: timestamp, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, withTime: false)
+}
+
+private func exteraRegistrationYearString(userId: EnginePeer.Id) -> String? {
+    guard let year = ExteraProfilePeerInfo.approximateRegistrationYear(userId: userId) else {
+        return nil
+    }
+    return String(format: exteraProfileString("Extera.Profile.RegisteredApproximately"), year)
+}
 
 private func peerVerificationDescriptionEntities(_ verification: PeerVerification) -> [MessageTextEntity] {
     var result = verification.descriptionEntities
@@ -64,10 +95,24 @@ func infoItems(
     callMessages: [EngineMessage],
     chatLocation: ChatLocation,
     isOpenedFromChat: Bool,
-    isMyProfile: Bool
+    isMyProfile: Bool,
+    exteraValues: PeerInfoExteraValues
 ) -> [(AnyHashable, [PeerInfoScreenItem])] {
     guard let data = data else {
         return []
+    }
+    let exteraPreferences = exteraValues.preferences
+
+    func exteraLabeledValue(id: AnyHashable, label: String, text: String, multiLine: Bool = false) -> PeerInfoScreenItem {
+        return PeerInfoScreenLabeledValueItem(
+            id: id,
+            label: label,
+            text: text,
+            textColor: .primary,
+            textBehavior: multiLine ? .multiLine(maxLines: 3, enabledEntities: []) : .singleLine,
+            action: nil,
+            requestLayout: { _ in }
+        )
     }
     
     var currentPeerInfoSection: InfoSection = .peerInfo
@@ -106,6 +151,11 @@ func infoItems(
         let ItemAbout = 3003
         let ItemNote = 3004
         let ItemAppFooter = 3005
+        let ItemExteraIdAndDc = 3006
+        let ItemExteraCreationDate = 3007
+        let ItemExteraRegistrationYear = 3008
+        let ItemExteraOnlineStatus = 3009
+        let ItemExteraForwardsCount = 3010
         let ItemAffiliate = 4000
         let ItemAffiliateInfo = 4001
         let ItemBusinessHours = 5000
@@ -173,7 +223,8 @@ func infoItems(
             ))
         }
         
-        if let phone = user.phone {
+        let hidesOwnPhoneNumber = exteraPreferences.hidePhoneNumber && user.id == context.account.peerId
+        if let phone = user.phone, !hidesOwnPhoneNumber {
             let formattedPhone = formatPhoneNumber(context: context, number: phone)
             let label: String
             if formattedPhone.hasPrefix("+888 ") {
@@ -188,6 +239,8 @@ func infoItems(
             }, requestLayout: { animated in
                 interaction.requestLayout(animated)
             }))
+        } else if hidesOwnPhoneNumber {
+            items[currentPeerInfoSection]!.append(PeerInfoScreenLabeledValueItem(id: ItemPhoneNumber, label: presentationData.strings.ContactInfo_PhoneLabelMobile, text: presentationData.strings.ContactInfo_PhoneNumberHidden, textColor: .primary, action: nil, requestLayout: { _ in }))
         }
         if let mainUsername = user.addressName {
             var additionalUsernames: String?
@@ -222,9 +275,22 @@ func infoItems(
                 )
             )
         }
-        
-        if let cachedData = data.cachedData as? CachedUserData {
-            if let birthday = cachedData.birthday {
+
+        if exteraPreferences.showIdAndDc {
+            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: user), multiLine: true))
+            if exteraPreferences.showCreationDate, let creationDate = exteraCreationDateString(peer: data.peer, presentationData: presentationData, values: exteraValues) {
+                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraCreationDate, label: exteraProfileString("Extera.Profile.CreatedLabel"), text: creationDate))
+            }
+            if exteraPreferences.showRegistrationDates, let registrationYear = exteraRegistrationYearString(userId: user.id) {
+                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraRegistrationYear, label: exteraProfileString("Extera.Profile.RegisteredLabel"), text: registrationYear))
+            }
+            if exteraPreferences.showOnlineIndicator, let status = data.status {
+                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraOnlineStatus, label: "", text: status.text))
+            }
+            if exteraPreferences.showForwardsCount, let forwardsCount = exteraValues.storedHistoryStats?.forwardsCount {
+                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraForwardsCount, label: exteraProfileString("Extera.Profile.ForwardsLabel"), text: "\(forwardsCount)"))
+            }
+        }
                 let isBirthdayToday = hasBirthdayToday(birthday: birthday)
                 
                 var birthdayAction: ((ASDisplayNode, Promise<Bool>?) -> Void)?
@@ -563,7 +629,9 @@ func infoItems(
         let ItemEdit = 10
         let ItemPeerPersonalChannel = 11
         let ItemCommunity = 12
-        
+        let ItemExteraIdAndDc = 100
+        let ItemExteraCreationDate = 101
+
         if let _ = data.threadData {
             let mainUsername: String
             if let addressName = channel.addressName {
@@ -660,6 +728,12 @@ func infoItems(
                         }
                     )
                 )
+            }
+            if exteraPreferences.showIdAndDc {
+                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: channel), multiLine: true))
+                if exteraPreferences.showCreationDate {
+                    items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraCreationDate, label: exteraProfileString("Extera.Profile.CreatedLabel"), text: stringForMediumDate(timestamp: channel.creationDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, withTime: false)))
+                }
             }
             if let cachedData = data.cachedData as? CachedChannelData {
                 let aboutText: String?
@@ -823,6 +897,7 @@ func infoItems(
             }
         }
     } else if case let .legacyGroup(group) = data.peer {
+        let ItemExteraIdAndDcLegacyGroup = 0
         if let cachedData = data.cachedData as? CachedGroupData {
             let aboutText: String?
             if group.isFake {
@@ -843,8 +918,11 @@ func infoItems(
                 }))
             }
         }
+        if exteraPreferences.showIdAndDc, let groupPeer = data.peer._asPeer() as? TelegramGroup {
+            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDcLegacyGroup, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: groupPeer), multiLine: true))
+        }
     }
-    
+
     if let peer = data.peer, let members = data.members, case let .shortList(_, memberList) = members {
         var canAddMembers = false
         if case let .legacyGroup(group) = data.peer {

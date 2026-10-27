@@ -24,6 +24,7 @@ import UndoUI
 import NewSessionInfoScreen
 import PresentationDataUtils
 import GlobalControlPanelsContext
+import ExteraProfile
 
 public enum ChatListNodeMode {
     case chatList(appendContacts: Bool)
@@ -1970,10 +1971,14 @@ public final class ChatListNode: ListViewImpl {
             savedMessagesPeer = .single(nil)
         }
         
-        let hideArchivedFolderByDefault = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.chatArchiveSettings))
-        |> map { view -> Bool in
+        let hideArchivedFolderByDefault = combineLatest(
+            queue: Queue.mainQueue(),
+            context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.chatArchiveSettings)),
+            ExteraProfileSettings.shared.preferencesSignal
+        )
+        |> map { view, exteraPreferences -> Bool in
             let settings: ChatArchiveSettings = view?.get(ChatArchiveSettings.self) ?? .default
-            return settings.isHiddenByDefault
+            return settings.isHiddenByDefault || exteraPreferences.hideArchiveFolder
         }
         |> distinctUntilChanged
         
