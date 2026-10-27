@@ -5,7 +5,6 @@ import TelegramPresentationData
 
 public final class ExteraAIResultController: UIViewController {
     private let theme: PresentationTheme
-    private let strings: PresentationStrings
     private let titleText: String
 
     private let backdropView = UIView()
@@ -26,9 +25,8 @@ public final class ExteraAIResultController: UIViewController {
     public var onCopy: ((String) -> Void)?
     public var onClose: (() -> Void)?
 
-    public init(theme: PresentationTheme, strings: PresentationStrings, title: String) {
+    public init(theme: PresentationTheme, title: String) {
         self.theme = theme
-        self.strings = strings
         self.titleText = title
 
         super.init(nibName: nil, bundle: nil)
@@ -71,18 +69,18 @@ public final class ExteraAIResultController: UIViewController {
         self.resultTextView.textColor = self.theme.actionSheet.primaryTextColor
         self.cardView.addSubview(self.resultTextView)
 
-        self.statusLabel.text = self.strings.ExteraAI_ResultGenerating
+        self.statusLabel.text = exteraAIString("Extera.AI.ResultGenerating")
         self.statusLabel.font = UIFont.systemFont(ofSize: 13.0)
         self.statusLabel.textColor = self.theme.list.itemSecondaryTextColor
         self.cardView.addSubview(self.statusLabel)
 
-        self.configureButton(self.insertButton, title: self.strings.ExteraAI_ResultInsertQuote, emphasized: true, action: #selector(self.insertPressed))
+        self.configureButton(self.insertButton, title: exteraAIString("Extera.AI.ResultInsertQuote"), emphasized: true, action: #selector(self.insertPressed))
         self.cardView.addSubview(self.insertButton)
 
-        self.configureButton(self.copyButton, title: self.strings.ExteraAI_ResultCopy, emphasized: false, action: #selector(self.copyPressed))
+        self.configureButton(self.copyButton, title: exteraAIString("Extera.AI.ResultCopy"), emphasized: false, action: #selector(self.copyPressed))
         self.cardView.addSubview(self.copyButton)
 
-        self.configureButton(self.closeButton, title: self.strings.ExteraAI_ResultClose, emphasized: false, action: #selector(self.closePressed))
+        self.configureButton(self.closeButton, title: exteraAIString("Extera.AI.ResultClose"), emphasized: false, action: #selector(self.closePressed))
         self.cardView.addSubview(self.closeButton)
 
         self.applyState()

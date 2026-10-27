@@ -1,0 +1,91 @@
+"Extera.AI.Title" = "AI Chat";
+"Extera.AI.Services" = "Services";
+"Extera.AI.ServicesInfo" = "Choose the appropriate service for interacting with language models.";
+"Extera.AI.NewService" = "New Service";
+"Extera.AI.EditService" = "Edit Service";
+"Extera.AI.ServiceName" = "Name";
+"Extera.AI.ServiceURL" = "URL";
+"Extera.AI.ServiceModel" = "Model";
+"Extera.AI.ServiceKey" = "API Key";
+"Extera.AI.ServiceTestAndSave" = "Test and Save";
+"Extera.AI.ServiceTestPassed" = "The service works and has been saved.";
+"Extera.AI.ServiceTestFailed" = "Test failed";
+"Extera.AI.DeleteService" = "Delete Service";
+"Extera.AI.DeleteServiceText" = "Delete service \"%@\"?";
+"Extera.AI.ServiceDuplicateTitle" = "Service Already Exists";
+"Extera.AI.ServiceDuplicateInfo" = "Another service already uses this URL, model and key. Switched to the existing service.";
+"Extera.AI.UseService" = "Use This Service";
+
+"Extera.AI.Roles" = "Roles";
+"Extera.AI.RolesInfo" = "Create roles for your specific needs.";
+"Extera.AI.NewRole" = "New Role";
+"Extera.AI.EditRole" = "Edit Role";
+"Extera.AI.RoleName" = "Name";
+"Extera.AI.RolePrompt" = "Prompt";
+"Extera.AI.PromptInfo" = "A prompt is the initial text given to the model to start generating a response or continue a dialogue.";
+"Extera.AI.DeleteRole" = "Delete Role";
+"Extera.AI.DeleteRoleText" = "Delete role \"%@\"?";
+"Extera.AI.UseRole" = "Use This Role";
+
+"Extera.AI.Generation" = "Generation";
+"Extera.AI.Reasoning" = "Reasoning";
+"Extera.AI.ReasoningInfo" = "Shows the reasoning tokens that supported models spend thinking before answering.";
+"Extera.AI.Temperature" = "Temperature";
+"Extera.AI.TemperatureInfo" = "Temperature controls response randomness: higher values are more creative, lower values are more focused.";
+"Extera.AI.ResponseStreaming" = "Response Streaming";
+"Extera.AI.ResponseStreamingInfo" = "Ensures smoother and faster display of responses.";
+"Extera.AI.ShowResponseOnly" = "Show Response Only";
+"Extera.AI.InsertAsQuote" = "Insert Response as Quote";
+
+"Extera.AI.OnDevice" = "On-device";
+"Extera.AI.OnDeviceStatusReady" = "READY";
+"Extera.AI.OnDeviceStatusDownload" = "DOWNLOAD";
+"Extera.AI.OnDeviceStatusLoading" = "LOADING";
+"Extera.AI.OnDeviceStatusUnavailable" = "UNAVAILABLE";
+"Extera.AI.OnDeviceUnavailableInfo" = "This device cannot run the on-device model yet. Enable Apple Intelligence in system settings or pick another service.";
+
+"Extera.AI.MenuTranslate" = "Translate";
+"Extera.AI.MenuRestyle" = "Restyle";
+"Extera.AI.MenuProofread" = "Proofread";
+"Extera.AI.MenuSummarize" = "Summarize";
+
+"Extera.AI.ResultInsertQuote" = "Insert as Quote";
+"Extera.AI.ResultCopy" = "Copy";
+"Extera.AI.ResultClose" = "Close";
+"Extera.AI.ResultGenerating" = "Generating…";
+"Extera.AI.ResultInsertedToast" = "Inserted as quote";
+"Extera.AI.ResultCopiedToast" = "Copied to clipboard";
+
+"Extera.AI.ReplaceTelegramTitle" = "Replace Telegram AI Actions";
+"Extera.AI.ReplaceTelegramInfo" = "Use exteraAI services and on-device models for the compose button instead of Telegram Premium AI.";
+
+"Extera.AI.Chat.Send" = "Send";
+"Extera.AI.Chat.Placeholder" = "Message";
+"Extera.AI.Chat.Thinking" = "Thinking…";
+"Extera.AI.Chat.Clear" = "Clear Conversation";
+"Extera.AI.Chat.ClearInfo" = "Are you sure you want to clear the conversation history?";
+
+"Extera.AI.Error400Title" = "Bad Request";
+"Extera.AI.Error400Info" = "Check the request parameters.";
+"Extera.AI.Error401Title" = "Invalid Credentials";
+"Extera.AI.Error401Info" = "API key is invalid or disabled. Check your credentials.";
+"Extera.AI.Error402Title" = "Insufficient Credits";
+"Extera.AI.Error402Info" = "Your account or API key has insufficient credits. Add more credits and retry the request.";
+"Extera.AI.Error403Title" = "Access Denied";
+"Extera.AI.Error403Info" = "You don't have permission to access this model or resource. Check your API key and account permissions.";
+"Extera.AI.Error408Title" = "Request Timeout";
+"Extera.AI.Error408Info" = "Your request was not processed in time. Please try again later.";
+"Extera.AI.Error429Title" = "Rate Limit Exceeded";
+"Extera.AI.Error429Info" = "You are sending requests too frequently. Please wait a moment and try again.";
+"Extera.AI.Error502Title" = "Model Failure";
+"Extera.AI.Error502Info" = "The selected model is unavailable or we received an invalid response from it.";
+"Extera.AI.Error503Title" = "Service Unavailable";
+"Extera.AI.Error503Info" = "The service is temporarily unavailable or overloaded. Please try again later.";
+"Extera.AI.ErrorGenericTitle" = "Server Error";
+"Extera.AI.ErrorGenericInfo" = "Please retry your request after a short wait.";
+"Extera.AI.ErrorEmptyTitle" = "Empty Response";
+"Extera.AI.ErrorEmptyInfo" = "The model returned nothing. Try again or choose another model.";
+"Extera.AI.ErrorNetworkTitle" = "Network Error";
+"Extera.AI.ErrorNetworkInfo" = "The service could not be reached. Check the URL and your connection.";
+"Extera.AI.ErrorParsingTitle" = "Unexpected Response";
+"Extera.AI.ErrorParsingInfo" = "The service answered with a format this app cannot parse. Check that it is OpenAI-compatible.";

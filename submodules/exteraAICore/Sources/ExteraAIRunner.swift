@@ -38,7 +38,7 @@ public enum ExteraAIGenerationFailure: Error, Equatable {
 public func exteraAIGenerate(
     backend: ExteraAIBackend,
     settings: ExteraAIGenerationSettings,
-    role: ExterraAIRoleConfig?,
+    role: ExteraAIRoleConfig?,
     action: ExteraAIActionKind,
     input: String,
     onEvent: @escaping (ExteraAIStreamEvent) -> Void
@@ -58,7 +58,7 @@ public func exteraAIGenerate(
             let client = ExteraAIChatClient()
             do {
                 var produced = ""
-                for try await event in client.stream(service: service, system: system, user: user, settings: settings) {
+                for try await event in client.stream(service: service, system: system, user: input, settings: settings) {
                     switch event {
                     case .reasoning(let reasoning):
                         onEvent(.reasoning(reasoning))

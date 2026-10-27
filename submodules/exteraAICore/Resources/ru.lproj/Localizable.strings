@@ -1,0 +1,91 @@
+"Extera.AI.Title" = "AI Chat";
+"Extera.AI.Services" = "Сервисы";
+"Extera.AI.ServicesInfo" = "Выберите подходящий сервис для работы с языковыми моделями.";
+"Extera.AI.NewService" = "Новый сервис";
+"Extera.AI.EditService" = "Изменить сервис";
+"Extera.AI.ServiceName" = "Название";
+"Extera.AI.ServiceURL" = "URL";
+"Extera.AI.ServiceModel" = "Модель";
+"Extera.AI.ServiceKey" = "API-ключ";
+"Extera.AI.ServiceTestAndSave" = "Проверить и сохранить";
+"Extera.AI.ServiceTestPassed" = "Сервис работает и сохранён.";
+"Extera.AI.ServiceTestFailed" = "Проверка не пройдена";
+"Extera.AI.DeleteService" = "Удалить сервис";
+"Extera.AI.DeleteServiceText" = "Удалить сервис \"%@\"?";
+"Extera.AI.ServiceDuplicateTitle" = "Сервис уже существует";
+"Extera.AI.ServiceDuplicateInfo" = "Другой сервис уже использует этот URL, модель и ключ. Переключено на существующий сервис.";
+"Extera.AI.UseService" = "Использовать сервис";
+
+"Extera.AI.Roles" = "Роли";
+"Extera.AI.RolesInfo" = "Создавайте роли под свои задачи.";
+"Extera.AI.NewRole" = "Новая роль";
+"Extera.AI.EditRole" = "Изменить роль";
+"Extera.AI.RoleName" = "Название";
+"Extera.AI.RolePrompt" = "Промпт";
+"Extera.AI.PromptInfo" = "Промпт — начальный текст для модели, чтобы начать генерацию ответа или продолжить диалог.";
+"Extera.AI.DeleteRole" = "Удалить роль";
+"Extera.AI.DeleteRoleText" = "Удалить роль \"%@\"?";
+"Extera.AI.UseRole" = "Использовать роль";
+
+"Extera.AI.Generation" = "Генерация";
+"Extera.AI.Reasoning" = "Размышление";
+"Extera.AI.ReasoningInfo" = "Показывает токены размышления, которые поддерживаемые модели тратят на раздумья перед ответом.";
+"Extera.AI.Temperature" = "Температура";
+"Extera.AI.TemperatureInfo" = "Температура управляет случайностью ответа: выше — креативнее, ниже — сфокусированнее.";
+"Extera.AI.ResponseStreaming" = "Стриминг ответа";
+"Extera.AI.ResponseStreamingInfo" = "Обеспечивает более плавное и быстрое отображение ответов.";
+"Extera.AI.ShowResponseOnly" = "Показывать только ответ";
+"Extera.AI.InsertAsQuote" = "Вставлять ответ как цитату";
+
+"Extera.AI.OnDevice" = "На устройстве";
+"Extera.AI.OnDeviceStatusReady" = "ГОТОВА";
+"Extera.AI.OnDeviceStatusDownload" = "ЗАГРУЗКА";
+"Extera.AI.OnDeviceStatusLoading" = "ЗАГРУЗКА";
+"Extera.AI.OnDeviceStatusUnavailable" = "НЕДОСТУПНА";
+"Extera.AI.OnDeviceUnavailableInfo" = "Это устройство пока не может запустить модель на устройстве. Включите Apple Intelligence в настройках системы или выберите другой сервис.";
+
+"Extera.AI.MenuTranslate" = "Перевести";
+"Extera.AI.MenuRestyle" = "Переформулировать";
+"Extera.AI.MenuProofread" = "Исправить";
+"Extera.AI.MenuSummarize" = "Сделать выжимку";
+
+"Extera.AI.ResultInsertQuote" = "Вставить как цитату";
+"Extera.AI.ResultCopy" = "Скопировать";
+"Extera.AI.ResultClose" = "Закрыть";
+"Extera.AI.ResultGenerating" = "Генерация…";
+"Extera.AI.ResultInsertedToast" = "Вставлено как цитата";
+"Extera.AI.ResultCopiedToast" = "Скопировано в буфер обмена";
+
+"Extera.AI.ReplaceTelegramTitle" = "Заменить AI-действия Telegram";
+"Extera.AI.ReplaceTelegramInfo" = "Использовать сервисы exteraAI и модели на устройстве для кнопки отправки вместо Telegram Premium AI.";
+
+"Extera.AI.Chat.Send" = "Отправить";
+"Extera.AI.Chat.Placeholder" = "Сообщение";
+"Extera.AI.Chat.Thinking" = "Думает…";
+"Extera.AI.Chat.Clear" = "Очистить переписку";
+"Extera.AI.Chat.ClearInfo" = "Вы действительно хотите очистить историю переписки?";
+
+"Extera.AI.Error400Title" = "Неверный запрос";
+"Extera.AI.Error400Info" = "Проверьте параметры запроса.";
+"Extera.AI.Error401Title" = "Недействительные учётные данные";
+"Extera.AI.Error401Info" = "API-ключ недействителен или отключён. Проверьте свои учётные данные.";
+"Extera.AI.Error402Title" = "Недостаточно кредитов";
+"Extera.AI.Error402Info" = "У вашего аккаунта или API-ключа закончились кредиты. Пополните баланс и повторите запрос.";
+"Extera.AI.Error403Title" = "Доступ запрещён";
+"Extera.AI.Error403Info" = "У вас нет доступа к этой модели или ресурсу. Проверьте API-ключ и права аккаунта.";
+"Extera.AI.Error408Title" = "Таймаут запроса";
+"Extera.AI.Error408Info" = "Ваш запрос не был обработан вовремя. Попробуйте позже.";
+"Extera.AI.Error429Title" = "Превышен лимит запросов";
+"Extera.AI.Error429Info" = "Вы отправляете запросы слишком часто. Подождите немного и попробуйте снова.";
+"Extera.AI.Error502Title" = "Сбой модели";
+"Extera.AI.Error502Info" = "Выбранная модель недоступна или вернула некорректный ответ.";
+"Extera.AI.Error503Title" = "Сервис недоступен";
+"Extera.AI.Error503Info" = "Сервис временно недоступен или перегружен. Попробуйте позже.";
+"Extera.AI.ErrorGenericTitle" = "Ошибка сервера";
+"Extera.AI.ErrorGenericInfo" = "Повторите запрос через некоторое время.";
+"Extera.AI.ErrorEmptyTitle" = "Пустой ответ";
+"Extera.AI.ErrorEmptyInfo" = "Модель ничего не вернула. Попробуйте снова или выберите другую модель.";
+"Extera.AI.ErrorNetworkTitle" = "Ошибка сети";
+"Extera.AI.ErrorNetworkInfo" = "Не удалось связаться с сервисом. Проверьте URL и соединение.";
+"Extera.AI.ErrorParsingTitle" = "Неожиданный ответ";
+"Extera.AI.ErrorParsingInfo" = "Сервис ответил в формате, который приложение не может разобрать. Проверьте, что он совместим с OpenAI.";

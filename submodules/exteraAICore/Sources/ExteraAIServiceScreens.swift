@@ -87,7 +87,7 @@ private func exteraAIServiceListEntries(state: [ExteraAIServiceConfig], presenta
     for (index, service) in state.enumerated() {
         entries.append(.service(index, presentationData.theme, service.name, service.model))
     }
-    entries.append(.addAction(presentationData.theme, presentationData.strings.ExteraAI_NewService))
+    entries.append(.addAction(presentationData.theme, presentationData.exteraAIString("Extera.AI.NewService")))
     return entries
 }
 
@@ -111,7 +111,7 @@ public func exteraAIServiceListController(context: AccountContext, refreshed: @e
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, servicesPromise.get())
     |> map { presentationData, services -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.ExteraAI_ServicesTitle), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraAIString("Extera.AI.Services")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraAIServiceListEntries(state: services, presentationData: presentationData), style: .blocks)
         return (controllerState, (listState, arguments))
     }
@@ -334,24 +334,24 @@ private func exteraAIServiceEditTitle(_ text: String, presentationData: Presenta
 private func exteraAIServiceEditEntries(state: ExteraAIServiceEditState, presentationData: PresentationData) -> [ExteraAIServiceEditEntry] {
     let strings = presentationData.strings
     var entries: [ExteraAIServiceEditEntry] = []
-    entries.append(.name(presentationData.theme, exteraAIServiceEditTitle(strings.ExteraAI_ServiceName, presentationData: presentationData), state.name, strings.ExteraAI_ServiceName))
-    entries.append(.url(presentationData.theme, exteraAIServiceEditTitle(strings.ExteraAI_ServiceURL, presentationData: presentationData), state.url, "https://api.example.com/v1"))
-    entries.append(.model(presentationData.theme, exteraAIServiceEditTitle(strings.ExteraAI_ServiceModel, presentationData: presentationData), state.model, strings.ExteraAI_ServiceModel))
-    entries.append(.apiKey(presentationData.theme, exteraAIServiceEditTitle(strings.ExteraAI_ServiceKey, presentationData: presentationData), state.apiKey, strings.ExteraAI_ServiceKey))
-    entries.append(.testAndSave(presentationData.theme, strings.ExteraAI_ServiceTestAndSave))
+    entries.append(.name(presentationData.theme, exteraAIServiceEditTitle(exteraAIString("Extera.AI.ServiceName"), presentationData: presentationData), state.name, exteraAIString("Extera.AI.ServiceName")))
+    entries.append(.url(presentationData.theme, exteraAIServiceEditTitle(exteraAIString("Extera.AI.ServiceURL"), presentationData: presentationData), state.url, "https://api.example.com/v1"))
+    entries.append(.model(presentationData.theme, exteraAIServiceEditTitle(exteraAIString("Extera.AI.ServiceModel"), presentationData: presentationData), state.model, exteraAIString("Extera.AI.ServiceModel")))
+    entries.append(.apiKey(presentationData.theme, exteraAIServiceEditTitle(exteraAIString("Extera.AI.ServiceKey"), presentationData: presentationData), state.apiKey, exteraAIString("Extera.AI.ServiceKey")))
+    entries.append(.testAndSave(presentationData.theme, exteraAIString("Extera.AI.ServiceTestAndSave")))
     switch state.testState {
     case .idle:
         break
     case .testing:
-        entries.append(.testResult(presentationData.theme, strings.ExteraAI_ResultGenerating))
+        entries.append(.testResult(presentationData.theme, exteraAIString("Extera.AI.ResultGenerating")))
     case .passed:
-        entries.append(.testResult(presentationData.theme, strings.ExteraAI_ServiceTestPassed))
+        entries.append(.testResult(presentationData.theme, exteraAIString("Extera.AI.ServiceTestPassed")))
     case let .failed(title, info):
-        entries.append(.testResult(presentationData.theme, strings.ExteraAI_ServiceTestFailed + ": " + title))
+        entries.append(.testResult(presentationData.theme, exteraAIString("Extera.AI.ServiceTestFailed") + ": " + title))
         entries.append(.testResultInfo(info))
     }
-    entries.append(.delete(presentationData.theme, strings.ExteraAI_DeleteService))
-    entries.append(.useService(presentationData.theme, strings.ExteraAI_UseService))
+    entries.append(.delete(presentationData.theme, exteraAIString("Extera.AI.DeleteService")))
+    entries.append(.useService(presentationData.theme, exteraAIString("Extera.AI.UseService")))
     return entries
 }
 
@@ -406,7 +406,7 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
             let config = ExteraAIServiceConfig(id: service.id, name: current.name, url: current.url, model: current.model, apiKey: current.apiKey)
             guard ExteraAIChatClient.endpoint(for: config) != nil, !config.model.isEmpty else {
                 updateState {
-                    $0.testState = .failed(title: presentationData.strings.ExteraAI_ErrorParsingTitle, info: presentationData.strings.ExteraAI_ErrorParsingInfo)
+                    $0.testState = .failed(title: presentationData.exteraAIString("Extera.AI.ErrorParsingTitle"), info: presentationData.exteraAIString("Extera.AI.ErrorParsingInfo"))
                 }
                 return
             }
@@ -415,7 +415,7 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
             if let duplicate {
                 ExteraAIStore.shared.selectedServiceId = duplicate.id
                 refreshState(ExteraAIServiceEditState(name: current.name, url: current.url, model: current.model, apiKey: current.apiKey, testState: .idle))
-                presentControllerImpl?(textAlertController(context: context, title: presentationData.strings.ExteraAI_ServiceDuplicateTitle, text: presentationData.strings.ExteraAI_ServiceDuplicateInfo, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {
+                presentControllerImpl?(textAlertController(context: context, title: presentationData.exteraAIString("Extera.AI.ServiceDuplicateTitle"), text: presentationData.exteraAIString("Extera.AI.ServiceDuplicateInfo"), actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {
                     dismissImpl?()
                 })]), nil)
                 return
@@ -444,12 +444,12 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
                     refreshed()
                 } catch let failure as ExteraAIRequestFailure {
                     updateState {
-                        $0.testState = .failed(title: exteraAIRequestErrorTexts(strings: presentationData.strings, requestFailure: failure).title, info: exteraAIRequestErrorTexts(strings: presentationData.strings, requestFailure: failure).info)
+                        $0.testState = .failed(title: exteraAIRequestErrorTexts(requestFailure: failure).title, info: exteraAIRequestErrorTexts(requestFailure: failure).info)
                     }
                 } catch is CancellationError {
                 } catch {
                     updateState {
-                        $0.testState = .failed(title: presentationData.strings.ExteraAI_ErrorNetworkTitle, info: presentationData.strings.ExteraAI_ErrorNetworkInfo)
+                        $0.testState = .failed(title: presentationData.exteraAIString("Extera.AI.ErrorNetworkTitle"), info: presentationData.exteraAIString("Extera.AI.ErrorNetworkInfo"))
                     }
                 }
             }
@@ -463,9 +463,9 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
         },
         deleteService: {
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-            presentControllerImpl?(textAlertController(context: context, title: nil, text: String(format: presentationData.strings.ExteraAI_DeleteServiceText, service.name), actions: [
+            presentControllerImpl?(textAlertController(context: context, title: nil, text: String(format: presentationData.exteraAIString("Extera.AI.DeleteServiceText"), service.name), actions: [
                 TextAlertAction(type: .genericAction, title: presentationData.strings.Common_Cancel, action: {}),
-                TextAlertAction(type: .destructiveAction, title: presentationData.strings.ExteraAI_DeleteService, action: {
+                TextAlertAction(type: .destructiveAction, title: presentationData.exteraAIString("Extera.AI.DeleteService"), action: {
                     ExteraAIStore.shared.services = ExteraAIStore.shared.services.filter { $0.id != service.id }
                     if ExteraAIStore.shared.selectedServiceId == service.id {
                         ExteraAIStore.shared.selectedServiceId = nil
@@ -479,7 +479,7 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, statePromise.get())
     |> map { presentationData, state -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let title = isNew ? presentationData.strings.ExteraAI_NewService : presentationData.strings.ExteraAI_EditService
+        let title = isNew ? presentationData.exteraAIString("Extera.AI.NewService") : presentationData.exteraAIString("Extera.AI.EditService")
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(title), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraAIServiceEditEntries(state: state, presentationData: presentationData), style: .blocks)
         return (controllerState, (listState, arguments))

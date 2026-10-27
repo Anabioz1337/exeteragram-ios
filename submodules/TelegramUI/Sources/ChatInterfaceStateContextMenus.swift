@@ -39,6 +39,7 @@ import ChatMessageBubbleItemNode
 import AdsInfoScreen
 import AdsReportScreen
 import WalletContext
+import exteraAICore
  
 private struct MessageContextMenuData {
     let starStatus: Bool?
@@ -1479,7 +1480,18 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
                         f(.default)
                     })))
                 }
-                
+
+                for item in exteraAIMessageContextMenuItems(
+                    context: context,
+                    message: message,
+                    messageText: messageText,
+                    activeTranslateToLang: activeTranslateToLang,
+                    controllerInteraction: controllerInteraction,
+                    interfaceInteraction: interfaceInteraction
+                ) {
+                    actions.append(item)
+                }
+
                 if isSpeakSelectionEnabled() && !messageText.isEmpty {
                     actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.Conversation_ContextMenuSpeak, icon: { theme in
                         return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Message"), color: theme.actionSheet.primaryTextColor)

@@ -7,31 +7,31 @@ import TelegramPresentationData
 import PresentationDataUtils
 import ItemListUI
 
-private final class ExterraAIRoleListArguments {
-    let openRole: (ExterraAIRoleConfig) -> Void
+private final class ExteraAIRoleListArguments {
+    let openRole: (ExteraAIRoleConfig) -> Void
     let addRole: () -> Void
 
-    init(openRole: @escaping (ExterraAIRoleConfig) -> Void, addRole: @escaping () -> Void) {
+    init(openRole: @escaping (ExteraAIRoleConfig) -> Void, addRole: @escaping () -> Void) {
         self.openRole = openRole
         self.addRole = addRole
     }
 }
 
-private enum ExterraAIRoleListSection: Int32 {
+private enum ExteraAIRoleListSection: Int32 {
     case list
     case add
 }
 
-private enum ExterraAIRoleListEntry: ItemListNodeEntry {
+private enum ExteraAIRoleListEntry: ItemListNodeEntry {
     case role(Int, PresentationTheme, String, String)
     case addAction(PresentationTheme, String)
 
     var section: ItemListSectionId {
         switch self {
         case .role:
-            return ExterraAIRoleListSection.list.rawValue
+            return ExteraAIRoleListSection.list.rawValue
         case .addAction:
-            return ExterraAIRoleListSection.add.rawValue
+            return ExteraAIRoleListSection.add.rawValue
         }
     }
 
@@ -44,7 +44,7 @@ private enum ExterraAIRoleListEntry: ItemListNodeEntry {
         }
     }
 
-    static func ==(lhs: ExterraAIRoleListEntry, rhs: ExterraAIRoleListEntry) -> Bool {
+    static func ==(lhs: ExteraAIRoleListEntry, rhs: ExteraAIRoleListEntry) -> Bool {
         switch lhs {
         case let .role(lhsIndex, lhsTheme, lhsTitle, lhsLabel):
             if case let .role(rhsIndex, rhsTheme, rhsTitle, rhsLabel) = rhs, lhsIndex == rhsIndex, lhsTheme === rhsTheme, lhsTitle == rhsTitle, lhsLabel == rhsLabel {
@@ -59,12 +59,12 @@ private enum ExterraAIRoleListEntry: ItemListNodeEntry {
         }
     }
 
-    static func <(lhs: ExterraAIRoleListEntry, rhs: ExterraAIRoleListEntry) -> Bool {
+    static func <(lhs: ExteraAIRoleListEntry, rhs: ExteraAIRoleListEntry) -> Bool {
         return lhs.stableId < rhs.stableId
     }
 
     func item(presentationData: ItemListPresentationData, arguments: Any) -> ListViewItem {
-        let arguments = arguments as! ExterraAIRoleListArguments
+        let arguments = arguments as! ExteraAIRoleListArguments
         switch self {
         case let .role(index, _, title, label):
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: label, labelStyle: .detailText, sectionId: self.section, style: .blocks, action: {
@@ -82,18 +82,18 @@ private enum ExterraAIRoleListEntry: ItemListNodeEntry {
     }
 }
 
-private func exterraAIRoleListEntries(state: [ExterraAIRoleConfig], presentationData: PresentationData) -> [ExterraAIRoleListEntry] {
-    var entries: [ExterraAIRoleListEntry] = []
+private func exteraAIRoleListEntries(state: [ExteraAIRoleConfig], presentationData: PresentationData) -> [ExteraAIRoleListEntry] {
+    var entries: [ExteraAIRoleListEntry] = []
     for (index, role) in state.enumerated() {
         let promptPreview = role.prompt.components(separatedBy: "\n").first ?? role.prompt
         entries.append(.role(index, presentationData.theme, role.name, promptPreview))
     }
-    entries.append(.addAction(presentationData.theme, presentationData.strings.ExteraAI_NewRole))
+    entries.append(.addAction(presentationData.theme, presentationData.exteraAIString("Extera.AI.NewRole")))
     return entries
 }
 
-public func exterraAIRoleListController(context: AccountContext, refreshed: @escaping () -> Void) -> ItemListController {
-    let rolesPromise = Promise<[ExterraAIRoleConfig]>(ExteraAIStore.shared.roles)
+public func exteraAIRoleListController(context: AccountContext, refreshed: @escaping () -> Void) -> ItemListController {
+    let rolesPromise = Promise<[ExteraAIRoleConfig]>(ExteraAIStore.shared.roles)
     let refreshRoles: () -> Void = {
         rolesPromise.set(.single(ExteraAIStore.shared.roles))
         refreshed()
@@ -101,19 +101,19 @@ public func exterraAIRoleListController(context: AccountContext, refreshed: @esc
 
     var pushControllerImpl: ((ViewController) -> Void)?
 
-    let arguments = ExterraAIRoleListArguments(
+    let arguments = ExteraAIRoleListArguments(
         openRole: { role in
-            pushControllerImpl?(exterraAIRoleEditController(context: context, role: role, refreshed: refreshRoles))
+            pushControllerImpl?(exteraAIRoleEditController(context: context, role: role, refreshed: refreshRoles))
         },
         addRole: {
-            pushControllerImpl?(exterraAIRoleEditController(context: context, role: ExterraAIRoleConfig(name: "", prompt: ""), refreshed: refreshRoles))
+            pushControllerImpl?(exteraAIRoleEditController(context: context, role: ExteraAIRoleConfig(name: "", prompt: ""), refreshed: refreshRoles))
         }
     )
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, rolesPromise.get())
     |> map { presentationData, roles -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.ExteraAI_Roles), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
-        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exterraAIRoleListEntries(state: roles, presentationData: presentationData), style: .blocks)
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.exteraAIString("Extera.AI.Roles")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraAIRoleListEntries(state: roles, presentationData: presentationData), style: .blocks)
         return (controllerState, (listState, arguments))
     }
 
@@ -126,7 +126,7 @@ public func exterraAIRoleListController(context: AccountContext, refreshed: @esc
     return controller
 }
 
-private final class ExterraAIRoleEditArguments {
+private final class ExteraAIRoleEditArguments {
     let updateName: (String) -> Void
     let updatePrompt: (String) -> Void
     let useRole: () -> Void
@@ -145,13 +145,13 @@ private final class ExterraAIRoleEditArguments {
     }
 }
 
-private enum ExterraAIRoleEditSection: Int32 {
+private enum ExteraAIRoleEditSection: Int32 {
     case fields
     case promptInfo
     case manage
 }
 
-private enum ExterraAIRoleEditEntry: ItemListNodeEntry {
+private enum ExteraAIRoleEditEntry: ItemListNodeEntry {
     case name(PresentationTheme, NSAttributedString, String, String)
     case prompt(PresentationTheme, String, String)
     case promptInfo(String)
@@ -161,11 +161,11 @@ private enum ExterraAIRoleEditEntry: ItemListNodeEntry {
     var section: ItemListSectionId {
         switch self {
         case .name, .prompt:
-            return ExterraAIRoleEditSection.fields.rawValue
+            return ExteraAIRoleEditSection.fields.rawValue
         case .promptInfo:
-            return ExterraAIRoleEditSection.promptInfo.rawValue
+            return ExteraAIRoleEditSection.promptInfo.rawValue
         case .useRole, .delete:
-            return ExterraAIRoleEditSection.manage.rawValue
+            return ExteraAIRoleEditSection.manage.rawValue
         }
     }
 
@@ -184,7 +184,7 @@ private enum ExterraAIRoleEditEntry: ItemListNodeEntry {
         }
     }
 
-    static func ==(lhs: ExterraAIRoleEditEntry, rhs: ExterraAIRoleEditEntry) -> Bool {
+    static func ==(lhs: ExteraAIRoleEditEntry, rhs: ExteraAIRoleEditEntry) -> Bool {
         switch lhs {
         case let .name(lhsTheme, lhsTitle, lhsText, lhsPlaceholder):
             if case let .name(rhsTheme, rhsTitle, rhsText, rhsPlaceholder) = rhs, lhsTheme === rhsTheme, lhsTitle == rhsTitle, lhsText == rhsText, lhsPlaceholder == rhsPlaceholder {
@@ -214,12 +214,12 @@ private enum ExterraAIRoleEditEntry: ItemListNodeEntry {
         }
     }
 
-    static func <(lhs: ExterraAIRoleEditEntry, rhs: ExterraAIRoleEditEntry) -> Bool {
+    static func <(lhs: ExteraAIRoleEditEntry, rhs: ExteraAIRoleEditEntry) -> Bool {
         return lhs.stableId < rhs.stableId
     }
 
     func item(presentationData: ItemListPresentationData, arguments: Any) -> ListViewItem {
-        let arguments = arguments as! ExterraAIRoleEditArguments
+        let arguments = arguments as! ExteraAIRoleEditArguments
         switch self {
         case let .name(_, title, text, placeholder):
             return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .glass, title: title, text: text, placeholder: placeholder, sectionId: self.section, textUpdated: { value in
@@ -243,31 +243,31 @@ private enum ExterraAIRoleEditEntry: ItemListNodeEntry {
     }
 }
 
-private struct ExterraAIRoleEditState: Equatable {
+private struct ExteraAIRoleEditState: Equatable {
     let name: String
     let prompt: String
 }
 
-private func exterraAIRoleEditEntries(state: ExterraAIRoleEditState, presentationData: PresentationData) -> [ExterraAIRoleEditEntry] {
+private func exteraAIRoleEditEntries(state: ExteraAIRoleEditState, presentationData: PresentationData) -> [ExteraAIRoleEditEntry] {
     let strings = presentationData.strings
-    var entries: [ExterraAIRoleEditEntry] = []
-    entries.append(.name(presentationData.theme, NSAttributedString(string: strings.ExteraAI_RoleName, attributes: [
+    var entries: [ExteraAIRoleEditEntry] = []
+    entries.append(.name(presentationData.theme, NSAttributedString(string: exteraAIString("Extera.AI.RoleName"), attributes: [
         .font: Font.regular(presentationData.listsFontSize.itemListBaseFontSize),
         .foregroundColor: presentationData.theme.list.itemPrimaryTextColor
-    ]), state.name, strings.ExteraAI_RoleName))
-    entries.append(.prompt(presentationData.theme, state.prompt, strings.ExteraAI_RolePrompt))
-    entries.append(.promptInfo(strings.ExteraAI_PromptInfo))
-    entries.append(.useRole(presentationData.theme, strings.ExteraAI_UseRole))
-    entries.append(.delete(presentationData.theme, strings.ExteraAI_DeleteRole))
+    ]), state.name, exteraAIString("Extera.AI.RoleName")))
+    entries.append(.prompt(presentationData.theme, state.prompt, exteraAIString("Extera.AI.RolePrompt")))
+    entries.append(.promptInfo(exteraAIString("Extera.AI.PromptInfo")))
+    entries.append(.useRole(presentationData.theme, exteraAIString("Extera.AI.UseRole")))
+    entries.append(.delete(presentationData.theme, exteraAIString("Extera.AI.DeleteRole")))
     return entries
 }
 
-public func exterraAIRoleEditController(context: AccountContext, role: ExterraAIRoleConfig, refreshed: @escaping () -> Void) -> ItemListController {
-    let statePromise = Promise<ExterraAIRoleEditState>(ExterraAIRoleEditState(name: role.name, prompt: role.prompt))
+public func exteraAIRoleEditController(context: AccountContext, role: ExteraAIRoleConfig, refreshed: @escaping () -> Void) -> ItemListController {
+    let statePromise = Promise<ExteraAIRoleEditState>(ExteraAIRoleEditState(name: role.name, prompt: role.prompt))
 
-    func persist(_ state: ExterraAIRoleEditState) {
+    func persist(_ state: ExteraAIRoleEditState) {
         var roles = ExteraAIStore.shared.roles
-        let updated = ExterraAIRoleConfig(id: role.id, name: state.name, prompt: state.prompt)
+        let updated = ExteraAIRoleConfig(id: role.id, name: state.name, prompt: state.prompt)
         if let index = roles.firstIndex(where: { $0.id == role.id }) {
             roles[index] = updated
         } else {
@@ -276,8 +276,8 @@ public func exterraAIRoleEditController(context: AccountContext, role: ExterraAI
         ExteraAIStore.shared.roles = roles
     }
 
-    func updateState(_ transform: (inout ExterraAIRoleEditState) -> Void) {
-        var state = statePromise.get().get() ?? ExterraAIRoleEditState(name: "", prompt: "")
+    func updateState(_ transform: (inout ExteraAIRoleEditState) -> Void) {
+        var state = statePromise.get().get() ?? ExteraAIRoleEditState(name: "", prompt: "")
         transform(&state)
         statePromise.set(.single(state))
         persist(state)
@@ -286,7 +286,7 @@ public func exterraAIRoleEditController(context: AccountContext, role: ExterraAI
     var presentControllerImpl: ((ViewController, Any?) -> Void)?
     var dismissImpl: (() -> Void)?
 
-    let arguments = ExterraAIRoleEditArguments(
+    let arguments = ExteraAIRoleEditArguments(
         updateName: { value in
             updateState { $0.name = value }
         },
@@ -302,9 +302,9 @@ public func exterraAIRoleEditController(context: AccountContext, role: ExterraAI
         },
         deleteRole: {
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-            presentControllerImpl?(textAlertController(context: context, title: nil, text: String(format: presentationData.strings.ExterraAI_DeleteRoleText, role.name), actions: [
+            presentControllerImpl?(textAlertController(context: context, title: nil, text: String(format: presentationData.exteraAIString("Extera.AI.DeleteRoleText"), role.name), actions: [
                 TextAlertAction(type: .genericAction, title: presentationData.strings.Common_Cancel, action: {}),
-                TextAlertAction(type: .destructiveAction, title: presentationData.strings.ExterraAI_DeleteRole, action: {
+                TextAlertAction(type: .destructiveAction, title: presentationData.exteraAIString("Extera.AI.DeleteRole"), action: {
                     ExteraAIStore.shared.roles = ExteraAIStore.shared.roles.filter { $0.id != role.id }
                     if ExteraAIStore.shared.selectedRoleId == role.id {
                         ExteraAIStore.shared.selectedRoleId = nil
@@ -318,9 +318,9 @@ public func exterraAIRoleEditController(context: AccountContext, role: ExterraAI
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, statePromise.get())
     |> map { presentationData, state -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let title = state.name.isEmpty ? presentationData.strings.ExteraAI_NewRole : presentationData.strings.ExterraAI_EditRole
+        let title = state.name.isEmpty ? presentationData.exteraAIString("Extera.AI.NewRole") : presentationData.exteraAIString("Extera.AI.EditRole")
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(title), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
-        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exterraAIRoleEditEntries(state: state, presentationData: presentationData), style: .blocks)
+        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraAIRoleEditEntries(state: state, presentationData: presentationData), style: .blocks)
         return (controllerState, (listState, arguments))
     }
 

@@ -63,6 +63,7 @@ public enum ExteraAIActionKind: Equatable {
     case restyle
     case proofread
     case summarize
+    case correctPunctuation
 
     func systemInstruction() -> String {
         switch self {
@@ -74,6 +75,8 @@ public enum ExteraAIActionKind: Equatable {
             return "Fix spelling, grammar and punctuation mistakes in the following text without changing its meaning or wording more than necessary. Reply with ONLY the corrected text, preserving line breaks."
         case .summarize:
             return "Summarize the following text concisely, keeping every important fact. Reply with ONLY the summary."
+        case .correctPunctuation:
+            return "Correct punctuation of this transcript, reply only with the fixed text"
         }
     }
 }

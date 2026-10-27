@@ -15,8 +15,8 @@ final class ExteraAIStore {
         case replaceTelegramAI = "exteraAI.replaceTelegramAI"
     }
 
-    private init(defaults: UserDefaults = .standard) {
-        self.defaults = defaults
+    private init(defaults: UserDefaults? = UserDefaults(suiteName: "exteraAI")) {
+        self.defaults = defaults ?? .standard
     }
 
     var services: [ExteraAIServiceConfig] {
@@ -24,7 +24,7 @@ final class ExteraAIStore {
         set { self.encode(newValue, key: Key.services) }
     }
 
-    var roles: [ExterraAIRoleConfig] {
+    var roles: [ExteraAIRoleConfig] {
         get { return self.decoded(Key.roles) }
         set { self.encode(newValue, key: Key.roles) }
     }
@@ -64,7 +64,7 @@ final class ExteraAIStore {
         return self.services.first(where: { $0.id == selectedId }) ?? self.services.first
     }
 
-    var selectedRole: ExterraAIRoleConfig? {
+    var selectedRole: ExteraAIRoleConfig? {
         return self.roles.first(where: { $0.id == self.selectedRoleId })
     }
 

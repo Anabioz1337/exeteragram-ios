@@ -12,6 +12,28 @@ public enum ExteraAIStreamEvent {
     case content(String)
 }
 
+public struct ExteraAIChatMessage: Equatable {
+    let role: String
+    let content: String
+
+    init(role: String, content: String) {
+        self.role = role
+        self.content = content
+    }
+
+    public static func system(_ content: String) -> ExteraAIChatMessage {
+        return ExteraAIChatMessage(role: "system", content: content)
+    }
+
+    public static func user(_ content: String) -> ExteraAIChatMessage {
+        return ExteraAIChatMessage(role: "user", content: content)
+    }
+
+    public static func assistant(_ content: String) -> ExteraAIChatMessage {
+        return ExteraAIChatMessage(role: "assistant", content: content)
+    }
+}
+
 struct ExteraAIChatRequest: Encodable {
     struct Message: Encodable {
         let role: String
@@ -80,13 +102,10 @@ final class ExteraAIChatClient {
         return components.url
     }
 
-    private static func requestBody(service: ExteraAIServiceConfig, system: String, user: String, settings: ExteraAIGenerationSettings, stream: Bool) throws -> Data {
+    private static func requestBody(service: ExteraAIServiceConfig, messages: [ExteraAIChatMessage], settings: ExteraAIGenerationSettings, stream: Bool) throws -> Data {
         let request = ExteraAIChatRequest(
             model: service.model,
-            messages: [
-                ExteraAIChatRequest.Message(role: "system", content: system),
-                ExteraAIChatRequest.Message(role: "user", content: user)
-            ],
+            messages: messages.map { ExteraAIChatRequest.Message(role: $0.role, content: $0.content) },
             stream: stream,
             temperature: settings.temperature,
             reasoningEffort: settings.showReasoningTokens ? "medium" : nil
@@ -109,11 +128,12 @@ final class ExteraAIChatClient {
         return urlRequest
     }
 
-    func stream(service: ExteraAIServiceConfig, system: String, user: String, settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
+    /// Full OpenAI-compatible chat turn: a system message plus alternating history.
+    func chatStream(service: ExteraAIServiceConfig, messages: [ExteraAIChatMessage], settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
         return AsyncThrowingStream { continuation in
             let task = Task {
                 do {
-                    let body = try Self.requestBody(service: service, system: system, user: user, settings: settings, stream: settings.responseStreaming)
+                    let body = try Self.requestBody(service: service, messages: messages, settings: settings, stream: settings.responseStreaming)
                     let urlRequest = try Self.urlRequest(service: service, body: body)
                     if settings.responseStreaming {
                         try await Self.stream(urlRequest: urlRequest, session: self.session, continuation: continuation)
@@ -129,6 +149,15 @@ final class ExteraAIChatClient {
                 task.cancel()
             }
         }
+    }
+
+    func stream(service: ExteraAIServiceConfig, system: String, user: String, settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
+        var messages: [ExteraAIChatMessage] = []
+        if !system.isEmpty {
+            messages.append(.system(system))
+        }
+        messages.append(.user(user))
+        return chatStream(service: service, messages: messages, settings: settings)
     }
 
     private static func complete(urlRequest: URLRequest, session: URLSession, continuation: AsyncThrowingStream<ExteraAIStreamEvent, Error>.Continuation) async throws {

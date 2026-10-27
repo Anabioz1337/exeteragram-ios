@@ -6,6 +6,8 @@ import AccountContext
 import TelegramCore
 import TelegramPresentationData
 import UndoUI
+import BrowserUI
+import TextFormat
 import exteraAICore
 import ContextUI
 
@@ -20,7 +22,7 @@ private func exteraAIPresentResult(
 ) {
     guard case let .resolved(backend) = exteraAIResolveBackend() else {
         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-        displayUndo(.info(title: presentationData.strings.ExteraAI_Title, text: presentationData.strings.ExteraAI_ServicesInfo, timeout: nil, customUndoText: nil))
+        displayUndo(.info(title: presentationData.exteraAIString("Extera.AI.Title"), text: presentationData.exteraAIString("Extera.AI.ServicesInfo"), timeout: nil, customUndoText: nil))
         return
     }
 
@@ -29,17 +31,17 @@ private func exteraAIPresentResult(
     let role = store.selectedRole
 
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-    let resultController = ExteraAIResultController(theme: presentationData.theme, strings: presentationData.strings, title: title)
+    let resultController = ExteraAIResultController(theme: presentationData.theme, title: title)
     var generationTask: Task<Void, Never>?
 
     resultController.onInsert = { result in
         insertResult(result, settings.responseDisplay)
         let updated = context.sharedContext.currentPresentationData.with { $0 }
-        displayUndo(.succeed(text: updated.strings.ExteraAI_ResultInsertedToast, timeout: nil, customUndoText: nil))
+        displayUndo(.succeed(text: updated.exteraAIString("Extera.AI.ResultInsertedToast"), timeout: nil, customUndoText: nil))
     }
     resultController.onCopy = { _ in
         let updated = context.sharedContext.currentPresentationData.with { $0 }
-        displayUndo(.succeed(text: updated.strings.ExteraAI_ResultCopiedToast, timeout: nil, customUndoText: nil))
+        displayUndo(.succeed(text: updated.exteraAIString("Extera.AI.ResultCopiedToast"), timeout: nil, customUndoText: nil))
     }
     resultController.onClose = {
         generationTask?.cancel()
@@ -52,19 +54,15 @@ private func exteraAIPresentResult(
             var content = ""
             var reasoning = ""
             let result = try await exteraAIGenerate(backend: backend, settings: settings, role: role, action: action, input: sourceText) { event in
-                let delta: String
                 switch event {
                 case .content(let contentDelta):
                     content += contentDelta
-                    delta = contentDelta
                 case .reasoning(let reasoningDelta):
                     reasoning += reasoningDelta
-                    delta = reasoningDelta
                 }
                 let currentContent = content
                 let currentReasoning = reasoning
                 Queue.mainQueue().async {
-                    let _ = delta
                     resultController.update(content: currentContent, reasoning: currentReasoning, isGenerating: true)
                 }
             }
@@ -72,16 +70,14 @@ private func exteraAIPresentResult(
                 resultController.update(content: result, reasoning: reasoning, isGenerating: false)
             }
         } catch let failure as ExteraAIGenerationFailure {
-            let updated = context.sharedContext.currentPresentationData.with { $0 }
-            let texts = exteraAIErrorTexts(strings: updated.strings, failure: failure)
+            let texts = exteraAIErrorTexts(failure: failure)
             Queue.mainQueue().async {
                 resultController.fail(title: texts.title, info: texts.info)
             }
         } catch is CancellationError {
         } catch {
-            let updated = context.sharedContext.currentPresentationData.with { $0 }
             Queue.mainQueue().async {
-                resultController.fail(title: updated.strings.ExteraAI_ErrorNetworkTitle, info: updated.strings.ExteraAI_ErrorNetworkInfo)
+                resultController.fail(title: exteraAIString("Extera.AI.ErrorNetworkTitle"), info: exteraAIString("Extera.AI.ErrorNetworkInfo"))
             }
         }
     }
@@ -89,17 +85,15 @@ private func exteraAIPresentResult(
 
 func exteraAIMessageContextMenuItems(
     context: AccountContext,
-    message: Message,
+    message: EngineRawMessage,
     messageText: String,
     activeTranslateToLang: String?,
-    controllerInteraction: ChatControllerInteraction,
+    controllerInteraction: ChatControllerInteraction?,
     interfaceInteraction: ChatPanelInterfaceInteraction?
 ) -> [ContextMenuItem] {
     guard case .resolved(_) = exteraAIResolveBackend(), !messageText.isEmpty else {
         return []
     }
-
-    let strings = context.sharedContext.currentPresentationData.with { $0 }.strings
 
     func item(text: String, iconName: String, actionKind: ExteraAIActionKind) -> ContextMenuItem {
         return .action(ContextMenuActionItem(text: text, icon: { theme in
@@ -112,10 +106,10 @@ func exteraAIMessageContextMenuItems(
                 action: actionKind,
                 sourceText: messageText,
                 present: { resultController in
-                    controllerInteraction.presentControllerInCurrent(resultController, nil)
+                    controllerInteraction?.presentControllerInCurrent(resultController, nil)
                 },
                 displayUndo: { content in
-                    controllerInteraction.displayUndo(content)
+                    controllerInteraction?.displayUndo(content)
                 },
                 insertResult: { result, display in
                     let insertText: String
@@ -131,16 +125,16 @@ func exteraAIMessageContextMenuItems(
     }
 
     return [
-        item(text: strings.ExteraAI_MenuTranslate, iconName: "Translate", actionKind: .translate(languageName: activeTranslateToLang ?? "English")),
-        item(text: strings.ExteraAI_MenuRestyle, iconName: "Customize", actionKind: .restyle),
-        item(text: strings.ExteraAI_MenuProofread, iconName: "FactCheck", actionKind: .proofread),
-        item(text: strings.ExteraAI_MenuSummarize, iconName: "Message", actionKind: .summarize)
+        item(text: exteraAIString("Extera.AI.MenuTranslate"), iconName: "Translate", actionKind: .translate(languageName: activeTranslateToLang ?? "English")),
+        item(text: exteraAIString("Extera.AI.MenuRestyle"), iconName: "Customize", actionKind: .restyle),
+        item(text: exteraAIString("Extera.AI.MenuProofread"), iconName: "FactCheck", actionKind: .proofread),
+        item(text: exteraAIString("Extera.AI.MenuSummarize"), iconName: "Message", actionKind: .summarize)
     ]
 }
 
 @discardableResult
 func exteraAIPresentComposeReplacement(
-    controller: ChatController?,
+    controller: ChatControllerImpl?,
     context: AccountContext,
     composedInputText: ComposedRichMessage
 ) -> Bool {
@@ -166,10 +160,9 @@ func exteraAIPresentComposeReplacement(
         return false
     }
 
-    let strings = context.sharedContext.currentPresentationData.with { $0 }.strings
     exteraAIPresentResult(
         context: context,
-        title: strings.ExteraAI_Title,
+        title: exteraAIString("Extera.AI.Title"),
         action: .restyle,
         sourceText: instruction,
         present: { resultController in

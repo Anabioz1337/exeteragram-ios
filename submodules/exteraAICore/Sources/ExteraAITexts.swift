@@ -1,56 +1,55 @@
 import Foundation
-import TelegramPresentationData
 
-public func exteraAIErrorTexts(strings: PresentationStrings, failure: ExteraAIGenerationFailure) -> (title: String, info: String) {
+public func exteraAIErrorTexts(failure: ExteraAIGenerationFailure) -> (title: String, info: String) {
     switch failure {
     case .onDeviceUnavailable:
-        return (strings.ExteraAI_OnDeviceStatusUnavailable, strings.ExteraAI_OnDeviceUnavailableInfo)
+        return (exteraAIOnDeviceStatusText(status: .unavailable), exteraAIString("Extera.AI.OnDeviceUnavailableInfo"))
     case .request(let requestFailure):
-        return exteraAIRequestErrorTexts(strings: strings, requestFailure: requestFailure)
+        return exteraAIRequestErrorTexts(requestFailure: requestFailure)
     }
 }
 
-public func exteraAIRequestErrorTexts(strings: PresentationStrings, requestFailure: ExteraAIRequestFailure) -> (title: String, info: String) {
+public func exteraAIRequestErrorTexts(requestFailure: ExteraAIRequestFailure) -> (title: String, info: String) {
     switch requestFailure {
     case .http(let status):
         switch status {
         case 400:
-            return (strings.ExteraAI_Error400Title, strings.ExteraAI_Error400Info)
+            return (exteraAIString("Extera.AI.Error400Title"), exteraAIString("Extera.AI.Error400Info"))
         case 401:
-            return (strings.ExteraAI_Error401Title, strings.ExteraAI_Error401Info)
+            return (exteraAIString("Extera.AI.Error401Title"), exteraAIString("Extera.AI.Error401Info"))
         case 402:
-            return (strings.ExteraAI_Error402Title, strings.ExteraAI_Error402Info)
+            return (exteraAIString("Extera.AI.Error402Title"), exteraAIString("Extera.AI.Error402Info"))
         case 403:
-            return (strings.ExteraAI_Error403Title, strings.ExteraAI_Error403Info)
+            return (exteraAIString("Extera.AI.Error403Title"), exteraAIString("Extera.AI.Error403Info"))
         case 408:
-            return (strings.ExteraAI_Error408Title, strings.ExteraAI_Error408Info)
+            return (exteraAIString("Extera.AI.Error408Title"), exteraAIString("Extera.AI.Error408Info"))
         case 429:
-            return (strings.ExteraAI_Error429Title, strings.ExteraAI_Error429Info)
+            return (exteraAIString("Extera.AI.Error429Title"), exteraAIString("Extera.AI.Error429Info"))
         case 502:
-            return (strings.ExteraAI_Error502Title, strings.ExteraAI_Error502Info)
+            return (exteraAIString("Extera.AI.Error502Title"), exteraAIString("Extera.AI.Error502Info"))
         case 503:
-            return (strings.ExteraAI_Error503Title, strings.ExteraAI_Error503Info)
+            return (exteraAIString("Extera.AI.Error503Title"), exteraAIString("Extera.AI.Error503Info"))
         default:
-            return (strings.ExteraAI_ErrorGenericTitle, strings.ExteraAI_ErrorGenericInfo)
+            return (exteraAIString("Extera.AI.ErrorGenericTitle"), exteraAIString("Extera.AI.ErrorGenericInfo"))
         }
     case .network:
-        return (strings.ExteraAI_ErrorNetworkTitle, strings.ExteraAI_ErrorNetworkInfo)
+        return (exteraAIString("Extera.AI.ErrorNetworkTitle"), exteraAIString("Extera.AI.ErrorNetworkInfo"))
     case .parse:
-        return (strings.ExteraAI_ErrorParsingTitle, strings.ExteraAI_ErrorParsingInfo)
+        return (exteraAIString("Extera.AI.ErrorParsingTitle"), exteraAIString("Extera.AI.ErrorParsingInfo"))
     case .emptyResponse:
-        return (strings.ExteraAI_ErrorEmptyTitle, strings.ExteraAI_ErrorEmptyInfo)
+        return (exteraAIString("Extera.AI.ErrorEmptyTitle"), exteraAIString("Extera.AI.ErrorEmptyInfo"))
     }
 }
 
-public func exteraAIOnDeviceStatusText(strings: PresentationStrings, status: ExteraAIOnDeviceStatus) -> String {
+public func exteraAIOnDeviceStatusText(status: ExteraAIOnDeviceStatus) -> String {
     switch status {
     case .ready:
-        return strings.ExteraAI_OnDeviceStatusReady
+        return exteraAIString("Extera.AI.OnDeviceStatusReady")
     case .downloading:
-        return strings.ExteraAI_OnDeviceStatusDownload
+        return exteraAIString("Extera.AI.OnDeviceStatusDownload")
     case .loading:
-        return strings.ExteraAI_OnDeviceStatusLoading
+        return exteraAIString("Extera.AI.OnDeviceStatusLoading")
     case .unavailable:
-        return strings.ExteraAI_OnDeviceStatusUnavailable
+        return exteraAIString("Extera.AI.OnDeviceStatusUnavailable")
     }
 }

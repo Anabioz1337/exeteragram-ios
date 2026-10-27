@@ -168,7 +168,7 @@ private enum ExteraAISettingsEntry: ItemListNodeEntry {
 
 private struct ExteraAISettingsState: Equatable {
     let services: [ExteraAIServiceConfig]
-    let roles: [ExterraAIRoleConfig]
+    let roles: [ExteraAIRoleConfig]
     let settings: ExteraAIGenerationSettings
     let selectedServiceId: String?
     let selectedRoleId: String?
@@ -194,24 +194,24 @@ private func exteraAISettingsEntries(state: ExteraAISettingsState, presentationD
 
     let activeServiceName: String
     if state.selectedServiceId == exteraAIOnDeviceServiceId && state.onDeviceStatus == .ready {
-        activeServiceName = strings.ExteraAI_OnDevice
+        activeServiceName = exteraAIString("Extera.AI.OnDevice")
     } else if let service = state.services.first(where: { $0.id == state.selectedServiceId }) ?? state.services.first {
         activeServiceName = service.name
     } else {
-        activeServiceName = strings.ExteraAI_OnDevice
+        activeServiceName = exteraAIString("Extera.AI.OnDevice")
     }
 
-    entries.append(.replaceTelegramAI(presentationData.theme, strings.ExteraAI_ReplaceTelegramTitle, state.replaceTelegramAI))
-    entries.append(.replaceTelegramAIInfo(strings.ExteraAI_ReplaceTelegramInfo))
-    entries.append(.services(presentationData.theme, strings.ExteraAI_ServicesTitle, activeServiceName))
-    entries.append(.roles(presentationData.theme, strings.ExteraAI_Roles, state.roles.first(where: { $0.id == state.selectedRoleId })?.name ?? ""))
-    entries.append(.generation(presentationData.theme, strings.ExteraAI_Generation, String(format: "%.1f", state.settings.temperature ?? 0.0)))
-    entries.append(.servicesInfo(strings.ExteraAI_ServicesInfo))
+    entries.append(.replaceTelegramAI(presentationData.theme, exteraAIString("Extera.AI.ReplaceTelegramTitle"), state.replaceTelegramAI))
+    entries.append(.replaceTelegramAIInfo(exteraAIString("Extera.AI.ReplaceTelegramInfo")))
+    entries.append(.services(presentationData.theme, exteraAIString("Extera.AI.Services"), activeServiceName))
+    entries.append(.roles(presentationData.theme, exteraAIString("Extera.AI.Roles"), state.roles.first(where: { $0.id == state.selectedRoleId })?.name ?? ""))
+    entries.append(.generation(presentationData.theme, exteraAIString("Extera.AI.Generation"), String(format: "%.1f", state.settings.temperature ?? 0.0)))
+    entries.append(.servicesInfo(exteraAIString("Extera.AI.ServicesInfo")))
 
-    entries.append(.onDeviceHeader(presentationData.theme, strings.ExteraAI_OnDevice))
-    entries.append(.onDevice(presentationData.theme, strings.ExteraAI_OnDevice, exteraAIOnDeviceStatusText(strings: strings, status: state.onDeviceStatus)))
+    entries.append(.onDeviceHeader(presentationData.theme, exteraAIString("Extera.AI.OnDevice")))
+    entries.append(.onDevice(presentationData.theme, exteraAIString("Extera.AI.OnDevice"), exteraAIOnDeviceStatusText(status: state.onDeviceStatus)))
     if state.onDeviceStatus != .ready {
-        entries.append(.onDeviceInfo(strings.ExteraAI_OnDeviceUnavailableInfo))
+        entries.append(.onDeviceInfo(exteraAIString("Extera.AI.OnDeviceUnavailableInfo")))
     }
 
     return entries
@@ -248,14 +248,14 @@ public func exteraAISettingsController(context: AccountContext) -> ItemListContr
                 ExteraAIStore.shared.selectedServiceId = exteraAIOnDeviceServiceId
                 refreshState()
             } else {
-                presentControllerImpl?(textAlertController(context: context, title: exteraAIOnDeviceStatusText(strings: presentationData.strings, status: status), text: presentationData.strings.ExteraAI_OnDeviceUnavailableInfo, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]), nil)
+                presentControllerImpl?(textAlertController(context: context, title: exteraAIOnDeviceStatusText(status: status), text: exteraAIString("Extera.AI.OnDeviceUnavailableInfo"), actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]), nil)
             }
         }
     )
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, statePromise.get())
     |> map { presentationData, state -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.ExteraAI_Title), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.exteraAIString("Extera.AI.Title")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraAISettingsEntries(state: state, presentationData: presentationData), style: .blocks)
         return (controllerState, (listState, arguments))
     }

@@ -159,17 +159,17 @@ private enum ExteraAIGenerationEntry: ItemListNodeEntry {
 private func exteraAIGenerationEntries(settings: ExteraAIGenerationSettings, presentationData: PresentationData) -> [ExteraAIGenerationEntry] {
     let strings = presentationData.strings
     var entries: [ExteraAIGenerationEntry] = []
-    entries.append(.showResponseOnly(presentationData.theme, strings.ExteraAI_ShowResponseOnly, settings.responseDisplay == .showResponseOnly))
-    entries.append(.insertAsQuote(presentationData.theme, strings.ExteraAI_InsertAsQuote, settings.responseDisplay == .insertAsQuote))
-    entries.append(.temperature(presentationData.theme, NSAttributedString(string: strings.ExteraAI_Temperature, attributes: [
+    entries.append(.showResponseOnly(presentationData.theme, exteraAIString("Extera.AI.ShowResponseOnly"), settings.responseDisplay == .showResponseOnly))
+    entries.append(.insertAsQuote(presentationData.theme, exteraAIString("Extera.AI.InsertAsQuote"), settings.responseDisplay == .insertAsQuote))
+    entries.append(.temperature(presentationData.theme, NSAttributedString(string: exteraAIString("Extera.AI.Temperature"), attributes: [
         .font: Font.regular(presentationData.listsFontSize.itemListBaseFontSize),
         .foregroundColor: presentationData.theme.list.itemPrimaryTextColor
-    ]), settings.temperature.map { String(format: "%.1f", $0) } ?? "", strings.ExteraAI_Temperature))
-    entries.append(.temperatureInfo(strings.ExteraAI_TemperatureInfo))
-    entries.append(.reasoning(presentationData.theme, strings.ExteraAI_Reasoning, settings.showReasoningTokens))
-    entries.append(.reasoningInfo(strings.ExteraAI_ReasoningInfo))
-    entries.append(.streaming(presentationData.theme, strings.ExteraAI_ResponseStreaming, settings.responseStreaming))
-    entries.append(.streamingInfo(strings.ExteraAI_ResponseStreamingInfo))
+    ]), settings.temperature.map { String(format: "%.1f", $0) } ?? "", exteraAIString("Extera.AI.Temperature")))
+    entries.append(.temperatureInfo(exteraAIString("Extera.AI.TemperatureInfo")))
+    entries.append(.reasoning(presentationData.theme, exteraAIString("Extera.AI.Reasoning"), settings.showReasoningTokens))
+    entries.append(.reasoningInfo(exteraAIString("Extera.AI.ReasoningInfo")))
+    entries.append(.streaming(presentationData.theme, exteraAIString("Extera.AI.ResponseStreaming"), settings.responseStreaming))
+    entries.append(.streamingInfo(exteraAIString("Extera.AI.ResponseStreamingInfo")))
     return entries
 }
 
@@ -207,7 +207,7 @@ public func exteraAIGenerationController(context: AccountContext, refreshed: @es
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsPromise.get())
     |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.ExteraAI_Generation), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.exteraAIString("Extera.AI.Generation")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraAIGenerationEntries(settings: settings, presentationData: presentationData), style: .blocks)
         return (controllerState, (listState, arguments))
     }
