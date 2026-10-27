@@ -65,6 +65,7 @@ swift_library(
         "//submodules/StickerPackPreviewUI:StickerPackPreviewUI",
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",
         "//submodules/ExteraSpeech:ExteraSpeech",
+        "//submodules/ExteraProfile:ExteraProfile",
         "//submodules/TelegramStringFormatting:TelegramStringFormatting",
         "//submodules/TelegramNotices:TelegramNotices",
         "//submodules/TelegramCallsUI:TelegramCallsUI",
