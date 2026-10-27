@@ -1,4 +1,3 @@
-        "//submodules/exteraAICore:exteraAICore",
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 
 swift_library(
@@ -12,9 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/exteraPluginUI:ExteraPluginUI",
-        "//submodules/exteraPluginUI:ExteraPluginUI",
         "//submodules/exteraTranslator:ExteraTranslator",
-        "//submodules/ChatListUI:ChatListUI",
         "//submodules/ChatListUI:ChatListUI",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/CrashReporting:CrashReporting",
