@@ -28,31 +28,6 @@ apple_resource_bundle(
         "Resources/ExteraPillsBundle/**/*.lproj/*",
     ]),
 )
-load("//build-system/bazel-utils:plist_fragment.bzl", "plist_fragment")
-
-plist_fragment(
-    name = "ExteraPillsBundleInfoPlist",
-    extension = "plist",
-    template =
-    """
-    <key>CFBundleIdentifier</key>
-    <string>extera.ExteraPills</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>en</string>
-    <key>CFBundleName</key>
-    <string>ExteraPillsBundle</string>
-    """
-)
-
-apple_resource_bundle(
-    name = "ExteraPillsBundle",
-    infoplists = [
-        ":ExteraPillsBundleInfoPlist",
-    ],
-    resources = glob([
-        "Resources/ExteraPillsBundle/**/*.lproj/*",
-    ]),
-)
 
 swift_library(
     name = "ChatListUI",
