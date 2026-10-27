@@ -12,6 +12,7 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/TelegramCore:TelegramCore",
+        "//submodules/TelegramUIPreferences:TelegramUIPreferences",
         "//submodules/Display:Display",
         "//submodules/AccountContext:AccountContext",
         "//submodules/DeviceAccess:DeviceAccess",

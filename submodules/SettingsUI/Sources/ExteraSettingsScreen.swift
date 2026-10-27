@@ -20,9 +20,10 @@ private enum ExteraUpdaterStatus: Equatable {
 
 private enum ExteraSettingsSection: Int32 {
     case speed = 0
-    case interface = 1
-    case analytics = 2
-    case updates = 3
+    case storage = 1
+    case interface = 2
+    case analytics = 3
+    case updates = 4
 }
 
 private enum ExteraSettingsEntry: ItemListNodeEntry {
@@ -30,6 +31,9 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
     case downloadBoost(PresentationTheme, String, String)
     case ultraWarning(PresentationTheme, String)
     case uploadBoost(PresentationTheme, String, Bool)
+    case storageHeader(PresentationTheme, String)
+    case customSaveFolderInput(PresentationTheme, String, String)
+    case customSaveFolderHint(PresentationTheme, String)
     case interfaceHeader(PresentationTheme, String)
     case disableNumberRounding(PresentationTheme, String, Bool)
     case formatTimeWithSeconds(PresentationTheme, String, Bool)
@@ -50,6 +54,8 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
         switch self {
             case .speedHeader, .downloadBoost, .ultraWarning, .uploadBoost:
                 return ExteraSettingsSection.speed.rawValue
+            case .storageHeader, .customSaveFolderInput, .customSaveFolderHint:
+                return ExteraSettingsSection.storage.rawValue
             case .interfaceHeader, .disableNumberRounding, .formatTimeWithSeconds:
                 return ExteraSettingsSection.interface.rawValue
             case .analyticsHeader, .useGoogleAnalytics, .useGoogleCrashlytics, .analyticsInfo:
@@ -65,21 +71,24 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
             case .downloadBoost: return 1
             case .ultraWarning: return 2
             case .uploadBoost: return 3
-            case .interfaceHeader: return 4
-            case .disableNumberRounding: return 5
-            case .formatTimeWithSeconds: return 6
-            case .analyticsHeader: return 7
-            case .useGoogleAnalytics: return 8
-            case .useGoogleCrashlytics: return 9
-            case .analyticsInfo: return 10
-            case .updatesHeader: return 11
-            case .checkForUpdates: return 12
-            case .checkOnLaunch: return 13
-            case .lastCheck: return 14
-            case .currentVersion: return 15
-            case .latestVersion: return 16
-            case .changelog: return 17
-            case .downloadOnGitHub: return 18
+            case .storageHeader: return 4
+            case .customSaveFolderInput: return 5
+            case .customSaveFolderHint: return 6
+            case .interfaceHeader: return 7
+            case .disableNumberRounding: return 8
+            case .formatTimeWithSeconds: return 9
+            case .analyticsHeader: return 10
+            case .useGoogleAnalytics: return 11
+            case .useGoogleCrashlytics: return 12
+            case .analyticsInfo: return 13
+            case .updatesHeader: return 14
+            case .checkForUpdates: return 15
+            case .checkOnLaunch: return 16
+            case .lastCheck: return 17
+            case .currentVersion: return 18
+            case .latestVersion: return 19
+            case .changelog: return 20
+            case .downloadOnGitHub: return 21
         }
     }
 
@@ -105,6 +114,24 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 }
             case let .uploadBoost(lhsTheme, lhsText, lhsValue):
                 if case let .uploadBoost(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                } else {
+                    return false
+                }
+            case let .storageHeader(lhsTheme, lhsText):
+                if case let .storageHeader(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+                    return true
+                } else {
+                    return false
+                }
+            case let .customSaveFolderInput(lhsTheme, lhsTitle, lhsText):
+                if case let .customSaveFolderInput(rhsTheme, rhsTitle, rhsText) = rhs, lhsTheme === rhsTheme, lhsTitle == rhsTitle, lhsText == rhsText {
+                    return true
+                } else {
+                    return false
+                }
+            case let .customSaveFolderHint(lhsTheme, lhsText):
+                if case let .customSaveFolderHint(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
                 } else {
                     return false
@@ -221,6 +248,14 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
                     arguments.toggleUploadBoost(value)
                 })
+            case let .storageHeader(_, text):
+                return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
+            case let .customSaveFolderInput(_, title, text):
+                return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .glass, title: NSAttributedString(string: title), text: NSAttributedString(string: text), placeholder: "", type: .regular(capitalization: true, autocorrection: false), spacing: 10.0, clearType: .always, enabled: true, tag: nil, sectionId: self.section, style: .blocks, textUpdated: { updatedText in
+                    arguments.setCustomSaveFolderName(updatedText)
+                })
+            case let .customSaveFolderHint(_, text):
+                return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
             case let .interfaceHeader(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .disableNumberRounding(_, text, value):
@@ -272,6 +307,7 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
 private final class ExteraSettingsArguments {
     let chooseDownloadBoost: () -> Void
     let toggleUploadBoost: (Bool) -> Void
+    let setCustomSaveFolderName: (String) -> Void
     let toggleDisableNumberRounding: (Bool) -> Void
     let toggleFormatTimeWithSeconds: (Bool) -> Void
     let toggleUseGoogleAnalytics: (Bool) -> Void
@@ -283,6 +319,7 @@ private final class ExteraSettingsArguments {
     init(
         chooseDownloadBoost: @escaping () -> Void,
         toggleUploadBoost: @escaping (Bool) -> Void,
+        setCustomSaveFolderName: @escaping (String) -> Void,
         toggleDisableNumberRounding: @escaping (Bool) -> Void,
         toggleFormatTimeWithSeconds: @escaping (Bool) -> Void,
         toggleUseGoogleAnalytics: @escaping (Bool) -> Void,
@@ -293,6 +330,7 @@ private final class ExteraSettingsArguments {
     ) {
         self.chooseDownloadBoost = chooseDownloadBoost
         self.toggleUploadBoost = toggleUploadBoost
+        self.setCustomSaveFolderName = setCustomSaveFolderName
         self.toggleDisableNumberRounding = toggleDisableNumberRounding
         self.toggleFormatTimeWithSeconds = toggleFormatTimeWithSeconds
         self.toggleUseGoogleAnalytics = toggleUseGoogleAnalytics
@@ -339,6 +377,12 @@ private func exteraSettingsEntries(presentationData: PresentationData, settings:
         entries.append(.ultraWarning(presentationData.theme, strings.ultraWarning))
     }
     entries.append(.uploadBoost(presentationData.theme, strings.uploadBoost, settings.uploadSpeedBoost))
+
+    entries.append(.storageHeader(presentationData.theme, strings.storageHeader.uppercased()))
+    entries.append(.customSaveFolderInput(presentationData.theme, strings.customSaveFolder, settings.customSaveFolderName))
+    if !settings.customSaveFolderName.isEmpty {
+        entries.append(.customSaveFolderHint(presentationData.theme, strings.customSaveFolderHint))
+    }
 
     entries.append(.interfaceHeader(presentationData.theme, strings.interfaceHeader.uppercased()))
     entries.append(.disableNumberRounding(presentationData.theme, strings.disableNumberRounding, settings.disableNumberRounding))
@@ -397,6 +441,16 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
             }
             exteraApplyUploadBoost(context: context, enabled: value)
             exteraPresentRestartRequired(sharedContext: context.sharedContext)
+        },
+        setCustomSaveFolderName: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.customSaveFolderName = value.trimmingCharacters(in: .whitespacesAndNewlines)
+                return settings
+            }.start()
         },
         toggleDisableNumberRounding: { [weak context] value in
             guard let context = context else {
