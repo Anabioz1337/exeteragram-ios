@@ -10,6 +10,7 @@ import TelegramUIPreferences
 import TelegramBaseController
 import OverlayStatusController
 import AccountContext
+import ExteraProfile
 import AlertUI
 import PresentationDataUtils
 import UndoUI
@@ -93,8 +94,33 @@ private final class ContextControllerContentSourceImpl: ContextControllerContent
     }
 }
 
+/// The root chat list's bar title, when the extera preference replaces it with the account's
+/// username or first name; nil keeps the stock title.
+private func exteraActionBarTitleOverride(context: AccountContext) -> String? {
+    let preferences = ExteraProfileSettings.shared.current
+    guard preferences.actionBarTitle != .appName else {
+        return nil
+    }
+    return context.account.postbox.transaction { transaction -> String? in
+        guard let user = transaction.getPeer(context.account.peerId) as? TelegramUser else {
+            return nil
+        }
+        if case .username = preferences.actionBarTitle {
+            if let addressName = user.addressName, !addressName.isEmpty {
+                return "@\(addressName)"
+            } else if let username = user.username, !username.isEmpty {
+                return "@\(username)"
+            }
+            return nil
+        }
+        if let firstName = user.firstName, !firstName.isEmpty {
+            return firstName
+        }
+        return nil
+    } |> single
+}
+
 public class ChatListControllerImpl: TelegramBaseController, ChatListController {
-    /// iPhone Duo: this screen lays out its own side column, back button included.
     override public var placesNavigationButtonInSideColumn: Bool {
         return false
     }
@@ -7214,7 +7240,11 @@ private final class ChatListLocationContext {
         switch location {
         case let .chatList(groupId):
             if groupId == .root {
-                defaultTitle = presentationData.strings.DialogList_Title
+                if let exteraTitle = exteraActionBarTitleOverride(context: self.context) {
+                    defaultTitle = exteraTitle
+                } else {
+                    defaultTitle = presentationData.strings.DialogList_Title
+                }
             } else {
                 defaultTitle = presentationData.strings.ChatList_ArchivedChatsTitle
             }

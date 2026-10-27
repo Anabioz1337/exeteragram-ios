@@ -19,6 +19,7 @@
 "Extera.Profile.DisableUnarchiveSwipe" = "Disable \"Unarchive\" Swipe";
 "Extera.Profile.DisableUnarchiveSwipeInfo" = "Swiping left will not remove chats from the archive.";
 "Extera.Profile.ActionBarTitle" = "Title Text";
+"Extera.Profile.ActionBarTitleAppName" = "App Name";
 "Extera.Profile.ActionBarTitleUsername" = "Username";
 "Extera.Profile.ActionBarTitleName" = "First Name";
 "Extera.Profile.SenderMiniAvatars" = "Sender Mini Avatars";

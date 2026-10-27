@@ -19,6 +19,7 @@
 "Extera.Profile.DisableUnarchiveSwipe" = "Отключить жест \"Вернуть\"";
 "Extera.Profile.DisableUnarchiveSwipeInfo" = "Свайп влево не будет убирать чаты из архива.";
 "Extera.Profile.ActionBarTitle" = "Текст заголовка";
+"Extera.Profile.ActionBarTitleAppName" = "Название приложения";
 "Extera.Profile.ActionBarTitleUsername" = "Короткая ссылка";
 "Extera.Profile.ActionBarTitleName" = "Имя";
 "Extera.Profile.SenderMiniAvatars" = "Мини-аватары отправителей";

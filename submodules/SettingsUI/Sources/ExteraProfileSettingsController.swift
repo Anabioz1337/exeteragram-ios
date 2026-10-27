@@ -160,6 +160,8 @@ private func exteraProfileSwitchItem(_ presentationData: ItemListPresentationDat
 
 private func actionBarTitleLabel(value: ExteraChatListActionBarTitle) -> String {
     switch value {
+    case .appName:
+        return exteraProfileString("Extera.Profile.ActionBarTitleAppName")
     case .name:
         return exteraProfileString("Extera.Profile.ActionBarTitleName")
     case .username:
@@ -196,6 +198,7 @@ private final class ExteraActionBarTitleArguments {
 }
 
 private enum ExteraActionBarTitleEntry: ItemListNodeEntry {
+    case appName(selected: Bool, String)
     case name(selected: Bool, String)
     case username(selected: Bool, String)
 
@@ -205,8 +208,9 @@ private enum ExteraActionBarTitleEntry: ItemListNodeEntry {
 
     var stableId: Int32 {
         switch self {
-        case .name: return 0
-        case .username: return 1
+        case .appName: return 0
+        case .name: return 1
+        case .username: return 2
         }
     }
 
@@ -217,15 +221,18 @@ private enum ExteraActionBarTitleEntry: ItemListNodeEntry {
     func item(presentationData: ItemListPresentationData, arguments: Any) -> ListViewItem {
         let arguments = arguments as! ExteraActionBarTitleArguments
         let accentColor = presentationData.theme.list.itemAccentColor
+        func row(_ value: ExteraChatListActionBarTitle, selected: Bool, label: String) -> ListViewItem {
+            return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: label, label: selected ? "✓" : "", labelStyle: .coloredText(accentColor), sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
+                arguments.select(value)
+            })
+        }
         switch self {
+        case let .appName(selected, label):
+            return row(.appName, selected: selected, label: label)
         case let .name(selected, label):
-            return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: label, label: selected ? "✓" : "", labelStyle: .coloredText(accentColor), sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
-                arguments.select(.name)
-            })
+            return row(.name, selected: selected, label: label)
         case let .username(selected, label):
-            return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: label, label: selected ? "✓" : "", labelStyle: .coloredText(accentColor), sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
-                arguments.select(.username)
-            })
+            return row(.username, selected: selected, label: label)
         }
     }
 }
@@ -266,6 +273,7 @@ public func exteraProfileSettingsController(context: AccountContext) -> ViewCont
 
 private func exteraActionBarTitleEntries(presentationData: PresentationData, currentValue: ExteraChatListActionBarTitle) -> [ExteraActionBarTitleEntry] {
     return [
+        .appName(selected: currentValue == .appName, exteraProfileString("Extera.Profile.ActionBarTitleAppName")),
         .name(selected: currentValue == .name, exteraProfileString("Extera.Profile.ActionBarTitleName")),
         .username(selected: currentValue == .username, exteraProfileString("Extera.Profile.ActionBarTitleUsername"))
     ]

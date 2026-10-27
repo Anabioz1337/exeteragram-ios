@@ -2,6 +2,7 @@ import Foundation
 import SwiftSignalKit
 
 public enum ExteraChatListActionBarTitle: String, Codable, Equatable, CaseIterable {
+    case appName
     case name
     case username
 }
@@ -31,7 +32,7 @@ public struct ExteraProfilePreferences: Codable, Equatable {
         hideArchiveFolder: false,
         archiveOnPull: false,
         disableUnarchiveSwipe: false,
-        actionBarTitle: .name,
+        actionBarTitle: .appName,
         senderMiniAvatars: false
     )
 
@@ -87,7 +88,7 @@ public struct ExteraProfilePreferences: Codable, Equatable {
             hideArchiveFolder: try container.decodeIfPresent(Bool.self, forKey: .hideArchiveFolder) ?? false,
             archiveOnPull: try container.decodeIfPresent(Bool.self, forKey: .archiveOnPull) ?? false,
             disableUnarchiveSwipe: try container.decodeIfPresent(Bool.self, forKey: .disableUnarchiveSwipe) ?? false,
-            actionBarTitle: (try container.decodeIfPresent(String.self, forKey: .actionBarTitle)).flatMap(ExteraChatListActionBarTitle.init(rawValue:)) ?? .name,
+            actionBarTitle: (try container.decodeIfPresent(String.self, forKey: .actionBarTitle)).flatMap(ExteraChatListActionBarTitle.init(rawValue:)) ?? .appName,
             senderMiniAvatars: try container.decodeIfPresent(Bool.self, forKey: .senderMiniAvatars) ?? false
         )
     }
