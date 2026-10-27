@@ -19,8 +19,6 @@ swift_library(
         "//submodules/TelegramCore",
         "//submodules/TelegramUIPreferences",
         "//submodules/ExteraSearchToolkit",
-        "//submodules/TelegramUIPreferences",
-        "//submodules/ExteraSearchToolkit",
         "//submodules/AppBundle",
         "//submodules/AsyncDisplayKit",
         "//submodules/AnimationUI",
