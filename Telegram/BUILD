@@ -339,6 +339,15 @@ alternate_icon_folders = [
     "Premium",
     "PremiumBlack",
     "PremiumTurbo",
+] + [
+    "Extera{}".format(name)
+    for name in [
+        "Google", "Osu", "Aurora", "Amethyst", "Sunset", "Human", "Jellyfish",
+        "Space", "Cyberpunk", "Nasa", "Xp", "Psychosis", "Fish", "IceAge",
+        "NyanCat", "Flappy", "Invincible", "Sponge", "Hamster", "Frog",
+        "Guitar", "Candy", "Avatar", "Echpochmak", "Mole", "Editor", "Orbit",
+        "Monet", "Winter", "Sus",
+    ]
 ]
 
 composer_icon_folders = ["Telegram"]

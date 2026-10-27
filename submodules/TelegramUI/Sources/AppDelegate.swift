@@ -21,6 +21,7 @@ import LegacyUI
 import PassportUI
 import SettingsUI
 import AppBundle
+import ExteraBranding
 import UrlHandling
 import OpenSSLEncryptionProvider
 import AppLock
@@ -1018,7 +1019,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                 icons.append(PresentationAppIcon(name: "Premium", imageName: "Premium", isPremium: true))
                 icons.append(PresentationAppIcon(name: "PremiumTurbo", imageName: "PremiumTurbo", isPremium: true))
                 icons.append(PresentationAppIcon(name: "PremiumBlack", imageName: "PremiumBlack", isPremium: true))
-                
+                icons.append(contentsOf: exteraAlternateAppIcons)
+
                 return icons
             } else {
                 return []

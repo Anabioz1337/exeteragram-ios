@@ -8,6 +8,7 @@ import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AppBundle
+import ExteraBranding
 
 private func generateBorderImage(theme: PresentationTheme, bordered: Bool, selected: Bool) -> UIImage? {
     return generateImage(CGSize(width: 30.0, height: 30.0), rotatedContext: { size, context in
@@ -410,7 +411,12 @@ class ThemeSettingsAppIconItemNode: ListViewItemNode, ItemListItemNode {
                                 case "PremiumTurbo":
                                     name = item.strings.Appearance_AppIconTurbo
                                 default:
-                                    name = icon.name
+                                    if icon.name.hasPrefix("Extera") {
+                                        name = exteraBrandingAppIconTitle(identifier: String(icon.name.dropFirst("Extera".count)))
+                                        bordered = false
+                                    } else {
+                                        name = icon.name
+                                    }
                             }
                         
                             imageNode.setup(theme: item.theme, icon: image, title: NSAttributedString(string: name, font: selected ? selectedTextFont : textFont, textColor: selected  ? item.theme.list.itemAccentColor : item.theme.list.itemPrimaryTextColor, paragraphAlignment: .center), locked: !item.isPremium && icon.isPremium, color: item.theme.list.itemPrimaryTextColor, bordered: bordered, selected: selected, action: {

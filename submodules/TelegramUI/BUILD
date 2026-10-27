@@ -71,7 +71,7 @@ swift_library(
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/Postbox:Postbox",
-        "//submodules/exteraTranslator:ExteraTranslator",
+        "//submodules/ExteraBranding:ExteraBranding",        "//submodules/exteraTranslator:ExteraTranslator",
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/WebProxyTransport:WebProxyTransport",
         "//submodules/MtProtoKit:MtProtoKit",
