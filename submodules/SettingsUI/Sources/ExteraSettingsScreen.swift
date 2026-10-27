@@ -37,6 +37,7 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
     case interfaceHeader(PresentationTheme, String)
     case disableNumberRounding(PresentationTheme, String, Bool)
     case formatTimeWithSeconds(PresentationTheme, String, Bool)
+    case pluginsRow(PresentationTheme, String)
     case analyticsHeader(PresentationTheme, String)
     case useGoogleAnalytics(PresentationTheme, String, Bool)
     case useGoogleCrashlytics(PresentationTheme, String, Bool)
@@ -56,7 +57,7 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 return ExteraSettingsSection.speed.rawValue
             case .storageHeader, .customSaveFolderInput, .customSaveFolderHint:
                 return ExteraSettingsSection.storage.rawValue
-            case .interfaceHeader, .disableNumberRounding, .formatTimeWithSeconds:
+            case .interfaceHeader, .disableNumberRounding, .formatTimeWithSeconds, .pluginsRow:
                 return ExteraSettingsSection.interface.rawValue
             case .analyticsHeader, .useGoogleAnalytics, .useGoogleCrashlytics, .analyticsInfo:
                 return ExteraSettingsSection.analytics.rawValue
@@ -77,6 +78,7 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
             case .interfaceHeader: return 7
             case .disableNumberRounding: return 8
             case .formatTimeWithSeconds: return 9
+            case .pluginsRow: return 22
             case .analyticsHeader: return 10
             case .useGoogleAnalytics: return 11
             case .useGoogleCrashlytics: return 12
@@ -150,6 +152,12 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 }
             case let .formatTimeWithSeconds(lhsTheme, lhsText, lhsValue):
                 if case let .formatTimeWithSeconds(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                } else {
+                    return false
+                }
+            case let .pluginsRow(lhsTheme, lhsText):
+                if case let .pluginsRow(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
                 } else {
                     return false
@@ -266,6 +274,10 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
                     arguments.toggleFormatTimeWithSeconds(value)
                 })
+            case let .pluginsRow(_, text):
+                return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: text, label: "", sectionId: self.section, style: .blocks, action: {
+                    arguments.openPlugins()
+                })
             case let .analyticsHeader(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .useGoogleAnalytics(_, text, value):
@@ -315,6 +327,7 @@ private final class ExteraSettingsArguments {
     let checkForUpdates: () -> Void
     let toggleCheckOnLaunch: (Bool) -> Void
     let openReleasePage: (String) -> Void
+    let openPlugins: () -> Void
 
     init(
         chooseDownloadBoost: @escaping () -> Void,
@@ -326,7 +339,8 @@ private final class ExteraSettingsArguments {
         toggleUseGoogleCrashlytics: @escaping (Bool) -> Void,
         checkForUpdates: @escaping () -> Void,
         toggleCheckOnLaunch: @escaping (Bool) -> Void,
-        openReleasePage: @escaping (String) -> Void
+        openReleasePage: @escaping (String) -> Void,
+        openPlugins: @escaping () -> Void
     ) {
         self.chooseDownloadBoost = chooseDownloadBoost
         self.toggleUploadBoost = toggleUploadBoost
@@ -338,6 +352,7 @@ private final class ExteraSettingsArguments {
         self.checkForUpdates = checkForUpdates
         self.toggleCheckOnLaunch = toggleCheckOnLaunch
         self.openReleasePage = openReleasePage
+        self.openPlugins = openPlugins
     }
 }
 
@@ -387,6 +402,7 @@ private func exteraSettingsEntries(presentationData: PresentationData, settings:
     entries.append(.interfaceHeader(presentationData.theme, strings.interfaceHeader.uppercased()))
     entries.append(.disableNumberRounding(presentationData.theme, strings.disableNumberRounding, settings.disableNumberRounding))
     entries.append(.formatTimeWithSeconds(presentationData.theme, strings.formatTimeWithSeconds, settings.formatTimeWithSeconds))
+    entries.append(.pluginsRow(presentationData.theme, strings.pluginsRow))
 
     entries.append(.analyticsHeader(presentationData.theme, strings.analyticsHeader.uppercased()))
     entries.append(.useGoogleAnalytics(presentationData.theme, strings.useGoogleAnalytics, settings.useGoogleAnalytics))
@@ -414,6 +430,7 @@ private func exteraSettingsEntries(presentationData: PresentationData, settings:
 public func exteraSettingsScreen(context: AccountContext) -> ViewController {
     let statusPromise = ValuePromise<ExteraUpdaterStatus>(ignoreRepeated: true)
     let updateStatusDisposable = MetaDisposable()
+    let pluginsNavControllerHolder = Atomic<(NavigationController?)?>(value: nil)
 
     let arguments = ExteraSettingsArguments(
         chooseDownloadBoost: { [weak context] in
@@ -522,6 +539,13 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
                 return
             }
             UIApplication.shared.open(url)
+        },
+        openPlugins: { [weak context] in
+            guard let context else {
+                return
+            }
+            let screen = exteraPluginsScreen(context: context)
+            (pluginsNavControllerHolder.with { $0 })?.pushViewController(screen)
         }
     )
 
@@ -541,7 +565,15 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
         updateStatusDisposable.dispose()
     }
 
-    return ItemListController(context: context, state: signal)
+    let controller = ItemListController(context: context, state: signal)
+    controller.navigationPresentation = .modal
+    let _ = pluginsNavControllerHolder.swap({ [weak controller] nav in
+        if nav == nil {
+            return controller.navigationController as? NavigationController
+        }
+        return nav
+    })
+    return controller
 }
 
 private func exteraApplyDownloadBoostLevel(context: AccountContext, level: Int) {

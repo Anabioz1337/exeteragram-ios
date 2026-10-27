@@ -16,6 +16,7 @@ private struct ExteraStringsTable {
     let interfaceHeader: String
     let disableNumberRounding: String
     let formatTimeWithSeconds: String
+    let pluginsRow: String
     let storageHeader: String
     let customSaveFolder: String
     let customSaveFolderHint: String
@@ -54,6 +55,7 @@ private let exteraStringsEnglish = ExteraStringsTable(
     interfaceHeader: "Interface",
     disableNumberRounding: "Disable Number Rounding",
     formatTimeWithSeconds: "Format Time with Seconds",
+    pluginsRow: "Plugins",
     storageHeader: "Storage",
     customSaveFolder: "Custom Save Folder",
     customSaveFolderHint: "Media will be saved to this album.",
@@ -94,6 +96,7 @@ private let exteraStringsRussian = ExteraStringsTable(
     interfaceHeader: "Интерфейс",
     disableNumberRounding: "Не сокращать числа",
     formatTimeWithSeconds: "Формат времени с секундами",
+    pluginsRow: "Плагины",
     storageHeader: "Хранилище",
     customSaveFolder: "Своё сохранение в папку",
     customSaveFolderHint: "Медиа сохраняется в этот альбом.",

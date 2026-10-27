@@ -385,6 +385,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         } else {
             self.energyUsageSettings = self.currentAutomaticMediaDownloadSettings.energyUsageSettings
         }
+
+        ExteraPluginsManager.shared.attach(sharedContext: self)
         
         let presentationData: Signal<PresentationData, NoError> = .single(initialPresentationDataAndSettings.presentationData)
         |> then(
