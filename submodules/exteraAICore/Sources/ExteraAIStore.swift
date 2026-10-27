@@ -1,0 +1,88 @@
+import Foundation
+
+public let exteraAIOnDeviceServiceId = "exteraAI.on-device"
+
+final class ExteraAIStore {
+    static let shared = ExteraAIStore()
+
+    private let defaults: UserDefaults
+    private enum Key: String, CaseIterable {
+        case services = "exteraAI.services"
+        case roles = "exteraAI.roles"
+        case generationSettings = "exteraAI.generation"
+        case selectedServiceId = "exteraAI.selectedServiceId"
+        case selectedRoleId = "exteraAI.selectedRoleId"
+        case replaceTelegramAI = "exteraAI.replaceTelegramAI"
+    }
+
+    private init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
+
+    var services: [ExteraAIServiceConfig] {
+        get { return self.decoded(Key.services) }
+        set { self.encode(newValue, key: Key.services) }
+    }
+
+    var roles: [ExterraAIRoleConfig] {
+        get { return self.decoded(Key.roles) }
+        set { self.encode(newValue, key: Key.roles) }
+    }
+
+    var generationSettings: ExteraAIGenerationSettings {
+        get {
+            return self.decoded(ExteraAIGenerationSettings.self, key: Key.generationSettings) ?? .defaultValue
+        }
+        set { self.encode(newValue, key: Key.generationSettings) }
+    }
+
+    var selectedServiceId: String? {
+        get { return self.defaults.string(forKey: Key.selectedServiceId.rawValue) }
+        set { self.defaults.set(newValue, forKey: Key.selectedServiceId.rawValue) }
+    }
+
+    var selectedRoleId: String? {
+        get { return self.defaults.string(forKey: Key.selectedRoleId.rawValue) }
+        set { self.defaults.set(newValue, forKey: Key.selectedRoleId.rawValue) }
+    }
+
+    var replaceTelegramAI: Bool {
+        get {
+            if self.defaults.object(forKey: Key.replaceTelegramAI.rawValue) == nil {
+                return true
+            }
+            return self.defaults.bool(forKey: Key.replaceTelegramAI.rawValue)
+        }
+        set { self.defaults.set(newValue, forKey: Key.replaceTelegramAI.rawValue) }
+    }
+
+    var selectedService: ExteraAIServiceConfig? {
+        let selectedId = self.selectedServiceId
+        if selectedId == exteraAIOnDeviceServiceId {
+            return nil
+        }
+        return self.services.first(where: { $0.id == selectedId }) ?? self.services.first
+    }
+
+    var selectedRole: ExterraAIRoleConfig? {
+        return self.roles.first(where: { $0.id == self.selectedRoleId })
+    }
+
+    private func decoded<T: Decodable>(_ key: Key) -> T? {
+        return self.decoded(T.self, key: key)
+    }
+
+    private func decoded<T: Decodable>(_ type: T.Type, key: Key) -> T? {
+        guard let data = self.defaults.data(forKey: key.rawValue) else {
+            return nil
+        }
+        return try? JSONDecoder().decode(type, from: data)
+    }
+
+    private func encode<T: Encodable>(_ value: T, key: Key) {
+        guard let data = try? JSONEncoder().encode(value) else {
+            return
+        }
+        self.defaults.set(data, forKey: key.rawValue)
+    }
+}
