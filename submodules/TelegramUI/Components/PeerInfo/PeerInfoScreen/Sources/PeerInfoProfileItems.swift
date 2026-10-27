@@ -23,7 +23,7 @@ private let enabledPrivateBioEntities: EnabledEntityTypes = [.internalUrl, .ment
 
 /// Peer facts the profile shows on top of what the server exposes, filled asynchronously while
 /// the screen is open.
-struct PeerInfoExteraValues {
+struct PeerInfoExteraValues: Equatable {
     var preferences: ExteraProfilePreferences
     var storedHistoryStats: ExteraPeerStoredHistoryStats?
 
@@ -277,7 +277,7 @@ func infoItems(
         }
 
         if exteraPreferences.showIdAndDc {
-            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: user, multiLine: true)))
+            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: user), multiLine: true))
             if exteraPreferences.showCreationDate, let creationDate = exteraCreationDateString(peer: data.peer, presentationData: presentationData, values: exteraValues) {
                 items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraCreationDate, label: exteraProfileString("Extera.Profile.CreatedLabel"), text: creationDate))
             }
@@ -730,7 +730,7 @@ func infoItems(
                 )
             }
             if exteraPreferences.showIdAndDc {
-                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: channel, multiLine: true)))
+                items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDc, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: channel), multiLine: true))
                 if exteraPreferences.showCreationDate {
                     items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraCreationDate, label: exteraProfileString("Extera.Profile.CreatedLabel"), text: stringForMediumDate(timestamp: channel.creationDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, withTime: false)))
                 }
@@ -919,7 +919,7 @@ func infoItems(
             }
         }
         if exteraPreferences.showIdAndDc, let groupPeer = data.peer._asPeer() as? TelegramGroup {
-            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDcLegacyGroup, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: groupPeer, multiLine: true)))
+            items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDcLegacyGroup, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: groupPeer), multiLine: true))
         }
     }
 

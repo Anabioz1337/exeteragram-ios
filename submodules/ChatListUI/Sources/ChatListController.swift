@@ -96,28 +96,24 @@ private final class ContextControllerContentSourceImpl: ContextControllerContent
 
 /// The root chat list's bar title, when the extera preference replaces it with the account's
 /// username or first name; nil keeps the stock title.
-private func exteraActionBarTitleOverride(context: AccountContext) -> String? {
-    let preferences = ExteraProfileSettings.shared.current
-    guard preferences.actionBarTitle != .appName else {
+private func exteraChatListTitle(preferences: ExteraProfilePreferences, peer: EnginePeer?) -> String? {
+    guard case let .user(user) = peer else {
         return nil
     }
-    return context.account.postbox.transaction { transaction -> String? in
-        guard let user = transaction.getPeer(context.account.peerId) as? TelegramUser else {
-            return nil
+    switch preferences.actionBarTitle {
+    case .appName:
+        return nil
+    case .username:
+        if let addressName = user.addressName, !addressName.isEmpty {
+            return "@\(addressName)"
         }
-        if case .username = preferences.actionBarTitle {
-            if let addressName = user.addressName, !addressName.isEmpty {
-                return "@\(addressName)"
-            } else if let username = user.username, !username.isEmpty {
-                return "@\(username)"
-            }
-            return nil
-        }
+        return nil
+    case .name:
         if let firstName = user.firstName, !firstName.isEmpty {
             return firstName
         }
         return nil
-    } |> single
+    }
 }
 
 public class ChatListControllerImpl: TelegramBaseController, ChatListController {
@@ -6944,6 +6940,22 @@ private final class ChatListLocationContext {
         default:
             peerStatus = .single(nil)
         }
+
+        let exteraActionBarTitle: Signal<String?, NoError>
+        switch self.location {
+        case .chatList(.root):
+            exteraActionBarTitle = combineLatest(
+                queue: .mainQueue(),
+                ExteraProfileSettings.shared.preferencesSignal,
+                context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+            )
+            |> map { preferences, peer -> String? in
+                return exteraChatListTitle(preferences: preferences, peer: peer)
+            }
+            |> distinctUntilChanged
+        default:
+            exteraActionBarTitle = .single(nil)
+        }
         
         let networkState: Signal<AccountNetworkState, NoError>
         #if DEBUG && false
@@ -6992,13 +7004,14 @@ private final class ChatListLocationContext {
                     containerNode.currentItemState,
                     isReorderingTabs,
                     peerStatus,
+                    exteraActionBarTitle,
                     parentController.updatedPresentationData.1,
                     storyPostingAvailable
-                ).startStrict(next: { [weak self] networkState, proxy, passcode, stateAndFilterId, isReorderingTabs, peerStatus, presentationData, storyPostingAvailable in
+                ).startStrict(next: { [weak self] networkState, proxy, passcode, stateAndFilterId, isReorderingTabs, peerStatus, exteraActionTitle, presentationData, storyPostingAvailable in
                     guard let self else {
                         return
                     }
-                    
+
                     self.updateChatList(
                         networkState: networkState,
                         proxy: proxy,
@@ -7006,6 +7019,7 @@ private final class ChatListLocationContext {
                         stateAndFilterId: stateAndFilterId,
                         isReorderingTabs: isReorderingTabs,
                         peerStatus: peerStatus,
+                        exteraActionTitle: exteraActionTitle,
                         presentationData: presentationData,
                         storyPostingAvailable: storyPostingAvailable
                     )
@@ -7233,6 +7247,7 @@ private final class ChatListLocationContext {
         stateAndFilterId: (state: ChatListNodeState, filterId: Int32?),
         isReorderingTabs: Bool,
         peerStatus: NetworkStatusTitle.Status?,
+        exteraActionTitle: String?,
         presentationData: PresentationData,
         storyPostingAvailable: Bool
     ) {
@@ -7240,8 +7255,8 @@ private final class ChatListLocationContext {
         switch location {
         case let .chatList(groupId):
             if groupId == .root {
-                if let exteraTitle = exteraActionBarTitleOverride(context: self.context) {
-                    defaultTitle = exteraTitle
+                if let exteraActionTitle = exteraActionTitle {
+                    defaultTitle = exteraActionTitle
                 } else {
                     defaultTitle = presentationData.strings.DialogList_Title
                 }

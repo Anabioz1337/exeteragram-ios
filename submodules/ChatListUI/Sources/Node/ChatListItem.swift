@@ -3196,9 +3196,9 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     }
 
                     if ExteraProfileSettings.shared.current.senderMiniAvatars, contentImageSpecs.isEmpty,
-                       let message = messages.last, let author = message.author?._asPeer(), case .user = author,
+                       let message = messages.last, case let .user(author) = message.author,
                        let chatPeer = itemPeer.chatMainPeer, author.id != chatPeer.id {
-                        senderMiniAvatarSpec = SenderMiniAvatarSpec(peer: EnginePeer(author), size: contentImageSize)
+                        senderMiniAvatarSpec = SenderMiniAvatarSpec(peer: .user(author), size: contentImageSize)
                     }
                 case let .group(peers):
                     let textString = NSMutableAttributedString(string: "")
