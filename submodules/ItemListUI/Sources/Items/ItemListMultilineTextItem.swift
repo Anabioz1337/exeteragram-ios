@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Display
+import exteraAppearance
 import AsyncDisplayKit
 import SwiftSignalKit
 import TelegramPresentationData
@@ -292,6 +293,11 @@ public class ItemListMultilineTextItemNode: ListViewItemNode {
                         strongSelf.maskNode.frame = strongSelf.backgroundNode.frame.inset(by: UIEdgeInsets(top: 0.0, left: params.leftInset, bottom: 0.0, right: params.rightInset))
                         strongSelf.topStripeNode.frame = CGRect(origin: CGPoint(x: 0.0, y: -min(insets.top, separatorHeight)), size: CGSize(width: layoutSize.width, height: separatorHeight))
                         strongSelf.bottomStripeNode.frame = CGRect(origin: CGPoint(x: bottomStripeInset, y: contentSize.height + bottomStripeOffset), size: CGSize(width: layoutSize.width - bottomStripeInset, height: separatorHeight))
+                    }
+
+                    if ExteraAppearanceSettings.shared.disableDividers {
+                        strongSelf.topStripeNode.isHidden = true
+                        strongSelf.bottomStripeNode.isHidden = true
                     }
                     
                     strongSelf.textNode.frame = CGRect(origin: CGPoint(x: leftInset, y: 11.0), size: titleLayout.size)

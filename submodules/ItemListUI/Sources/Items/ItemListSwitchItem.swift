@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Display
+import exteraAppearance
 import AsyncDisplayKit
 import SwiftSignalKit
 import TelegramPresentationData
@@ -498,7 +499,7 @@ public class ItemListSwitchItemNode: ListViewItemNode, ItemListItemNode {
                             }
                             
                             strongSelf.maskNode.image = hasCorners ? PresentationResourcesItemList.cornersImage(item.presentationData.theme, top: hasTopCorners, bottom: hasBottomCorners, glass: item.systemStyle == .glass) : nil
-                            
+
                             transition.updateFrame(node: strongSelf.backgroundNode, frame: CGRect(origin: CGPoint(x: 0.0, y: -min(insets.top, separatorHeight)), size: CGSize(width: params.width, height: contentSize.height + min(insets.top, separatorHeight) + min(insets.bottom, separatorHeight))))
                             transition.updateFrame(node: strongSelf.highlightNode, frame: CGRect(origin: CGPoint(x: 0.0, y: -min(insets.top, separatorHeight)), size: CGSize(width: params.width, height: contentSize.height + min(insets.top, separatorHeight) + min(insets.bottom, separatorHeight))))
                             // Per side: the margins differ beside iPhone Duo's strip; equal margins give the symmetric frame.
@@ -506,6 +507,11 @@ public class ItemListSwitchItemNode: ListViewItemNode, ItemListItemNode {
                             transition.updateFrame(node: strongSelf.maskNode, frame: CGRect(x: backgroundFrame.minX + params.leftInset, y: backgroundFrame.minY, width: backgroundFrame.width - params.leftInset - params.rightInset, height: backgroundFrame.height))
                             transition.updateFrame(node: strongSelf.topStripeNode, frame: CGRect(origin: CGPoint(x: 0.0, y: -min(insets.top, separatorHeight)), size: CGSize(width: layoutSize.width, height: separatorHeight)))
                             transition.updateFrame(node: strongSelf.bottomStripeNode, frame: CGRect(origin: CGPoint(x: bottomStripeInset, y: contentSize.height - separatorHeight), size: CGSize(width: layoutSize.width - params.rightInset - bottomStripeInset - separatorRightInset, height: separatorHeight)))
+                    }
+
+                    if ExteraAppearanceSettings.shared.disableDividers {
+                        strongSelf.topStripeNode.isHidden = true
+                        strongSelf.bottomStripeNode.isHidden = true
                     }
                     
                     var titleOriginY = floorToScreenPixels((contentSize.height - titleLayout.size.height) / 2.0) + 1.0
