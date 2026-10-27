@@ -88,7 +88,7 @@ swift_library(
         "//submodules/MediaPlayer:UniversalMediaPlayer",
         "//submodules/TelegramVoip:TelegramVoip",
         "//submodules/DeviceAccess:DeviceAccess",
-        "//submodules/exteraCamera",
+        "//submodules/exteraCamera:ExteraCamera",
         "//submodules/Utils/DeviceModel",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/BuildConfigExtra:BuildConfigExtra",

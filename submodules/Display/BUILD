@@ -16,7 +16,7 @@ swift_library(
     	"//submodules/UIKitRuntimeUtils:UIKitRuntimeUtils",
         "//submodules/AppBundle:AppBundle",
     	"//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/exteraAppearance",
+        "//submodules/exteraAppearance:exteraAppearance",
         "//submodules/Markdown:Markdown",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
     ],

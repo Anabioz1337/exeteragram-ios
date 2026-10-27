@@ -19,7 +19,7 @@ swift_library(
         "//submodules/TelegramUI/Components/EdgeEffect",
         "//submodules/TelegramUI/Components/SideColumnLayout",
         "//submodules/TelegramUI/Components/NavigationBarComponent",
-        "//submodules/exteraAppearance",
+        "//submodules/exteraAppearance:exteraAppearance",
     ],
     visibility = [
         "//visibility:public",

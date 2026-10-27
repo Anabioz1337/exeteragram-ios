@@ -19,7 +19,7 @@ swift_library(
         "//submodules/LocalMediaResources",
         "//submodules/LegacyMediaPickerUI",
         "//submodules/TelegramUI/Components/MediaEditor",
-        "//submodules/exteraCamera",
+        "//submodules/exteraCamera:ExteraCamera",
     ],
     visibility = [
         "//visibility:public",

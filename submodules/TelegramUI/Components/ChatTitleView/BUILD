@@ -14,7 +14,7 @@ swift_library(
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/TelegramCore:TelegramCore",
-        "//submodules/exteraAppearance",
+        "//submodules/exteraAppearance:exteraAppearance",
         "//submodules/LegacyComponents:LegacyComponents",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",

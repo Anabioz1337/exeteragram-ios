@@ -58,7 +58,7 @@ swift_library(
         "//submodules/GZip",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Utils/DeviceModel",
-        "//submodules/exteraCamera",
+        "//submodules/exteraCamera:ExteraCamera",
         "//submodules/LottieBinding:LottieBinding",
         "//submodules/LottieSettings:LottieSettings",
     ],

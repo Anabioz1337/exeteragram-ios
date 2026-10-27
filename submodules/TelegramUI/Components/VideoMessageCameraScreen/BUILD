@@ -45,7 +45,7 @@ swift_library(
         "//submodules/TelegramUI/Components/ChatControllerInteraction",
         "//submodules/TelegramUI/Components/LottieComponent",
         "//submodules/TelegramUI/Components/GlassBackgroundComponent",
-        "//submodules/exteraCamera",
+        "//submodules/exteraCamera:ExteraCamera",
     ],
     visibility = [
         "//visibility:public",

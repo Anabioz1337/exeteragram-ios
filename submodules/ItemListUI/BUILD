@@ -14,7 +14,7 @@ swift_library(
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/exteraAppearance",
+        "//submodules/exteraAppearance:exteraAppearance",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/MergeLists:MergeLists",
         "//submodules/TextFormat:TextFormat",

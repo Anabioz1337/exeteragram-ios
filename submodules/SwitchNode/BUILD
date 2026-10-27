@@ -13,7 +13,7 @@ swift_library(
     	"//submodules/AsyncDisplayKit:AsyncDisplayKit",
 	    "//submodules/Display:Display",
         "//submodules/LegacyComponents:LegacyComponents",
-        "//submodules/exteraAppearance",
+        "//submodules/exteraAppearance:exteraAppearance",
     ],
     visibility = [
         "//visibility:public",
