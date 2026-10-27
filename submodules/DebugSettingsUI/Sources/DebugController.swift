@@ -8,6 +8,7 @@ import MessageUI
 import TelegramPresentationData
 import TelegramUIPreferences
 import ExteraTranslator
+import ChatListUI
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -765,6 +766,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
     case logTranslationRecognition(Bool)
     case resetTranslationStates
     case exteraTranslator
+    case exteraPillStack
     case hostInfo(PresentationTheme, String)
     case versionInfo(PresentationTheme)
     case collectCpuProfile
@@ -790,7 +792,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return DebugControllerSection.experiments.rawValue
         case .crash, .resetBiometricsData, .photoPreview, .knockoutWallpaper, .compressedEmojiCache, .storiesJpegExperiment, .checkSerializedData, .enableQuickReactionSwitch, .experimentalCompatibility, .enableDebugDataDisplay, .fakeGlass, .forceClearGlass, .debugRipple, .inputDecEngineEditor, .coreListChatBackend, .forceRLottieBackend, .respectSystemMicrophone, .useModernVideoMessagePipeline, .videoMessageCameraMode, .browserExperiment, .allForumsHaveTabs, .enableReactionOverrides, .disableReloginTokens, .liveStreamV2, .experimentalCallMute, .groupCallReferenceEngine, .playerV2, .devRequests, .enableUpdates, .pwa, .enableLocalTranslation, .testPasscodeMigration:
             return DebugControllerSection.experiments.rawValue
-        case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers:
+        case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers, .exteraPillStack:
             return DebugControllerSection.experiments.rawValue
         case .logTranslationRecognition, .resetTranslationStates, .exteraTranslator:
             return DebugControllerSection.translation.rawValue
@@ -951,6 +953,8 @@ private enum DebugControllerEntry: ItemListNodeEntry {
         case .fakeWalletTransfers:
             // Appended right after `springSendAnimation`; see the ordering note above.
             return 74
+        case .exteraPillStack:
+            return 75
         case .disableVideoAspectScaling:
             return 104
         case .enableNetworkFramework:
@@ -1138,6 +1142,12 @@ private enum DebugControllerEntry: ItemListNodeEntry {
         case .exteraTranslator:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Translator", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
                 arguments.pushController(ExteraTranslatorScreen())
+            })
+        case .exteraPillStack:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Pill Stack", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                if let context = arguments.context {
+                    arguments.pushController(exteraPillsSettingsController(context: context))
+                }
             })
         case .resetNotifications:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Reset Notifications", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
@@ -1996,7 +2006,9 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
         if let data = context?.currentAppConfiguration.with({ $0 }).data, let isDev = data["dev"] as? Double, isDev == 1.0 {
             entries.append(.fakeWalletTransfers(experimentalSettings.fakeWalletTransfers))
         }
-        
+
+        entries.append(.exteraPillStack)
+
         entries.append(.logTranslationRecognition(experimentalSettings.logLanguageRecognition))
         entries.append(.resetTranslationStates)
         entries.append(.exteraTranslator)
