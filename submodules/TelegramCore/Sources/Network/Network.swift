@@ -748,8 +748,11 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             if let data = appConfiguration.data, let _ = data["ios_killswitch_disable_downloadv2"] {
                 useExperimentalFeatures = false
             }
-            
-            let network = Network(queue: queue, datacenterId: datacenterId, context: context, engine: engine, switchingEngine: switchingEngine, engineFactory: arguments.networkEngineFactory, rustEngineDisabled: rustEngineDisabled, rustEngineWaitsForWebProxy: rustEngineWaitsForWebProxy, mainSession: mainSession, mainSessionDelegate: mainSessionDelegate, telemetry: telemetry, _connectionStatus: connectionStatus, basePath: basePath, appDataDisposable: appDataDisposable, encryptionProvider: arguments.encryptionProvider, useRequestTimeoutTimers: useRequestTimeoutTimers, useBetaFeatures: arguments.useBetaFeatures, useExperimentalFeatures: useExperimentalFeatures, baseTcpConnectionInterfaceFactory: baseTcpConnectionInterfaceFactory, isAppExtension: isAppExtension, initialWebProxyActive: initialActiveServer?.isWebProxy == true)
+
+            let downloadSpeedBoostLevel = max(0, networkSettings?.downloadSpeedBoostLevel ?? 0)
+            let uploadSpeedBoost = networkSettings?.uploadSpeedBoost ?? false
+
+            let network = Network(queue: queue, datacenterId: datacenterId, context: context, engine: engine, switchingEngine: switchingEngine, engineFactory: arguments.networkEngineFactory, rustEngineDisabled: rustEngineDisabled, rustEngineWaitsForWebProxy: rustEngineWaitsForWebProxy, mainSession: mainSession, mainSessionDelegate: mainSessionDelegate, telemetry: telemetry, _connectionStatus: connectionStatus, basePath: basePath, appDataDisposable: appDataDisposable, encryptionProvider: arguments.encryptionProvider, useRequestTimeoutTimers: useRequestTimeoutTimers, useBetaFeatures: arguments.useBetaFeatures, useExperimentalFeatures: useExperimentalFeatures, downloadSpeedBoostLevel: downloadSpeedBoostLevel, uploadSpeedBoost: uploadSpeedBoost, baseTcpConnectionInterfaceFactory: baseTcpConnectionInterfaceFactory, isAppExtension: isAppExtension, initialWebProxyActive: initialActiveServer?.isWebProxy == true)
             
             if let data = appConfiguration.data, let notifyInterval = data["upload_premium_speedup_notify_period"] as? Double {
                 network.updateNetworkSpeedLimitedEventNotifyInterval(value: notifyInterval)
@@ -932,6 +935,10 @@ public final class Network: NSObject {
     private var livenessMonitor: NetworkLivenessMonitor?
     public let useBetaFeatures: Bool
     public let useExperimentalFeatures: Bool
+    /// Extera fork: download speed boost level (0 = default, 1 = fast, 2 = ultra) applied to the
+    /// chunked fetch pipelines, and the upload speed boost switch.
+    public let downloadSpeedBoostLevel: Int
+    public let uploadSpeedBoost: Bool
     
     private let appDataDisposable: Disposable
     
@@ -995,7 +1002,7 @@ public final class Network: NSObject {
         return self.engine.kind
     }
     
-    fileprivate init(queue: Queue, datacenterId: Int, context: MTContext, engine: NetworkEngine, switchingEngine: SwitchingNetworkEngine?, engineFactory: NetworkEngineFactory?, rustEngineDisabled: Bool, rustEngineWaitsForWebProxy: Bool, mainSession: NetworkEngineSession, mainSessionDelegate: NetworkMainSessionDelegate, telemetry: NetworkTelemetry?, _connectionStatus: Promise<ConnectionStatus>, basePath: String, appDataDisposable: Disposable, encryptionProvider: EncryptionProvider, useRequestTimeoutTimers: Bool, useBetaFeatures: Bool, useExperimentalFeatures: Bool, baseTcpConnectionInterfaceFactory: ((MTTcpConnectionInterfaceDelegate, DispatchQueue) -> MTTcpConnectionInterface)?, isAppExtension: Bool, initialWebProxyActive: Bool) {
+    fileprivate init(queue: Queue, datacenterId: Int, context: MTContext, engine: NetworkEngine, switchingEngine: SwitchingNetworkEngine?, engineFactory: NetworkEngineFactory?, rustEngineDisabled: Bool, rustEngineWaitsForWebProxy: Bool, mainSession: NetworkEngineSession, mainSessionDelegate: NetworkMainSessionDelegate, telemetry: NetworkTelemetry?, _connectionStatus: Promise<ConnectionStatus>, basePath: String, appDataDisposable: Disposable, encryptionProvider: EncryptionProvider, useRequestTimeoutTimers: Bool, useBetaFeatures: Bool, useExperimentalFeatures: Bool, downloadSpeedBoostLevel: Int = 0, uploadSpeedBoost: Bool = false, baseTcpConnectionInterfaceFactory: ((MTTcpConnectionInterfaceDelegate, DispatchQueue) -> MTTcpConnectionInterface)?, isAppExtension: Bool, initialWebProxyActive: Bool) {
         self.encryptionProvider = encryptionProvider
         
         self.queue = queue
@@ -1020,6 +1027,8 @@ public final class Network: NSObject {
         self.webProxyActive = ValuePromise<Bool>(initialWebProxyActive, ignoreRepeated: true)
         self.useBetaFeatures = useBetaFeatures
         self.useExperimentalFeatures = useExperimentalFeatures
+        self.downloadSpeedBoostLevel = downloadSpeedBoostLevel
+        self.uploadSpeedBoost = uploadSpeedBoost
         
         super.init()
         

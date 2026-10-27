@@ -139,8 +139,15 @@ public func stringForMessageTimestamp(timestamp: Int32, dateTimeFormat: Presenta
     } else {
         gmtime_r(&t, &timeinfo)
     }
-    
-    return stringForShortTimestamp(hours: timeinfo.tm_hour, minutes: timeinfo.tm_min, seconds: withSeconds ? timeinfo.tm_sec : nil, dateTimeFormat: dateTimeFormat)
+
+    let seconds: Int32?
+    if withSeconds || presentationTimeWithSeconds() {
+        seconds = timeinfo.tm_sec
+    } else {
+        seconds = nil
+    }
+
+    return stringForShortTimestamp(hours: timeinfo.tm_hour, minutes: timeinfo.tm_min, seconds: seconds, dateTimeFormat: dateTimeFormat)
 }
 
 public func stringForShortDate(timestamp: Int32, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, withTime: Bool = true) -> String {
