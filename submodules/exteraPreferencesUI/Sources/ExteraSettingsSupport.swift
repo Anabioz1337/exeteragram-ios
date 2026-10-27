@@ -28,6 +28,10 @@ final class ExteraSettingsEditor {
         self.set(keyPath, values[(index + 1) % values.count])
     }
 
+    func apply(_ settings: ExteraSettings) {
+        self.update { _ in settings }
+    }
+
     func reset() {
         self.update { _ in ExteraSettings() }
     }

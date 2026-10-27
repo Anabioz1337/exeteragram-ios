@@ -57,6 +57,7 @@ swift_library(
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/LegacyComponents:LegacyComponents",
+        "//submodules/LegacyMediaPickerUI:LegacyMediaPickerUI",
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/ItemListUI:ItemListUI",

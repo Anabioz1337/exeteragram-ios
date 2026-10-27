@@ -190,6 +190,7 @@ swift_library(
         "//submodules/JoinLinkPreviewUI:JoinLinkPreviewUI",
         "//submodules/LanguageLinkPreviewUI:LanguageLinkPreviewUI",
         "//submodules/LegacyMediaPickerUI:LegacyMediaPickerUI",
+        "//submodules/exteraPreferencesUI:exteraPreferencesUI",
         "//submodules/MimeTypes:MimeTypes",
         "//submodules/LocalMediaResources:LocalMediaResources",
         "//submodules/Geocoding:Geocoding",

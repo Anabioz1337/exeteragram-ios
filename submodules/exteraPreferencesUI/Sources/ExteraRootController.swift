@@ -11,7 +11,7 @@ import UndoUI
 import PresentationDataUtils
 import exteraSettingsCore
 
-private func exteraScreen(
+func exteraScreen(
     context: AccountContext,
     title: @escaping (ExteraStrings) -> String,
     entries: @escaping (ExteraStrings, ExteraSettings) -> [ExteraSettingsEntry],

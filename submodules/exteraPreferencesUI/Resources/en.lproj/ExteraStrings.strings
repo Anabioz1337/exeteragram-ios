@@ -1241,3 +1241,14 @@
 "extera_OptionFast" = "Fast";
 "extera_SecondsShort" = "%1$d s";
 "extera_PixelsShort" = "%1$d px";
+
+// Preferences port
+"extera_Advanced" = "Advanced";
+"extera_BackupAndRestore" = "Backup & Restore";
+"extera_ComingSoon" = "This section is coming soon.";
+"extera_Boost2x" = "Boost (2×)";
+"extera_Boost4x" = "Boost (4×)";
+"extera_SendPhotosQuality" = "Photo Quality";
+"extera_ShowDetailsButton" = "Show Message Details Button";
+"extera_DetailsInfo" = "Adds a button to the message context menu that shows technical details such as identifiers and timestamps.";
+"extera_ImportFailed" = "The settings file could not be read.";

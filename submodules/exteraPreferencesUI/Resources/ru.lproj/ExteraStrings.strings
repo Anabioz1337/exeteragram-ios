@@ -1241,3 +1241,14 @@
 "extera_OptionFast" = "Быстро";
 "extera_SecondsShort" = "%1$d с";
 "extera_PixelsShort" = "%1$d px";
+
+// Preferences port
+"extera_Advanced" = "Расширенные";
+"extera_BackupAndRestore" = "Резервное копирование";
+"extera_ComingSoon" = "Этот раздел появится позже.";
+"extera_Boost2x" = "Ускорение (2×)";
+"extera_Boost4x" = "Ускорение (4×)";
+"extera_SendPhotosQuality" = "Качество фото";
+"extera_ShowDetailsButton" = "Показывать кнопку деталей сообщения";
+"extera_DetailsInfo" = "Добавляет в меню сообщения пункт с технической информацией: идентификаторами и временем.";
+"extera_ImportFailed" = "Не удалось прочитать файл настроек.";

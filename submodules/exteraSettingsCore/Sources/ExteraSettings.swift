@@ -243,6 +243,17 @@ extension ExteraSettings {
                 return 30000
         }
     }
+
+    public func changedKeyCount(comparedTo other: ExteraSettings) -> Int {
+        var count = 0
+        for (_, keyPath) in ExteraSettings.booleanKeyPaths where self[keyPath: keyPath] != other[keyPath: keyPath] {
+            count += 1
+        }
+        for (_, keyPath) in ExteraSettings.integerKeyPaths where self[keyPath: keyPath] != other[keyPath: keyPath] {
+            count += 1
+        }
+        return count
+    }
 }
 
 public func updateExteraSettingsInteractively(accountManager: AccountManager<TelegramAccountManagerTypes>, _ f: @escaping (ExteraSettings) -> ExteraSettings) -> Signal<Void, NoError> {
