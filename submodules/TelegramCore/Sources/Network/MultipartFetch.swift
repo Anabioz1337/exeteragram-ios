@@ -583,13 +583,25 @@ private final class MultipartFetchManager {
             if size <= 512 * 1024 {
                 self.defaultPartSize = 16 * 1024
                 self.parallelParts = 4 * 4
+            } else if network.downloadSpeedBoostLevel >= 2 {
+                self.defaultPartSize = 1024 * 1024
+                self.parallelParts = 16
             } else {
                 self.defaultPartSize = 512 * 1024
                 self.parallelParts = 8
             }
         } else {
-            self.parallelParts = 1
-            self.defaultPartSize = 128 * 1024
+            switch network.downloadSpeedBoostLevel {
+            case 2:
+                self.defaultPartSize = 1024 * 1024
+                self.parallelParts = 16
+            case 1:
+                self.defaultPartSize = 512 * 1024
+                self.parallelParts = 8
+            default:
+                self.defaultPartSize = 128 * 1024
+                self.parallelParts = 1
+            }
         }
         
         if let info = parameters?.info as? TelegramCloudMediaResourceFetchInfo {

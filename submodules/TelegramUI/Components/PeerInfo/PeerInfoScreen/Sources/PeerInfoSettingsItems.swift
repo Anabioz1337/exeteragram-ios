@@ -4,6 +4,7 @@ import Display
 import AccountContext
 import TelegramPresentationData
 import TelegramCore
+import SettingsUI
 import PhoneNumberFormat
 import ItemListUI
 import SwiftSignalKit
@@ -281,6 +282,11 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
         interaction.openSettings(.language)
     }))
     
+    let exteraStrings = exteraStrings(languageCode: presentationData.strings.primaryComponent.languageCode)
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 60, text: exteraStrings.settingsTitle, icon: PresentationResourcesSettings.dataAndStorage, action: {
+        interaction.openSettings(.extera)
+    }))
+
     let premiumConfiguration = PremiumConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
     let isPremiumDisabled = premiumConfiguration.isPremiumDisabled
     if !isPremiumDisabled || context.isPremium {

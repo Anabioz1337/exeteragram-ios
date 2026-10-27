@@ -8,6 +8,7 @@ import UniformTypeIdentifiers
 import DeviceAccess
 import AccountContext
 import LegacyComponents
+import TelegramUIPreferences
 
 public enum FetchMediaDataState {
     case progress(Float)
@@ -97,7 +98,49 @@ public func fetchMediaData(context: AccountContext, userLocation: MediaResourceU
     }
 }
 
+// Custom Save Folder: the folder names a Photos album. Creating it needs the same
+// performChanges block that creates the asset; when Photos refuses the album (permission,
+// iCloud state) the media lands in the app's own Documents/<folder>, which the Files app
+// already exposes (UIFileSharingEnabled).
+private func exteraSaveFolderName(context: AccountContext) -> Signal<String, NoError> {
+    return context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+    |> take(1)
+    |> map { sharedData in
+        return sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.customSaveFolderName ?? ""
+    }
+}
+
+private func exteraAlbumForSaveFolder(folderName: String) -> PHAssetCollection? {
+    let options = PHFetchOptions()
+    options.predicate = NSPredicate(format: "title == %@", folderName)
+    let fetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: options)
+    if let existing = fetchResult.firstObject {
+        return existing
+    }
+    let creationRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: folderName)
+    return creationRequest.placeholderForCreatedAssetCollection
+}
+
+private func exteraAttachAssetToSaveFolder(_ assetRequest: PHAssetChangeRequest, folderName: String) {
+    if let album = exteraAlbumForSaveFolder(folderName: folderName), let placeholder = assetRequest.placeholderForCreatedAsset {
+        PHAssetCollectionChangeRequest(for: album)?.addAssets([placeholder])
+    }
+}
+
+private func exteraSaveFallbackToDocuments(folderName: String, isImage: Bool, dataPath: String) {
+    let directory = NSHomeDirectory() + "/Documents/" + folderName
+    try? FileManager.default.createDirectory(atPath: directory, withIntermediateDirectories: true)
+    try? FileManager.default.copyItem(atPath: dataPath, toPath: directory + "/\(UUID().uuidString).\(isImage ? "jpg" : "mp4")")
+}
+
 public func saveToCameraRoll(context: AccountContext, userLocation: MediaResourceUserLocation, customUserContentType: MediaResourceUserContentType? = nil, mediaReference: AnyMediaReference, video: AnyMediaReference? = nil) -> Signal<Float, NoError> {
+    return exteraSaveFolderName(context: context)
+    |> mapToSignal { saveFolderName in
+        return exteraSaveToCameraRoll(context: context, userLocation: userLocation, customUserContentType: customUserContentType, mediaReference: mediaReference, video: video, saveFolderName: saveFolderName)
+    }
+}
+
+private func exteraSaveToCameraRoll(context: AccountContext, userLocation: MediaResourceUserLocation, customUserContentType: MediaResourceUserContentType?, mediaReference: AnyMediaReference, video: AnyMediaReference?, saveFolderName: String) -> Signal<Float, NoError> {
     let mediaData: Signal<(FetchMediaDataState, Bool), NoError> = fetchMediaData(context: context, userLocation: userLocation, customUserContentType: customUserContentType, mediaReference: mediaReference)
     let videoData: Signal<FetchMediaDataState?, NoError>
     if let video {
@@ -169,26 +212,46 @@ public func saveToCameraRoll(context: AccountContext, userLocation: MediaResourc
 
                                 request.addResource(with: .photo, data: jpegWithID, options: nil)
                                 request.addResource(with: .pairedVideo, fileURL: outputVideoURL, options: nil)
+
+                                if !saveFolderName.isEmpty {
+                                    exteraAttachAssetToSaveFolder(request, folderName: saveFolderName)
+                                }
                             }, completionHandler: { _, error in
                                 let _ = try? FileManager.default.removeItem(atPath: tempVideoPath)
+                                if let error, !saveFolderName.isEmpty {
+                                    exteraSaveFallbackToDocuments(folderName: saveFolderName, isImage: true, dataPath: videoData.path)
+                                }
                                 subscriber.putNext(1.0)
                                 subscriber.putCompletion()
                             })
                         }
                     } else {
                         PHPhotoLibrary.shared().performChanges({
+                            let assetRequest: PHAssetChangeRequest?
                             if isImage {
                                 if let imageData = try? Data(contentsOf: URL(fileURLWithPath: mainData.path)) {
-                                    PHAssetCreationRequest.forAsset().addResource(with: .photo, data: imageData, options: nil)
+                                    let request = PHAssetCreationRequest.forAsset()
+                                    request.addResource(with: .photo, data: imageData, options: nil)
+                                    assetRequest = request
+                                } else {
+                                    assetRequest = nil
                                 }
                             } else {
                                 if let _ = try? FileManager.default.copyItem(atPath: mainData.path, toPath: tempVideoPath) {
-                                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(fileURLWithPath: tempVideoPath))
+                                    assetRequest = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: URL(fileURLWithPath: tempVideoPath))
+                                } else {
+                                    assetRequest = nil
                                 }
+                            }
+                            if let assetRequest, !saveFolderName.isEmpty {
+                                exteraAttachAssetToSaveFolder(assetRequest, folderName: saveFolderName)
                             }
                         }, completionHandler: { _, error in
                             if let error {
                                 print("\(error)")
+                            }
+                            if error != nil, !saveFolderName.isEmpty {
+                                exteraSaveFallbackToDocuments(folderName: saveFolderName, isImage: isImage, dataPath: mainData.path)
                             }
                             let _ = try? FileManager.default.removeItem(atPath: tempVideoPath)
                             subscriber.putNext(1.0)

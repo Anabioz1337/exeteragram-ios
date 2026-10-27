@@ -392,6 +392,8 @@ private final class FetchImpl {
         private let fastDownloads: Bool
         private let masterPendingParts: Int
         private let cdnPendingParts: Int
+        private let largePartSize: Int64
+        private let largePartThroughput: Double
         private var cdnDisabled: Bool = false
         private var cdnHashFailures: Int = 0
         private var cdnVerificationFailures: Int = 0
@@ -460,14 +462,17 @@ private final class FetchImpl {
             }
             
             self.fastDownloads = network.engineKind == .rust
+            let boostUltra = network.downloadSpeedBoostLevel >= 2
             if isStory {
                 self.defaultPartSize = 512 * 1024
             } else {
-                self.defaultPartSize = 128 * 1024
+                self.defaultPartSize = boostUltra ? 512 * 1024 : 128 * 1024
             }
             self.cdnPartSize = 128 * 1024
-            self.masterPendingParts = self.fastDownloads ? fastDownloadMasterPendingParts : 6
-            self.cdnPendingParts = self.fastDownloads ? fastDownloadCdnPendingParts : 6
+            self.masterPendingParts = self.fastDownloads ? (boostUltra ? fastDownloadMasterPendingParts * 2 : fastDownloadMasterPendingParts) : 6
+            self.cdnPendingParts = self.fastDownloads ? (boostUltra ? fastDownloadCdnPendingParts * 2 : fastDownloadCdnPendingParts) : 6
+            self.largePartSize = boostUltra ? 1024 * 1024 : fastDownloadLargePartSize
+            self.largePartThroughput = boostUltra ? 1.5 * 1024.0 * 1024.0 : fastDownloadLargePartThroughput
             
             // The resource id tells concurrent downloads apart; an Api value prints only its constructor name.
             self.loggingIdentifier = resource.id.stringRepresentation
@@ -1204,8 +1209,8 @@ private final class FetchImpl {
             }
             let span = max(0.25, now - state.recentParts[0].time)
             let throughput = Double(state.recentParts.reduce(Int64(0), { $0 + $1.bytes })) / span
-            if throughput >= fastDownloadLargePartThroughput {
-                state.partSize = min(state.maxPartSize, fastDownloadLargePartSize)
+            if throughput >= self.largePartThroughput {
+                state.partSize = min(state.maxPartSize, self.largePartSize)
             } else if throughput < fastDownloadSmallPartThroughput {
                 state.partSize = max(state.minPartSize, fastDownloadSmallPartSize)
             }

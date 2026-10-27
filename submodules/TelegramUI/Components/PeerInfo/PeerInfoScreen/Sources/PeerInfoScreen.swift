@@ -192,6 +192,7 @@ enum PeerInfoSettingsSection {
     case profileColor
     case powerSaving
     case businessSetup
+    case extera
     case profile
     case premiumManagement
     case stars

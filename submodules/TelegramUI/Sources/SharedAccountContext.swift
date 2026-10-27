@@ -300,6 +300,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         return self.immediateExperimentalUISettingsValue.with { $0 }
     }
     private var experimentalUISettingsDisposable: Disposable?
+
+    private var exteraSettingsDisposable: Disposable?
     
     public var presentGlobalController: (ViewController, Any?) -> Void = { _, _ in }
     public var presentCrossfadeController: () -> Void = {}
@@ -542,10 +544,18 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         |> deliverOnMainQueue).start(next: { sharedData in
             if let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.experimentalUISettings]?.get(ExperimentalUISettings.self) {
                 let _ = immediateExperimentalUISettingsValue.swap(settings)
-                
+
                 flatBuffers_checkedGet = settings.checkSerializedData
                 GlassBackgroundView.useCustomGlassImpl = settings.fakeGlass
                 ManagedAudioSessionImpl.respectsSystemRecordingInput = settings.respectSystemMicrophone
+            }
+        })
+
+        self.exteraSettingsDisposable = (self.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> deliverOnMainQueue).start(next: { [weak self] sharedData in
+            if let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) {
+                applyExteraFormatFlags(numericRoundingDisabled: settings.disableNumberRounding, timeWithSeconds: settings.formatTimeWithSeconds)
+                ExteraUpdater.checkOnLaunchIfNeeded(sharedContext: self, settings: settings)
             }
         })
         
@@ -1133,6 +1143,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         self.mediaDisplaySettingsDisposable?.dispose()
         self.chatSettingsDisposable?.dispose()
         self.stickerSettingsDisposable?.dispose()
+        self.exteraSettingsDisposable?.dispose()
         self.callDisposable?.dispose()
         self.groupCallDisposable?.dispose()
         self.callStateDisposable?.dispose()
