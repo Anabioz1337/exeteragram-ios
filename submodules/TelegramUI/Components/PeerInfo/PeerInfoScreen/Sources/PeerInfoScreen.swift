@@ -39,6 +39,7 @@ import TextFormat
 import StatisticsUI
 import StickerResources
 import SettingsUI
+import ExteraProfile
 import ChatListUI
 import CallListUI
 import AccountUtils
@@ -359,6 +360,8 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
     let reactionSourceMessageId: EngineMessage.Id?
     let sourceMessageId: EngineMessage.Id?
     var canDeleteReaction = false
+    var exteraValues = PeerInfoExteraValues.empty()
+    var exteraValuesDisposable: Disposable?
     var dataDisposable: Disposable?
     
     let activeActionDisposable = MetaDisposable()
@@ -2611,7 +2614,25 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
         if peerId.namespace == Namespaces.Peer.CloudUser {
             let _ = context.engine.peers.requestRecommendedBots(peerId: peerId, forceUpdate: true).startStandalone()
         }
-        
+
+        self.exteraValuesDisposable = combineLatest(
+            queue: Queue.mainQueue(),
+            ExteraProfileSettings.shared.preferencesSignal,
+            exteraPeerStoredHistoryStats(account: context.account, peerId: peerId) |> distinctUntilChanged
+        ).startStrict(next: { [weak self] preferences, storedHistoryStats in
+            guard let strongSelf = self else {
+                return
+            }
+            let updatedValues = PeerInfoExteraValues(preferences: preferences, storedHistoryStats: storedHistoryStats)
+            guard updatedValues != strongSelf.exteraValues else {
+                return
+            }
+            strongSelf.exteraValues = updatedValues
+            if strongSelf.data != nil, let (layout, navigationHeight) = strongSelf.validLayout {
+                strongSelf.containerLayoutUpdated(layout: layout, navigationHeight: navigationHeight, transition: .immediate)
+            }
+        })
+
         if peerId.namespace == Namespaces.Peer.CloudChannel || peerId.namespace == Namespaces.Peer.CloudUser {
             self.storiesReady.set(false)
             let expiringStoryList = PeerExpiringStoryListContext(account: context.account, peerId: peerId)
@@ -2713,6 +2734,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
         self.refreshMessageTagStatsDisposable?.dispose()
         self.forumTopicNotificationExceptionsDisposable?.dispose()
         self.translationStateDisposable?.dispose()
+        self.exteraValuesDisposable?.dispose()
         self.copyProtectionTooltipController?.dismiss()
         self.expiringStoryListDisposable?.dispose()
         self.postingAvailabilityDisposable?.dispose()
@@ -5669,7 +5691,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
             insets.left += sideInsets.sectionLeft
             insets.right += sideInsets.sectionRight
             
-            let items = self.isSettings ? settingsItems(data: self.data, context: self.context, presentationData: self.presentationData, interaction: self.interaction, isExpanded: self.headerNode.isAvatarExpanded) : infoItems(data: self.data, context: self.context, presentationData: self.presentationData, interaction: self.interaction, reactionSourceMessageId: self.reactionSourceMessageId, canDeleteReaction: self.canDeleteReaction, callMessages: self.callMessages, chatLocation: self.chatLocation, isOpenedFromChat: self.isOpenedFromChat, isMyProfile: self.isMyProfile)
+            let items = self.isSettings ? settingsItems(data: self.data, context: self.context, presentationData: self.presentationData, interaction: self.interaction, isExpanded: self.headerNode.isAvatarExpanded) : infoItems(data: self.data, context: self.context, presentationData: self.presentationData, interaction: self.interaction, reactionSourceMessageId: self.reactionSourceMessageId, canDeleteReaction: self.canDeleteReaction, callMessages: self.callMessages, chatLocation: self.chatLocation, isOpenedFromChat: self.isOpenedFromChat, isMyProfile: self.isMyProfile, exteraValues: self.exteraValues)
             
             contentHeight += headerHeight
             if !((self.isSettings || self.isMyProfile) && self.state.isEditing) {
