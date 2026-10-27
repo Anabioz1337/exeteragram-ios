@@ -9,6 +9,7 @@ import FFMpegBinding
 import LocalMediaResources
 import LegacyMediaPickerUI
 import MediaEditor
+import ExteraCamera
 import Photos
 
 private final class AVURLAssetCopyItem: MediaResourceDataFetchCopyLocalItem {
@@ -323,7 +324,7 @@ public func fetchVideoLibraryMediaResource(postbox: Postbox, resource: VideoLibr
                         }
                     case let .compress(adjustmentsValue):
                         let defaultPreset = TGMediaVideoConversionPreset(rawValue: UInt32(UserDefaults.standard.integer(forKey: "TG_preferredVideoPreset_v0")))
-                        let qualityPreset = MediaQualityPreset(preset: defaultPreset)
+                        let qualityPreset = MediaQualityPreset(preset: defaultPreset, alwaysSendHD: true)
                         if let adjustmentsValue = adjustmentsValue {
                             if adjustmentsValue.isStory {
                                 isStory = true
@@ -486,7 +487,7 @@ public func fetchLocalFileVideoMediaResource(postbox: Postbox, resource: LocalFi
         let filteredPath = filteredPaths.first ?? ""
         
         let defaultPreset = TGMediaVideoConversionPreset(rawValue: UInt32(UserDefaults.standard.integer(forKey: "TG_preferredVideoPreset_v0")))
-        let qualityPreset = MediaQualityPreset(preset: defaultPreset)
+        let qualityPreset = MediaQualityPreset(preset: defaultPreset, alwaysSendHD: true)
         
         let isImage = filteredPath.contains(".jpg")
         var isStory = false
@@ -852,6 +853,21 @@ private extension MediaQualityPreset {
             qualityPreset = .compressedMedium
         }
         self = qualityPreset
+    }
+
+    /// "Always Send in HD" raises the compressing presets to the very-high tier so the
+    /// video is never downscaled on send.
+    init(preset: TGMediaVideoConversionPreset, alwaysSendHD: Bool) {
+        self.init(preset: preset)
+        if alwaysSendHD, ExteraCameraOptions.shared.current.alwaysSendHD {
+            switch self {
+            case .videoMessage, .animation, .sticker, .passthrough, .quality,
+                 .profileLow, .profile, .profileHigh, .profileVeryHigh:
+                break
+            default:
+                self = .compressedVeryHigh
+            }
+        }
     }
 }
 

@@ -877,6 +877,10 @@ public func legacyAssetPickerEnqueueMessages(
                             } else if preset == TGMediaVideoConversionPresetCompressedDefault && defaultPreset != TGMediaVideoConversionPresetCompressedDefault {
                                 preset = defaultPreset
                             }
+                            if ExteraCameraOptions.shared.current.alwaysSendHD, adjustments?.preset == nil,
+                               preset != TGMediaVideoConversionPresetAnimation {
+                                preset = TGMediaVideoConversionPresetCompressedVeryHigh
+                            }
                             if asAnimation {
                                 preset = TGMediaVideoConversionPresetAnimation
                             }
