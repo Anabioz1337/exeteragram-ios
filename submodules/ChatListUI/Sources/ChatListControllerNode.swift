@@ -30,6 +30,7 @@ import ChatListHeaderNoticeComponent
 import ChatListFilterTabContainerNode
 import GlassControls
 import SideColumnLayout
+import ExteraProfile
 
 public enum ChatListContainerNodeFilter: Equatable {
     case all
@@ -2274,9 +2275,13 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                             
                             if let currentOverscrollItemExpansionTimestamp = self.currentOverscrollItemExpansionTimestamp, currentOverscrollItemExpansionTimestamp <= timestamp - 0.0 {
                                 self.allowOverscrollItemExpansion = false
-                                
+
                                 if isPrimary {
-                                    self.mainContainerNode.currentItemNode.revealScrollHiddenItem()
+                                    if ExteraProfileSettings.shared.current.archiveOnPull, case .chatList(groupId: .root) = controller.location {
+                                        self.mainContainerNode.groupSelected?(.archive)
+                                    } else {
+                                        self.mainContainerNode.currentItemNode.revealScrollHiddenItem()
+                                    }
                                 } else {
                                     self.inlineStackContainerNode?.currentItemNode.revealScrollHiddenItem()
                                 }
