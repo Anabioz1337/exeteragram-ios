@@ -597,9 +597,6 @@ swift_library(
         "@build_bazel_rules_apple//apple:ios_arm64": appcenter_targets,
         "//build-system:ios_sim_arm64": [],
     }),
-    sdk_frameworks = [
-        "JavaScriptCore",
-    ],
     visibility = [
         "//visibility:public",
     ],
