@@ -1,6 +1,32 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
 load("@build_bazel_rules_apple//apple/testing/default_runner:ios_test_runner.bzl", "ios_test_runner")
+load("//build-system/bazel-utils:plist_fragment.bzl", "plist_fragment")
+
+plist_fragment(
+    name = "ExteraPillsBundleInfoPlist",
+    extension = "plist",
+    template =
+    """
+    <key>CFBundleIdentifier</key>
+    <string>extera.ExteraPills</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleName</key>
+    <string>ExteraPillsBundle</string>
+    """
+)
+
+apple_resource_bundle(
+    name = "ExteraPillsBundle",
+    infoplists = [
+        ":ExteraPillsBundleInfoPlist",
+    ],
+    resources = glob([
+        "Resources/ExteraPillsBundle/**/*.lproj/*",
+    ]),
+)
 
 swift_library(
     name = "ChatListUI",
@@ -11,6 +37,9 @@ swift_library(
     copts = [
         "-warnings-as-errors",
     ],
+    data = [
+        ":ExteraPillsBundle",
+    ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/LottieSettings:LottieSettings",
@@ -20,6 +49,7 @@ swift_library(
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",
+        "//submodules/ExteraSearchToolkit:ExteraSearchToolkit",
         "//submodules/AccountContext:AccountContext",
         "//submodules/TelegramBaseController:TelegramBaseController",
         "//submodules/OverlayStatusController:OverlayStatusController",

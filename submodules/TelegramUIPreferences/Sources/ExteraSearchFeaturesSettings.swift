@@ -39,7 +39,12 @@ public enum ExteraCryptoPillTargetCurrency: Int32, Equatable {
     }
 }
 
-public enum ExteraPillKind: String, Equatable {
+public enum ExteraPillKind: String, Equatable, CaseIterable {
+    case unread
+    case media
+    case files
+    case links
+    case voice
     case weather
     case crypto
 }
@@ -53,7 +58,7 @@ public struct ExteraPillStackSettings: Codable, Equatable {
 
     public static var defaultSettings: ExteraPillStackSettings {
         return ExteraPillStackSettings(
-            activePills: [ExteraPillKind.weather.rawValue, ExteraPillKind.crypto.rawValue],
+            activePills: [ExteraPillKind.unread.rawValue, ExteraPillKind.media.rawValue, ExteraPillKind.files.rawValue, ExteraPillKind.links.rawValue, ExteraPillKind.voice.rawValue, ExteraPillKind.weather.rawValue, ExteraPillKind.crypto.rawValue],
             hiddenPills: [],
             infiniteScrolling: true,
             weatherLocation: nil,
@@ -72,28 +77,8 @@ public struct ExteraPillStackSettings: Codable, Equatable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: StringCodingKey.self)
 
-        let encodedActivePills = try container.decodeIfPresent([Int32].self, forKey: "activePills") ?? []
-        self.activePills = encodedActivePills.compactMap { value in
-            guard value != -1 else {
-                return nil
-            }
-            if value == 0 {
-                return ExteraPillKind.weather.rawValue
-            } else {
-                return ExteraPillKind.crypto.rawValue
-            }
-        }
-        let encodedHiddenPills = try container.decodeIfPresent([Int32].self, forKey: "hiddenPills") ?? []
-        self.hiddenPills = encodedHiddenPills.compactMap { value in
-            guard value != -1 else {
-                return nil
-            }
-            if value == 0 {
-                return ExteraPillKind.weather.rawValue
-            } else {
-                return ExteraPillKind.crypto.rawValue
-            }
-        }
+        self.activePills = (try container.decodeIfPresent([String].self, forKey: "activePills") ?? []).filter({ ExteraPillKind(rawValue: $0) != nil })
+        self.hiddenPills = (try container.decodeIfPresent([String].self, forKey: "hiddenPills") ?? []).filter({ ExteraPillKind(rawValue: $0) != nil })
         self.infiniteScrolling = (try container.decode(Int32.self, forKey: "infiniteScrolling")) != 0
         if let hasLocation = try? container.decodeIfPresent(Int32.self, forKey: "weatherLocationHasValue"), hasLocation != 0 {
             let sourceRaw = try container.decodeIfPresent(Int32.self, forKey: "weatherLocationSource") ?? ExteraWeatherLocationSource.current.rawValue
@@ -110,26 +95,8 @@ public struct ExteraPillStackSettings: Codable, Equatable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: StringCodingKey.self)
 
-        try container.encode(self.activePills.map({ kind -> Int32 in
-            switch kind {
-            case ExteraPillKind.weather.rawValue:
-                return 0
-            case ExteraPillKind.crypto.rawValue:
-                return 1
-            default:
-                return -1
-            }
-        }), forKey: "activePills")
-        try container.encode(self.hiddenPills.map({ kind -> Int32 in
-            switch kind {
-            case ExteraPillKind.weather.rawValue:
-                return 0
-            case ExteraPillKind.crypto.rawValue:
-                return 1
-            default:
-                return -1
-            }
-        }), forKey: "hiddenPills")
+        try container.encode(self.activePills, forKey: "activePills")
+        try container.encode(self.hiddenPills, forKey: "hiddenPills")
         try container.encode((self.infiniteScrolling ? 1 : 0) as Int32, forKey: "infiniteScrolling")
         if let location = self.weatherLocation {
             try container.encode(1 as Int32, forKey: "weatherLocationHasValue")
@@ -176,6 +143,11 @@ public struct ExteraPillStackSettings: Codable, Equatable {
         let clampedToIndex = max(0, min(toIndex, reordered.count))
         reordered.insert(item, at: clampedToIndex)
         return self.withUpdatedActivePills(reordered)
+    }
+
+    /// The pills the search field renders, in order: everything active that is not hidden.
+    public var visiblePills: [String] {
+        return self.activePills.filter({ !self.hiddenPills.contains($0) })
     }
 }
 

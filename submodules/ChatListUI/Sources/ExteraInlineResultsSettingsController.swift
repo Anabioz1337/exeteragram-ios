@@ -166,7 +166,7 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
         let strings = presentationData.strings
         switch self {
         case let .showResults(value):
-            return ItemListSwitchItem(presentationData: presentationData, title: strings.Extera_Inline_ShowResults, value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
+            return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineShowResults"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
                 arguments.updateShowResults(updatedValue)
             })
         case let .resultsInfo(text):
@@ -174,37 +174,37 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
         case let .featuresHeader(text):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
         case let .calculator(value):
-            return ItemListSwitchItem(presentationData: presentationData, title: strings.Extera_Inline_Calculator, value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
+            return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineCalculator"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
                 arguments.updateCalculator(updatedValue)
             })
         case let .currencies(value):
-            return ItemListSwitchItem(presentationData: presentationData, title: strings.Extera_Inline_Currencies, value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
+            return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineCurrencies"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
                 arguments.updateCurrencies(updatedValue)
             })
         case let .units(value):
-            return ItemListSwitchItem(presentationData: presentationData, title: strings.Extera_Inline_Units, value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
+            return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineUnits"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
                 arguments.updateUnits(updatedValue)
             })
         case let .timeZones(value):
-            return ItemListSwitchItem(presentationData: presentationData, title: strings.Extera_Inline_TimeZones, value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
+            return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineTimeZones"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
                 arguments.updateTimeZones(updatedValue)
             })
         case let .defaultCurrency(value):
-            return ItemListDisclosureItem(presentationData: presentationData, title: strings.Extera_Inline_DefaultCurrency, label: value, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
+            return ItemListDisclosureItem(presentationData: presentationData, title: exteraPillString("extera_InlineDefaultCurrency"), label: value, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
                 arguments.openDefaultCurrency()
             })
         case let .autoCurrencyInfo(text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
         case let .angleUnit(value):
-            return ItemListDisclosureItem(presentationData: presentationData, title: strings.Extera_Inline_AngleUnit, label: value, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
+            return ItemListDisclosureItem(presentationData: presentationData, title: exteraPillString("extera_InlineAngleUnit"), label: value, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
                 arguments.updateAngleUnit()
             })
         case let .measureSystem(value):
-            return ItemListDisclosureItem(presentationData: presentationData, title: strings.Extera_Inline_MeasureSystem, label: value, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
+            return ItemListDisclosureItem(presentationData: presentationData, title: exteraPillString("extera_InlineMeasureSystem"), label: value, sectionId: self.section, style: .blocks, disclosureStyle: .arrow, action: {
                 arguments.updateMeasureSystem()
             })
         case let .digitGrouping(value):
-            return ItemListSwitchItem(presentationData: presentationData, title: strings.Extera_Inline_DigitGrouping, value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
+            return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineDigitGrouping"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
                 arguments.updateDigitGrouping(updatedValue)
             })
         case let .docTitle(text):
@@ -220,28 +220,28 @@ private func exteraInlineResultsSettingsEntries(presentationData: PresentationDa
     var entries: [ExteraInlineResultsSettingsEntry] = []
     
     entries.append(.showResults(settings.showResults))
-    entries.append(.resultsInfo(strings.Extera_Inline_Info))
+    entries.append(.resultsInfo(exteraPillString("extera_InlineMathResultInfo")))
     
-    entries.append(.featuresHeader(strings.Extera_Inline_Features))
+    entries.append(.featuresHeader(exteraPillString("extera_InlineFeatures")))
     entries.append(.calculator(settings.calculatorEnabled))
     entries.append(.currencies(settings.currenciesEnabled))
     entries.append(.units(settings.unitsEnabled))
     entries.append(.timeZones(settings.timeZonesEnabled))
     
     entries.append(.defaultCurrency(settings.defaultCurrency.isEmpty ? "Auto" : settings.defaultCurrency))
-    entries.append(.autoCurrencyInfo(strings.Extera_Inline_AutoCurrencyInfo))
-    entries.append(.angleUnit(settings.angleUnit == .degrees ? strings.Extera_Inline_AngleDegrees : strings.Extera_Inline_AngleRadians))
-    entries.append(.measureSystem(settings.measureSystem == .metric ? strings.Extera_Inline_MeasureMetric : strings.Extera_Inline_MeasureImperial))
+    entries.append(.autoCurrencyInfo(exteraPillString("extera_InlineAutoCurrencyInfo")))
+    entries.append(.angleUnit(settings.angleUnit == .degrees ? exteraPillString("extera_InlineAngleDegrees") : exteraPillString("extera_InlineAngleRadians")))
+    entries.append(.measureSystem(settings.measureSystem == .metric ? exteraPillString("extera_InlineMeasureMetric") : exteraPillString("extera_InlineMeasureImperial")))
     entries.append(.digitGrouping(settings.digitGrouping))
     
-    entries.append(.docTitle(strings.Extera_Inline_DocArithmeticTitle))
-    entries.append(.docText(strings.Extera_Inline_DocArithmeticInfo + ". " + strings.Extera_Inline_DocFunctionsText + " " + strings.Extera_Inline_DocPercentText + " " + strings.Extera_Inline_DocShorthandsText))
-    entries.append(.docTitle(strings.Extera_Inline_DocCurrenciesTitle))
-    entries.append(.docText(strings.Extera_Inline_DocCurrencyText))
-    entries.append(.docTitle(strings.Extera_Inline_DocUnitsTitle))
-    entries.append(.docText(strings.Extera_Inline_DocUnitsText))
-    entries.append(.docTitle(strings.Extera_Inline_DocTimeTitle))
-    entries.append(.docText(strings.Extera_Inline_DocTimeText))
+    entries.append(.docTitle(exteraPillString("extera_InlineDocArithmetic")))
+    entries.append(.docText(exteraPillString("extera_InlineDocArithmeticInfo") + ". " + exteraPillString("extera_InlineDocFunctionsText") + " " + exteraPillString("extera_InlineDocPercentText") + " " + exteraPillString("extera_InlineDocShorthandsText")))
+    entries.append(.docTitle(exteraPillString("extera_InlineDocCurrenciesInfo")))
+    entries.append(.docText(exteraPillString("extera_InlineDocCurrencyText")))
+    entries.append(.docTitle(exteraPillString("extera_InlineDocUnitsInfo")))
+    entries.append(.docText(exteraPillString("extera_InlineDocUnitsText")))
+    entries.append(.docTitle(exteraPillString("extera_InlineDocTimeInfo")))
+    entries.append(.docText(exteraPillString("extera_InlineDocTimeText")))
     
     return entries
 }
@@ -281,7 +281,7 @@ public func exteraInlineResultsSettingsController(context: AccountContext) -> Vi
     
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsSignal)
     |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState<ExteraInlineResultsSettingsEntry>, Any)) in
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.Extera_Inline_Title), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraPillString("extera_InlineMathResult")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraInlineResultsSettingsEntries(presentationData: presentationData, settings: settings), style: .blocks)
         
         return (controllerState, (listState, arguments))
@@ -391,7 +391,7 @@ public func exteraInlineDefaultCurrencyController(context: AccountContext) -> Vi
     
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsSignal)
     |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState<ExteraInlineDefaultCurrencyEntry>, Any)) in
-        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.Extera_Inline_DefaultCurrency), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
+        let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraPillString("extera_InlineDefaultCurrency")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraInlineDefaultCurrencyEntries(settings: settings), style: .blocks)
         
         return (controllerState, (listState, arguments))
