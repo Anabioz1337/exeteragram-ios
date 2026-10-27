@@ -606,6 +606,8 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
             var updatedDateText = arguments.dateText
             if arguments.edited {
                 if let useEditedTimestamp = arguments.context.getAppConfigValue("message_primary_edited_date") as? Bool, useEditedTimestamp {
+                } else if ExteraChatP1.editedAsIcon {
+                    updatedDateText = "\u{270F}\u{FE0E} \(updatedDateText)"
                 } else {
                     updatedDateText = "\(arguments.presentationData.strings.Conversation_MessageEditedLabel) \(updatedDateText)"
                 }
