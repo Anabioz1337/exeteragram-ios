@@ -22,9 +22,10 @@ public enum ExteraChatP1 {
         set { defaults.set(newValue, forKey: "editedAsIcon") }
     }
 
-    public static var stickerTimeHidden: Bool {
-        get { defaults.bool(forKey: "stickerTimeHidden") }
-        set { defaults.set(newValue, forKey: "stickerTimeHidden") }
+    /// 0: bottom right, 1: left side, 2: hidden
+    public static var stickerTimePosition: Int {
+        get { defaults.object(forKey: "stickerTimePosition") as? Int ?? 0 }
+        set { defaults.set(newValue, forKey: "stickerTimePosition") }
     }
 
     public static var unlimitedRecentStickers: Bool {

@@ -1,0 +1,20 @@
+"extera.ChatP1.Title" = "Чаты — дополнительно";
+"extera.ChatP1.StickersHeader" = "СТИКЕРЫ";
+"extera.ChatP1.MessagesHeader" = "СООБЩЕНИЯ";
+"extera.ChatP1.InputHeader" = "ВВОД И МЕДИА";
+
+"extera.ChatP1.StickerTime" = "Время на стикерах";
+"extera.ChatP1.StickerTime.Default" = "Обычно";
+"extera.ChatP1.StickerTime.Side" = "Слева";
+"extera.ChatP1.StickerTime.Hidden" = "Скрыть";
+
+"extera.ChatP1.HideReactions" = "Скрывать реакции";
+"extera.ChatP1.EditedAsIcon" = "Отметка правки значком";
+"extera.ChatP1.WidePosts" = "Широкие посты";
+"extera.ChatP1.ReplyBackground" = "Цветной фон ответа";
+
+"extera.ChatP1.UnlimitedRecentStickers" = "Без лимита недавних стикеров";
+"extera.ChatP1.BottomButton" = "Кнопка отправки";
+"extera.ChatP1.BottomButton.Default" = "Стандартная";
+"extera.ChatP1.BottomButton.Accent" = "Акцентная";
+"extera.ChatP1.BottomButton.Glass" = "Прозрачная";

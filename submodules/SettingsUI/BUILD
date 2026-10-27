@@ -1,6 +1,32 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
 load("@build_bazel_rules_apple//apple/testing/default_runner:ios_test_runner.bzl", "ios_test_runner")
+load("@build_bazel_rules_apple//apple:resources.bzl", "apple_resource_bundle")
+load("//build-system/bazel-utils:plist_fragment.bzl", "plist_fragment")
+
+plist_fragment(
+    name = "ExteraChatP1UIBundleInfoPlist",
+    extension = "plist",
+    template =
+    """
+    <key>CFBundleIdentifier</key>
+    <string>extera.ExteraChatP1</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleName</key>
+    <string>ExteraChatP1UIBundle</string>
+    """
+)
+
+apple_resource_bundle(
+    name = "ExteraChatP1UIBundle",
+    infoplists = [
+        ":ExteraChatP1UIBundleInfoPlist",
+    ],
+    resources = glob([
+        "Resources/**/*.lproj/*",
+    ]),
+)
 
 swift_library(
     name = "SettingsUI",
@@ -10,6 +36,9 @@ swift_library(
     ]),
     copts = [
         "-warnings-as-errors",
+    ],
+    data = [
+        ":ExteraChatP1UIBundle",
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",

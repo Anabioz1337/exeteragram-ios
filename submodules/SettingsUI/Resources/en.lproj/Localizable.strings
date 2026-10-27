@@ -1,0 +1,20 @@
+"extera.ChatP1.Title" = "Chat Extras";
+"extera.ChatP1.StickersHeader" = "STICKERS";
+"extera.ChatP1.MessagesHeader" = "MESSAGES";
+"extera.ChatP1.InputHeader" = "INPUT AND MEDIA";
+
+"extera.ChatP1.StickerTime" = "Time on Stickers";
+"extera.ChatP1.StickerTime.Default" = "Default";
+"extera.ChatP1.StickerTime.Side" = "Left Side";
+"extera.ChatP1.StickerTime.Hidden" = "Hidden";
+
+"extera.ChatP1.HideReactions" = "Hide Reactions";
+"extera.ChatP1.EditedAsIcon" = "Edit Mark as Icon";
+"extera.ChatP1.WidePosts" = "Wide Posts";
+"extera.ChatP1.ReplyBackground" = "Colored Reply Background";
+
+"extera.ChatP1.UnlimitedRecentStickers" = "Unlimited Recent Stickers";
+"extera.ChatP1.BottomButton" = "Send Button";
+"extera.ChatP1.BottomButton.Default" = "Default";
+"extera.ChatP1.BottomButton.Accent" = "Accent";
+"extera.ChatP1.BottomButton.Glass" = "Glass";
