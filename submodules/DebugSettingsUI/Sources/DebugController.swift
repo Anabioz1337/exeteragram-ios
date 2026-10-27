@@ -8,7 +8,10 @@ import MessageUI
 import TelegramPresentationData
 import TelegramUIPreferences
 import ExteraTranslator
+import ChatListUI
+import ChatListUI
 import ItemListUI
+import ExteraPluginUI
 import ExteraPluginUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -121,11 +124,11 @@ private extension ExperimentalUISettings.VideoMessageCameraMode {
         case .legacy:
             return "Legacy"
         case .vga:
-            return "VGA (640×480)"
+            return "VGA (640Г—480)"
         case .hdBilinear:
-            return "HD · Bilinear"
+            return "HD В· Bilinear"
         case .hdLanczos:
-            return "HD · Lanczos"
+            return "HD В· Lanczos"
         }
     }
 }
@@ -767,6 +770,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
     case resetTranslationStates
     case exteraPluginsUI
     case exteraTranslator
+    case exteraPillStack
     case hostInfo(PresentationTheme, String)
     case versionInfo(PresentationTheme)
     case collectCpuProfile
@@ -792,7 +796,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return DebugControllerSection.experiments.rawValue
         case .crash, .resetBiometricsData, .photoPreview, .knockoutWallpaper, .compressedEmojiCache, .storiesJpegExperiment, .checkSerializedData, .enableQuickReactionSwitch, .experimentalCompatibility, .enableDebugDataDisplay, .fakeGlass, .forceClearGlass, .debugRipple, .inputDecEngineEditor, .coreListChatBackend, .forceRLottieBackend, .respectSystemMicrophone, .useModernVideoMessagePipeline, .videoMessageCameraMode, .browserExperiment, .allForumsHaveTabs, .enableReactionOverrides, .disableReloginTokens, .liveStreamV2, .experimentalCallMute, .groupCallReferenceEngine, .playerV2, .devRequests, .enableUpdates, .pwa, .enableLocalTranslation, .testPasscodeMigration:
             return DebugControllerSection.experiments.rawValue
-        case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers, .exteraPluginsUI:
+        case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers, .exteraPillStack, .exteraPluginsUI:
             return DebugControllerSection.experiments.rawValue
         case .logTranslationRecognition, .resetTranslationStates, .exteraTranslator:
             return DebugControllerSection.translation.rawValue
@@ -948,13 +952,15 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             // at, or the list traps at runtime inside its own state closure.
             return 72
         case .exteraPluginsUI:
-            return 75
+            return 76
         case .springSendAnimation:
             // Appended right after `inputDecTextBackend`; see the ordering note above.
             return 73
         case .fakeWalletTransfers:
             // Appended right after `springSendAnimation`; see the ordering note above.
             return 74
+        case .exteraPillStack:
+            return 77
         case .disableVideoAspectScaling:
             return 104
         case .enableNetworkFramework:
@@ -1146,6 +1152,12 @@ private enum DebugControllerEntry: ItemListNodeEntry {
         case .exteraTranslator:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Translator", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
                 arguments.pushController(ExteraTranslatorScreen())
+            })
+        case .exteraPillStack:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Pill Stack", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                if let context = arguments.context {
+                    arguments.pushController(exteraPillsSettingsController(context: context))
+                }
             })
         case .resetNotifications:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Reset Notifications", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
@@ -1511,7 +1523,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
                 let presentationData = arguments.sharedContext.currentPresentationData.with { $0 }
                 let actionSheet = ActionSheetController(presentationData: presentationData)
                 var items: [ActionSheetItem] = [
-                    ActionSheetTextItem(title: "Reopen the camera to apply. VGA and HD use the Modern Video Message Pipeline and record 480×480 at 30 FPS.")
+                    ActionSheetTextItem(title: "Reopen the camera to apply. VGA and HD use the Modern Video Message Pipeline and record 480Г—480 at 30 FPS.")
                 ]
                 for mode in ExperimentalUISettings.VideoMessageCameraMode.allCases {
                     items.append(ActionSheetButtonItem(title: mode.debugTitle, color: .accent, action: { [weak actionSheet] in
@@ -2004,14 +2016,13 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
         if let data = context?.currentAppConfiguration.with({ $0 }).data, let isDev = data["dev"] as? Double, isDev == 1.0 {
             entries.append(.fakeWalletTransfers(experimentalSettings.fakeWalletTransfers))
         }
-        
+
+        entries.append(.exteraPillStack)
+
         entries.append(.logTranslationRecognition(experimentalSettings.logLanguageRecognition))
         entries.append(.resetTranslationStates)
-<<<<<<< HEAD
-        entries.append(.exteraPluginsUI)
-=======
         entries.append(.exteraTranslator)
->>>>>>> origin/extera-port
+        entries.append(.exteraPluginsUI)
     }
 
     if isMainApp {

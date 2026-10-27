@@ -11,7 +11,10 @@ swift_library(
     ],
     deps = [
         "//submodules/exteraPluginUI:ExteraPluginUI",
+        "//submodules/exteraPluginUI:ExteraPluginUI",
         "//submodules/exteraTranslator:ExteraTranslator",
+        "//submodules/ChatListUI:ChatListUI",
+        "//submodules/ChatListUI:ChatListUI",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/CrashReporting:CrashReporting",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",

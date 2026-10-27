@@ -40,6 +40,7 @@ import SectionTitleContextItem
 import EdgeEffect
 import ComponentFlow
 import ComponentDisplayAdapters
+import ExteraSearchToolkit
 
 private enum ChatListTokenId: Int32 {
     case archive
@@ -149,6 +150,17 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
     private var presentationData: PresentationData
     private var presentationDataDisposable: Disposable?
     
+    private let exteraInlineResultPanelNode: ExteraInlineResultPanelNode
+    private let exteraRatesCoordinator: ExteraSearchRatesCoordinator
+    private var exteraInlineSettings = ExteraInlineResultsSettings.defaultSettings
+    private var exteraLastQuery = ""
+    private let exteraSettingsDisposable = MetaDisposable()
+
+    private let exteraPillStackNode: ExteraPillStackNode
+    private let exteraPillsService = ExteraPillsService()
+    private var exteraPillStackSettings = ExteraPillStackSettings.defaultSettings
+    private var exteraSelectedPillKind: String?
+    
     private let suggestedDates = Promise<[(Date?, Date, String?)]>([])
     private var suggestedFilters: [ChatListSearchFilter]?
     private let suggestedFiltersDisposable = MetaDisposable()
@@ -206,6 +218,10 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.hasDownloads = hasDownloads
         self.navigationController = navigationController
         self.presentationData = updatedPresentationData?.initial ?? context.sharedContext.currentPresentationData.with { $0 }
+
+        self.exteraInlineResultPanelNode = ExteraInlineResultPanelNode(theme: self.presentationData.theme)
+        self.exteraRatesCoordinator = ExteraSearchRatesCoordinator()
+        self.exteraPillStackNode = ExteraPillStackNode(theme: self.presentationData.theme)
         
         self.selectedFilter = .filter(initialFilter)
         self.selectedFilterPromise.set(.single(self.selectedFilter))
@@ -230,6 +246,54 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.backgroundColor = filter.contains(.excludeRecent) ? nil : self.presentationData.theme.chatList.backgroundColor
         
         self.addSubnode(self.paneContainerNode)
+        self.addSubnode(self.exteraInlineResultPanelNode)
+        self.addSubnode(self.exteraPillStackNode)
+        self.exteraPillStackNode.interaction = self
+        self.updateExteraPillStack()
+        self.refreshExteraWeatherPill()
+        self.exteraInlineResultPanelNode.resultTapped = { [weak self] result in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.setQuery?(nil, [], result)
+            HapticFeedback().tap()
+        }
+        self.exteraInlineResultPanelNode.settingsTapped = { [weak self] in
+            guard let strongSelf, let interaction = strongSelf.interaction else {
+                return
+            }
+            interaction.present(ExteraInlineResultsSettingsController(context: strongSelf.context), nil)
+        }
+
+        let exteraRatesChanged: () -> Void = { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.evaluateExteraInlineResult(text: strongSelf.exteraLastQuery)
+            strongSelf.updateExteraPillStack()
+        }
+        let ratesCoordinator = self.exteraRatesCoordinator
+        ratesCoordinator.onChanged = exteraRatesChanged
+
+        self.exteraSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraInlineResultsSettings, ApplicationSpecificSharedDataKeys.exteraPillStackSettings])
+        |> deliverOnMainQueue).start(next: { [weak self] sharedData in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.exteraInlineSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraInlineResultsSettings]?.get(ExteraInlineResultsSettings.self) ?? .defaultSettings
+            strongSelf.evaluateExteraInlineResult(text: strongSelf.exteraLastQuery)
+
+            let previousWeatherLocation = strongSelf.exteraPillStackSettings.weatherLocation
+            strongSelf.exteraPillStackSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraPillStackSettings]?.get(ExteraPillStackSettings.self) ?? .defaultSettings
+            if let selectedKind = strongSelf.exteraSelectedPillKind, !strongSelf.exteraPillStackSettings.visiblePills.contains(selectedKind) {
+                strongSelf.exteraSelectedPillKind = nil
+                strongSelf.updateExteraSelectedPane()
+            }
+            if strongSelf.exteraPillStackSettings.weatherLocation != previousWeatherLocation {
+                strongSelf.refreshExteraWeatherPill()
+            }
+            strongSelf.updateExteraPillStack()
+        }))
                 
         let interaction = ChatListSearchInteraction(openPeer: { peer, chatPeer, threadId, value in
             originalOpenPeer(peer, chatPeer, threadId, value)
@@ -704,6 +768,8 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
     
     private func updateTheme(theme: PresentationTheme) {
         self.backgroundColor = self.peersFilter.contains(.excludeRecent) ? nil : theme.chatList.backgroundColor
+        self.exteraInlineResultPanelNode.updateTheme(theme)
+        self.exteraPillStackNode.updateTheme(theme)
         
         if let (layout, navigationBarHeight) = self.validLayout {
             self.containerLayoutUpdated(layout, navigationBarHeight: navigationBarHeight, transition: .immediate)
@@ -721,6 +787,21 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.searchQueryValue = searchQuery
         
         self.suggestedDates.set(.single(suggestDates(for: text, strings: self.presentationData.strings, dateTimeFormat: self.presentationData.dateTimeFormat)))
+        
+        self.evaluateExteraInlineResult(text: text)
+    }
+    
+    private func evaluateExteraInlineResult(text: String) {
+        self.exteraLastQuery = text
+        let (layoutWidth, safeInsets) = self.validLayout.map { ($0.0.size.width, $0.0.safeInsets) } ?? (0.0, UIEdgeInsets())
+        let maximumWidth = max(0.0, layoutWidth - safeInsets.left - safeInsets.right)
+        guard self.exteraInlineSettings.showResults, !text.isEmpty, let result = ExteraInlineResultsEvaluator.evaluate(query: text, settings: self.exteraInlineSettings, rates: self.exteraRatesCoordinator.activateSnapshot()) else {
+            self.exteraInlineResultPanelNode.updateResult(nil, maximumWidth: maximumWidth)
+            self.exteraUpdateTopPanelsLayout()
+            return
+        }
+        self.exteraInlineResultPanelNode.updateResult(result.resultText, maximumWidth: maximumWidth)
+        self.exteraUpdateTopPanelsLayout()
     }
     
     private func currentPaneUpdated(_ key: ChatListSearchPaneKey, transitionFraction: CGFloat = 0.0, transition: ContainedViewLayoutTransition) {
@@ -861,6 +942,8 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         self.validLayout = (layout, navigationBarHeight)
         
         let topInset = navigationBarHeight
+        
+        self.exteraUpdateTopPanelsLayout()
         
         transition.updateFrame(node: self.filterContainerNode, frame: self.filterContainerFrame(layout: layout))
         self.updateFilterContainerNode(layout: layout, transition: transition)
@@ -1909,5 +1992,107 @@ final class ActionSheetAnimationAndTextItemNode: ActionSheetItemNode {
         
         self.updateInternalLayout(size, constrainedSize: constrainedSize)
         return size
+    }
+}
+
+extension ChatListSearchContainerNode: ExteraPillStackNodeInteraction {
+    public func exteraPillStackTappedPill(kind: String, selected: Bool) {
+        guard kind == "unread" || kind == "media" || kind == "files" || kind == "links" || kind == "voice" else {
+            return
+        }
+        self.hapticFeedback.tap()
+        if selected {
+            self.exteraSelectedPillKind = nil
+            self.search(filter: .chats, query: self.searchQueryValue ?? "")
+        } else {
+            self.exteraSelectedPillKind = kind
+            let filter: ChatListSearchFilter
+            switch kind {
+            case "media":
+                filter = .media
+            case "files":
+                filter = .files
+            case "links":
+                filter = .links
+            case "voice":
+                filter = .voice
+            default:
+                filter = .chats
+            }
+            self.search(filter: filter, query: self.searchQueryValue ?? "")
+        }
+        self.updateExteraPillStack()
+    }
+
+    public func exteraPillStackReorderedPills(kinds: [String]) {
+        let _ = updateExteraPillStackSettingsInteractively(accountManager: self.context.sharedContext.accountManager, { settings in
+            settings.withUpdatedActivePills(kinds + settings.activePills.filter({ !kinds.contains($0) }))
+        }).start()
+    }
+}
+
+private extension ChatListSearchContainerNode {
+    func exteraPills() -> [ExteraPill] {
+        var pills: [ExteraPill] = []
+        for kind in self.exteraPillStackSettings.visiblePills {
+            let title: String
+            switch kind {
+            case "weather":
+                if let temperature = self.exteraPillsService.cachedTemperatureCelsius {
+                    title = String(format: "%.0f\u{00B0}", temperature)
+                } else {
+                    title = exteraPillString("extera_WeatherPill")
+                }
+            case "crypto":
+                title = exteraCryptoPillTitle(target: self.exteraPillStackSettings.cryptoTargetCurrency, rates: self.exteraRatesCoordinator.activateSnapshot())
+            case "unread", "media", "files", "links", "voice":
+                title = exteraPillString("extera_Pill\(kind.prefix(1).uppercased())\(kind.dropFirst())")
+            default:
+                continue
+            }
+            pills.append(ExteraPill(kind: kind, title: title))
+        }
+        return pills
+    }
+
+    func updateExteraPillStack() {
+        self.exteraPillStackNode.update(pills: self.exteraPills(), selectedKind: self.exteraSelectedPillKind, transition: .immediate)
+        self.exteraUpdateTopPanelsLayout()
+    }
+
+    func refreshExteraWeatherPill() {
+        let location = self.exteraPillStackSettings.weatherLocation
+        self.exteraPillsService.refreshWeather(location: location, completion: { [weak self] in
+            DispatchQueue.main.async(execute: { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                if strongSelf.exteraPillStackSettings.visiblePills.contains("weather") {
+                    strongSelf.updateExteraPillStack()
+                }
+            })
+        })
+    }
+
+    /// Both top strips share one slot: the pill stack sits directly under the search field and the inline result moves below it.
+    func exteraUpdateTopPanelsLayout() {
+        guard let (layout, navigationBarHeight) = self.validLayout else {
+            return
+        }
+        let transition = ContainedViewLayoutTransition.animated(duration: 0.25, curve: .easeInOut)
+        let width = max(0.0, layout.size.width - layout.safeInsets.left - layout.safeInsets.right)
+        let x = layout.safeInsets.left
+
+        let pillsVisible = !self.exteraPillStackSettings.visiblePills.isEmpty
+        self.exteraPillStackNode.isHidden = !pillsVisible
+
+        let pillFrame = CGRect(x: x, y: navigationBarHeight + 4.0, width: width, height: ExteraInlineResultsUI.pillStackHeight)
+        transition.updateFrame(node: self.exteraPillStackNode, frame: pillFrame)
+        self.exteraPillStackNode.updateLayout(size: pillFrame.size, transition: transition)
+
+        let panelY = pillsVisible ? pillFrame.maxY + 6.0 : navigationBarHeight + 4.0
+        let panelFrame = CGRect(x: x, y: panelY, width: width, height: ExteraInlineResultsUI.panelHeight)
+        transition.updateFrame(node: self.exteraInlineResultPanelNode, frame: panelFrame)
+        self.exteraInlineResultPanelNode.updateLayout(size: panelFrame.size, transition: transition)
     }
 }
