@@ -10,3 +10,5 @@ submodules/Stripe/* linguist-vendored
 third-party/* linguist-vendored
 # shell scripts must be LF or bash fails "set: pipefail: invalid option name"
 *.sh text eol=lf
+# TL schema: SwiftTL parser breaks on CRLF
+*.tl text eol=lf
