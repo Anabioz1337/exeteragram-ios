@@ -28,12 +28,13 @@ public enum ExteraTranslator {
         guard !text.isEmpty else {
             return .single(text)
         }
+        let normalizedSource = fromLanguage.isEmpty ? "auto" : fromLanguage
         let normalizedTarget = exteraProviderLanguageCode(toLanguage)
         switch provider {
         case .google:
-            return GoogleWebTranslationBackend.translate(text: text, fromLanguage: fromLanguage, toLanguage: normalizedTarget)
+            return GoogleWebTranslationBackend.translate(text: text, fromLanguage: normalizedSource, toLanguage: normalizedTarget)
         case .yandex:
-            return YandexWebTranslationBackend.translate(text: text, fromLanguage: fromLanguage, toLanguage: normalizedTarget)
+            return YandexWebTranslationBackend.translate(text: text, fromLanguage: normalizedSource, toLanguage: normalizedTarget)
         }
     }
 

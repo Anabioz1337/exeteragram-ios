@@ -7,6 +7,7 @@ import MtProtoKit
 import MessageUI
 import TelegramPresentationData
 import TelegramUIPreferences
+import ExteraTranslator
 import ItemListUI
 import ExteraPluginUI
 import PresentationDataUtils
@@ -765,6 +766,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
     case logTranslationRecognition(Bool)
     case resetTranslationStates
     case exteraPluginsUI
+    case exteraTranslator
     case hostInfo(PresentationTheme, String)
     case versionInfo(PresentationTheme)
     case collectCpuProfile
@@ -792,7 +794,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return DebugControllerSection.experiments.rawValue
         case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers, .exteraPluginsUI:
             return DebugControllerSection.experiments.rawValue
-        case .logTranslationRecognition, .resetTranslationStates:
+        case .logTranslationRecognition, .resetTranslationStates, .exteraTranslator:
             return DebugControllerSection.translation.rawValue
         case .disableVideoAspectScaling, .enableNetworkFramework, .enableNetworkExperiments, .rustMTProtoEngine, .networkEngineInfo:
             return DebugControllerSection.videoExperiments2.rawValue
@@ -911,6 +913,8 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return 68
         case .resetTranslationStates:
             return 69
+        case .exteraTranslator:
+            return 70
         case .compressedEmojiCache:
             return 55
         case .storiesJpegExperiment:
@@ -1138,6 +1142,10 @@ private enum DebugControllerEntry: ItemListNodeEntry {
         case .exteraPluginsUI:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Plugins", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
                 arguments.pushController(ExteraPluginsScreen())
+            })
+        case .exteraTranslator:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Translator", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                arguments.pushController(ExteraTranslatorScreen())
             })
         case .resetNotifications:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Reset Notifications", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
@@ -1999,7 +2007,11 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
         
         entries.append(.logTranslationRecognition(experimentalSettings.logLanguageRecognition))
         entries.append(.resetTranslationStates)
+<<<<<<< HEAD
         entries.append(.exteraPluginsUI)
+=======
+        entries.append(.exteraTranslator)
+>>>>>>> origin/extera-port
     }
 
     if isMainApp {

@@ -2001,7 +2001,15 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
         }
         
         let audioTranscriptionTrial = self.context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.AudioTranscriptionTrial())
-        
+
+        let exteraSpeechEnabled = self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSpeechSettings])
+        |> map { sharedData -> Bool in
+            if let entry = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSpeechSettings], let settings = entry.get(ExteraSpeechSettings.self) {
+                return settings.isEnabled
+            }
+            return ExteraSpeechSettings.defaultSettings.isEnabled
+        }
+
         let chatThemes = self.context.engine.themes.getChatThemes(accountManager: self.context.sharedContext.accountManager)
         
         let deviceContactsNumbers = self.context.sharedContext.deviceContactPhoneNumbers.get()
@@ -2081,8 +2089,9 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
             audioTranscriptionTrial |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_audioTranscriptionTrial"),
             chatThemes |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_chatThemes"),
             deviceContactsNumbers |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_deviceContactsNumbers"),
-            contentSettings |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_contentSettings")
-        ) |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_firstChatHistoryTransition")).startStrict(next: { [weak self] update, chatPresentationData, selectedMessages, updatingMedia, networkType, preferredStoryHighQuality, animatedEmojiAndGiftStickers, additionalAnimatedEmojiStickers, customChannelDiscussionReadState, customThreadOutgoingReadState, availableReactions, availableMessageEffects, savedMessageTags, defaultReaction, accountPeer, accountCountry, suggestAudioTranscription, promises, topicAuthorId, translationState, maxReadStoryId, recommendedChannels, audioTranscriptionTrial, chatThemes, deviceContactsNumbers, contentSettings in
+            contentSettings |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_contentSettings"),
+            exteraSpeechEnabled |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_exteraSpeechEnabled")
+        ) |> debug_measureTimeToFirstEvent(label: "chatHistoryNode_firstChatHistoryTransition")).startStrict(next: { [weak self] update, chatPresentationData, selectedMessages, updatingMedia, networkType, preferredStoryHighQuality, animatedEmojiAndGiftStickers, additionalAnimatedEmojiStickers, customChannelDiscussionReadState, customThreadOutgoingReadState, availableReactions, availableMessageEffects, savedMessageTags, defaultReaction, accountPeer, accountCountry, suggestAudioTranscription, promises, topicAuthorId, translationState, maxReadStoryId, recommendedChannels, audioTranscriptionTrial, chatThemes, deviceContactsNumbers, contentSettings, exteraSpeechEnabled in
             let (animatedEmojiStickers, premiumGiftStickers, tonGiftStickers) = animatedEmojiAndGiftStickers
             let (historyAppearsCleared, pendingUnpinnedAllMessages, pendingRemovedMessages, currentlyPlayingMessageIdAndType, scrollToMessageId, chatHasBots, allAdMessages) = promises
             
@@ -2311,7 +2320,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                 }
                 
                 let alwaysDisplayTranscribeButton = ChatMessageItemAssociatedData.DisplayTranscribeButton(
-                    canBeDisplayed: suggestAudioTranscription.0 < 2,
+                    canBeDisplayed: suggestAudioTranscription.0 < 2 || exteraSpeechEnabled,
                     displayForNotConsumed: suggestAudioTranscription.1,
                     providedByGroupBoost: audioTranscriptionProvidedByBoost
                 )

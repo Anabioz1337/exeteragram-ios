@@ -35,6 +35,8 @@ import AnimatedCountLabelNode
 import AudioWaveform
 import DeviceProximity
 import ShimmeringLinkNode
+import TelegramUIPreferences
+import ExteraSpeechUI
 
 private struct FetchControls {
     let fetch: (Bool) -> Void
@@ -203,6 +205,8 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
     public var audioTranscriptionState: AudioTranscriptionButtonComponent.TranscriptionState = .collapsed
     public var forcedAudioTranscriptionText: TranscribedText?
     private var transcribeDisposable: Disposable?
+    private var exteraSpeechSettingsDisposable: Disposable?
+    private var exteraSpeechSettings: ExteraSpeechSettings?
     public var hasExpandedAudioTranscription: Bool {
         if case .expanded = audioTranscriptionState {
             return true
@@ -278,6 +282,7 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
         self.fetchDisposable.dispose()
         self.audioLevelEventsDisposable.dispose()
         self.transcribeDisposable?.dispose()
+        self.exteraSpeechSettingsDisposable?.dispose()
     }
     
     override public func didLoad() {
@@ -347,12 +352,34 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
         }
     }
     
+    private func setupExteraSpeechSettingsSubscription(_ context: AccountContext) {
+        guard self.exteraSpeechSettingsDisposable == nil else {
+            return
+        }
+        self.exteraSpeechSettingsDisposable = (context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSpeechSettings])
+        |> map { sharedData -> ExteraSpeechSettings in
+            if let entry = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSpeechSettings], let settings = entry.get(ExteraSpeechSettings.self) {
+                return settings
+            }
+            return .defaultSettings
+        }
+        |> deliverOnMainQueue).start(next: { [weak self] settings in
+            self?.exteraSpeechSettings = settings
+        })
+    }
+
     private func transcribe() {
         guard let arguments = self.arguments, let context = self.context, let message = self.message else {
             return
         }
-        
         if !context.isPremium, case .inProgress = self.audioTranscriptionState {
+            return
+        }
+
+        if let settings = self.exteraSpeechSettings, settings.isEnabled,
+           transcribedText(message: EngineMessage(message)) == nil,
+           message.media.contains(where: { $0 is TelegramMediaFile }) {
+            self.transcribeOnDevice(settings: settings)
             return
         }
         
@@ -507,7 +534,59 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
             }
         }
     }
-    
+
+    private func transcribeOnDevice(settings: ExteraSpeechSettings) {
+        guard self.transcribeDisposable == nil, let arguments = self.arguments, let context = self.context, let message = self.message,
+              let mediaFile = message.media.first(where: { $0 is TelegramMediaFile }) as? TelegramMediaFile else {
+            return
+        }
+
+        let presentationData = context.sharedContext.currentPresentationData.with { $0 }
+
+        self.audioTranscriptionState = .inProgress
+        self.requestUpdateLayout(true)
+
+        self.transcribeDisposable = (exteraVoiceMessageTranscriptionSignal(context: context, mediaFile: mediaFile, settings: settings, deviceLanguageCode: presentationData.strings.baseLanguageCode)
+        |> deliverOnMainQueue).startStrict(next: { [weak self] outcome in
+            guard let strongSelf = self, let arguments = strongSelf.arguments else {
+                return
+            }
+            strongSelf.transcribeDisposable?.dispose()
+            strongSelf.transcribeDisposable = nil
+
+            switch outcome {
+            case let .transcript(text):
+                let _ = arguments.context.engine.messages.storeLocallyTranscribedAudio(messageId: arguments.message.id, text: text, isFinal: true, error: nil).startStandalone()
+                strongSelf.audioTranscriptionState = .collapsed
+                strongSelf.requestUpdateLayout(true)
+
+                let popupController = ExteraSpeechTranscriptPopupController(presentationData: presentationData, transcript: text, presentCopyFeedback: {
+                    if let hapticFeedback = strongSelf.hapticFeedback {
+                        hapticFeedback.impact(.light)
+                    }
+                })
+                arguments.controllerInteraction.presentControllerInCurrent(popupController, nil)
+            case .failure:
+                if let hapticFeedback = strongSelf.hapticFeedback {
+                    hapticFeedback.impact(.medium)
+                }
+                let tipController = UndoOverlayController(presentationData: presentationData, content: .universal(animation: "anim_voiceToText", scale: 0.065, colors: [:], title: nil, text: presentationData.strings.Extera_Speech_Error_Failed, customUndoText: nil, timeout: 5.0), elevatedLayout: false, position: .top, animateInAsReplacement: false, action: { _ in
+                    return false
+                })
+                arguments.controllerInteraction.presentControllerInCurrent(tipController, nil)
+
+                strongSelf.audioTranscriptionState = .collapsed
+                strongSelf.requestUpdateLayout(true)
+            }
+        }, completed: { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.transcribeDisposable?.dispose()
+            strongSelf.transcribeDisposable = nil
+        })
+    }
+
     private func presentAudioTranscriptionTooltip(finished: Bool) -> Bool {
         guard let arguments = self.arguments, !arguments.associatedData.isPremium else {
             return false
@@ -1079,6 +1158,7 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
                             strongSelf.message = arguments.message
                             strongSelf.arguments = arguments
                             strongSelf.file = arguments.file
+                            strongSelf.setupExteraSpeechSettingsSubscription(arguments.context)
                             
                             let _ = titleApply()
                             let _ = descriptionApply()
