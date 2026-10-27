@@ -6,6 +6,7 @@ import TelegramCore
 import Postbox
 import SwiftSignalKit
 import TelegramPresentationData
+import exteraAppearance
 import AnimationUI
 import AppBundle
 import AccountContext
@@ -742,10 +743,10 @@ public final class AvatarNode: ASDisplayNode {
                 self.imageNode.cornerRadius = 0.0
             case .round:
                 self.imageNode.clipsToBounds = true
-                self.imageNode.cornerRadius = displayDimensions.height * 0.5
+                self.imageNode.cornerRadius = exteraAvatarCornerRadius(displayDimensions: displayDimensions) ?? displayDimensions.height * 0.5
             case .roundedRect:
                 self.imageNode.clipsToBounds = true
-                self.imageNode.cornerRadius = displayDimensions.height * 0.25
+                self.imageNode.cornerRadius = exteraAvatarCornerRadius(displayDimensions: displayDimensions) ?? displayDimensions.height * 0.25
             case .bubble:
                 break
             }
