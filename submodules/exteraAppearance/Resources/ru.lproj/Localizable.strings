@@ -1,0 +1,15 @@
+"extera_AvatarCorners" = "Закругление аватарок";
+"extera_AvatarCornersLeft" = "Квадрат";
+"extera_AvatarCornersRight" = "Круг";
+"extera_ActionBarTitle" = "Текст заголовка";
+"extera_ActionBarTitleUsername" = "Короткая ссылка";
+"extera_ActionBarTitleName" = "Имя";
+"extera_CenterTitle" = "Заголовок по центру";
+"extera_HideActionBarStatus" = "Скрыть статус";
+"extera_NewSwitchStyle" = "Стиль переключателей";
+"extera_DisableDividers" = "Отключить разделители";
+"extera_ForceBlur" = "Принудительное размытие";
+"extera_ForceBlurInfo" = "Размытие будет применяться на абсолютно все темы.";
+"extera_ForceSnow" = "Принудительный снег";
+"extera_ForceSnowInfo" = "Снег появится в заголовке, боковом меню и на заднем фоне чатов.";
+"extera_UseSystemFonts" = "Системные шрифты";

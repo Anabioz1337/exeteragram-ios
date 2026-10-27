@@ -1,0 +1,15 @@
+"extera_AvatarCorners" = "Avatar Corners";
+"extera_AvatarCornersLeft" = "Square";
+"extera_AvatarCornersRight" = "Circle";
+"extera_ActionBarTitle" = "Title Text";
+"extera_ActionBarTitleUsername" = "Username";
+"extera_ActionBarTitleName" = "First Name";
+"extera_CenterTitle" = "Center Title";
+"extera_HideActionBarStatus" = "Hide Status";
+"extera_NewSwitchStyle" = "Switch Style";
+"extera_DisableDividers" = "Disable Dividers";
+"extera_ForceBlur" = "Force Blur";
+"extera_ForceBlurInfo" = "Blur effects will be applied to all themes, overriding their default settings.";
+"extera_ForceSnow" = "Force Snowflakes";
+"extera_ForceSnowInfo" = "Falling snowflakes will appear in the action bar, side menu, and chat backgrounds.";
+"extera_UseSystemFonts" = "Use System Fonts";
