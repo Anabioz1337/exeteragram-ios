@@ -13,6 +13,14 @@ private func cloudPhotoRepresentations(peer: Peer) -> [TelegramMediaImageReprese
     return []
 }
 
+private let datacenterLocations: [Int: String] = [
+    1: "Miami FL, USA",
+    2: "Amsterdam, NL",
+    3: "Miami FL, USA",
+    4: "Amsterdam, NL",
+    5: "Singapore, SG"
+]
+
 public enum ExteraProfilePeerInfo {
     /// Peer id as the Bot API spells it: users keep their raw id, basic groups get a minus,
     /// channels and supergroups are prefixed with -100.
@@ -43,10 +51,16 @@ public enum ExteraProfilePeerInfo {
 
     public static func idAndDcLine(peer: Peer) -> String {
         let id = botApiIdString(peer: peer)
-        if let dc = photoDatacenterId(peer: peer) {
-            return "\(id) (DC \(dc))"
+        if let dc = photoDatacenterId(peer: peer), let location = datacenterLocations[dc] {
+            return "\(id)\nDC\(dc), \(location)"
         }
         return id
+    }
+
+    /// The exact creation date only exists on channels and supergroups; every other peer kind
+    /// falls back to the oldest locally stored message (`exteraPeerStoredHistoryStats`).
+    public static func exactCreationDate(channel: TelegramChannel) -> Int32? {
+        return channel.creationDate
     }
 }
 
