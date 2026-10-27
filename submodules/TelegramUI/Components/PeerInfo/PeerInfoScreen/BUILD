@@ -161,6 +161,7 @@ swift_library(
         "//submodules/TelegramUI/Components/TextNodeWithEntities",
         "//submodules/UrlHandling",
         "//submodules/Pasteboard",
+        "//submodules/exteraPreferencesUI:exteraPreferencesUI",
         "//submodules/TelegramUI/Components/Chat/ChatRichTextEditorComposer",
         "//submodules/TelegramUI/Components/EmojiTextAttachmentView",
         "//submodules/TelegramUI/Components/MediaEditor",

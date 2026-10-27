@@ -1723,7 +1723,7 @@ final class ChatRecentActionsControllerNode: ViewControllerTracingNode {
                         break
                     case .sendGift:
                         break
-                    case .chats, .contacts, .compose, .postStory, .settings, .unknownDeepLink, .oauth, .createBot, .textStyle, .webProxy:
+                    case .chats, .contacts, .compose, .postStory, .settings, .unknownDeepLink, .oauth, .createBot, .textStyle, .webProxy, .exteraSettings:
                         break
                 }
             }

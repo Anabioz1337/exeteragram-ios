@@ -15,6 +15,7 @@ swift_library(
         "//submodules/Display:Display",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",
+        "//submodules/exteraSettingsCore:exteraSettingsCore",
         "//submodules/MediaResources:MediaResources",
         "//submodules/AppBundle:AppBundle",
         "//submodules/StringPluralization:StringPluralization",

@@ -45,6 +45,7 @@ import AuthConfirmationScreen
 import OpenInExternalAppUI
 import CreateBotScreen
 import WalletSendScreen
+import exteraPreferencesUI
 
 private func defaultNavigationForPeerId(_ peerId: EnginePeer.Id?, navigation: ChatControllerInteractionNavigateToPeer) -> ChatControllerInteractionNavigateToPeer {
     if case .default = navigation {
@@ -2193,5 +2194,20 @@ func openResolvedUrlImpl(
                 }), inputText: .plain(text: "", entities: []), copyResult: nil, translateChat: nil)
                 navigationController?.pushViewController(controller)
             }
+        case let .exteraSettings(payload):
+            dismissInput()
+            let strings = exteraLocalizedStrings(presentationData)
+            guard !payload.isEmpty, let imported = exteraDecodeSettingsPayload(payload) else {
+                present(UndoOverlayController(presentationData: presentationData, content: .info(title: nil, text: strings.value("extera_ImportFailed"), timeout: nil, customUndoText: nil), elevatedLayout: true, animateInAsReplacement: false, action: { _ in return true }), nil)
+                return
+            }
+            exteraRequestApplyImportedSettings(
+                context: context,
+                presentationData: presentationData,
+                imported: imported,
+                present: { controller in
+                    present(controller, nil)
+                }
+            )
     }
 }

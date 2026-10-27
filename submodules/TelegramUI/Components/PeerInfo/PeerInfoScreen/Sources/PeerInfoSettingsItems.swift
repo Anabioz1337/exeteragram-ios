@@ -15,6 +15,7 @@ import TelegramStringFormatting
 import SettingsUI
 import PeerNameColorItem
 import WalletContext
+import exteraPreferencesUI
 
 enum SettingsSection: Int, CaseIterable {
     case edit
@@ -267,7 +268,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 3, text: presentationData.strings.Settings_Appearance, icon: PresentationResourcesSettings.appearance, action: {
         interaction.openSettings(.appearance)
     }))
-    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 6, text: exteraChatP1String("extera.ChatP1.Title"), icon: PresentationResourcesSettings.dataAndStorage, action: {
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 9, text: exteraChatP1String("extera.ChatP1.Title"), icon: PresentationResourcesSettings.dataAndStorage, action: {
         interaction.openSettings(.exteraChatP1)
     }))
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 7, text: presentationData.strings.Extera_Speech_Settings_Title, icon: PresentationResourcesSettings.voices, action: {
@@ -285,7 +286,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 4, label: .text(languageName.isEmpty ? presentationData.strings.Localization_LanguageName : languageName), text: presentationData.strings.Settings_AppLanguage, icon: PresentationResourcesSettings.language, action: {
         interaction.openSettings(.language)
     }))
-    
+
     let exteraStrings = exteraStrings(languageCode: presentationData.strings.primaryComponent.languageCode)
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 60, text: exteraStrings.settingsTitle, icon: PresentationResourcesSettings.dataAndStorage, action: {
         interaction.openSettings(.extera)

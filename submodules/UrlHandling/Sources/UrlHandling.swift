@@ -157,6 +157,7 @@ public enum ParsedInternalUrl {
     case oauth(url: String)
     case createBot(parentBot: String, username: String?, title: String?)
     case textStyle(slug: String)
+    case exteraSettings(payload: String)
     case sendGrams(queryItems: [URLQueryItem])
     case externalUrl(url: String)
 }
@@ -677,6 +678,14 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                     return .createBot(parentBot: parentBot, username: username, title: title)
                 } else if pathComponents.count >= 2 && pathComponents[0] == "addstyle" {
                     return .textStyle(slug: pathComponents[1])
+                } else if pathComponents[0] == "exteraSettings" {
+                    var payload: String?
+                    for queryItem in components.queryItems ?? [] {
+                        if let value = queryItem.value, queryItem.name == "s" {
+                            payload = value
+                        }
+                    }
+                    return .exteraSettings(payload: payload ?? "")
                 } else if pathComponents[0] == "m" {
                     return .messageLink(slug: pathComponents[1])
                 } else if pathComponents.count == 3 && pathComponents[0] == "c" {
@@ -1508,6 +1517,8 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
             }
             return .single(.progress)
             |> then(signal)
+        case let .exteraSettings(payload):
+            return .single(.result(.exteraSettings(payload: payload)))
     }
 }
 

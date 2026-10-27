@@ -382,6 +382,7 @@ public enum ResolvedUrl {
     case oauth(url: String)
     case createBot(parentBot: EnginePeer.Id, username: String?, title: String?)
     case textStyle(style: TelegramComposeAIMessageMode.CloudStyle.Custom, initialPreview: AIMessageStylePreview?)
+    case exteraSettings(payload: String)
     
     public enum ResolvedCollectible {
         case gift(StarGift.UniqueGift)

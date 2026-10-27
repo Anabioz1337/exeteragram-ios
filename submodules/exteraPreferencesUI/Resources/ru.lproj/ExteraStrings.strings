@@ -1,0 +1,1254 @@
+// exteraGram — user-facing strings prepared from the Android fork catalog
+// Source: out/extera-strings-en.xml (+ values/extera.xml of the 2023 tree)
+
+"extera_exteraAppName" = "exteraGram";
+"extera_Preferences" = "Настройки exteraGram";
+
+// Main Menu
+"extera_Links" = "Ссылки";
+"extera_Crowdin" = "Перевод";
+"extera_Website" = "Веб-сайт";
+"extera_Categories" = "Категории";
+"extera_Developer" = "**%1$@** — участник команды разработки **exteraGram**.";
+"extera_DeveloperCompact" = "Участник команды разработки **exteraGram**.";
+"extera_Supporter" = "**%1$@** поддержал разработку **exteraGram** и получил уникальный значок.";
+"extera_OfficialChannel" = "**%1$@** — официальный ресурс **exteraGram**.";
+"extera_NoSuchSetting" = "Похоже, такой настройки не существует.";
+"extera_SettingLinkToSavedMessages" = "Ссылка на настройку отправлена в **Сохранённое**.";
+"extera_SettingLinkToUser" = "Ссылка на настройку отправлена в **%1$@**.";
+"extera_SettingLinkToChats" = "Ссылка на настройку отправлена в **%1$@**.";
+"extera_LiteBatteryFollowSystem" = "Использовать системный режим энергосбережения";
+"extera_LiteBatteryFollowSystemState" = "Система";
+"extera_LiteBatteryFollowSystemInfo" = "Управляется системным режимом энергосбережения.";
+
+// Pill Stack
+"extera_PillStackPills" = "Пилюли";
+"extera_PillStackPillsInfo" = "Показывать интерактивные пилюли в поле поиска";
+"extera_PillStackPillsSettingsInfo" = "Настройте, какие пилюли будут видны. Тап — показать или скрыть, удержание с перетаскиванием меняет порядок.";
+"extera_PillStackActivePills" = "Активные пилюли";
+"extera_PillStackHiddenPills" = "Скрытые пилюли";
+"extera_CurrentLocation" = "Текущая локация";
+"extera_SelectLocation" = "Выбрать на карте";
+"extera_WeatherPill" = "Погода";
+"extera_WeatherSettingsInfo" = "Выберите способ определения локации для погоды в поиске.";
+"extera_WeatherLocation" = "Определение локации";
+"extera_WeatherLocationPermissionNo" = "Чтобы показывать текущую погоду, exteraGram нужен доступ к вашей локации.";
+"extera_WeatherLocationPermissionGrant" = "Выдать разрешение";
+"extera_WeatherLocationServicesEnable" = "Включить геолокацию";
+"extera_WeatherPillTopInfo" = "Настройки погодной пилюли Pill Stack.";
+"extera_PillStackInfiniteScrolling" = "Бесконечная прокрутка";
+"extera_CryptoPillTargetCurrency" = "Целевая валюта";
+
+// Proxy
+"extera_ProxyDisableOn" = "Отключать прокси";
+"extera_ProxyDisableNever" = "Никогда";
+"extera_ProxyDisableAlways" = "Всегда";
+"extera_ProxyDisableOnVpn" = "VPN";
+"extera_ProxyDisableOnMobileData" = "Мобильный интернет";
+"extera_ProxyDisableOnWiFi" = "Wi-Fi";
+"extera_ProxyType" = "Тип";
+"extera_Unknown" = "Неизвестно";
+"extera_ProxyRename" = "Название прокси (необязательно)";
+"extera_ProxyPinLimitReached" = "Можно закрепить до %1$d прокси.";
+"extera_CopyIpAddress" = "Копировать IP-адрес";
+"extera_IpInfoUnavailable" = "Не удалось загрузить данные об IP-адресе.";
+"extera_IpInfoCountry" = "Страна";
+"extera_IpInfoIsp" = "Провайдер";
+"extera_IpInfoOrganization" = "Организация";
+"extera_IpInfoDomain" = "Домен";
+"extera_IpInfoTimezone" = "Часовой пояс";
+
+// Translator
+"extera_TranslationProvider" = "Провайдер перевода";
+"extera_TranslationTarget" = "Язык перевода";
+"extera_TranslationTargetApp" = "Как в приложении";
+"extera_ShowTranslateChatButtonLocked" = "Выберите другой провайдер перевода или оформите подписку **Telegram Premium**.";
+
+// Formatting & Behavior
+"extera_DisableNumberRounding" = "Отключить округление чисел";
+"extera_FormatTimeWithSeconds" = "Показывать время с секундами";
+"extera_RelativeLastSeen" = "Относительное время последнего визита";
+"extera_InAppVibration" = "Вибрация внутри приложения";
+"extera_DisableNotificationDelay" = "Отключить задержку уведомлений";
+"extera_AccountNotifications" = "Аккаунты";
+"extera_AccountNotificationsCount" = "%1$d из %2$d";
+"extera_AccountNotificationsInfo" = "Непомеченные аккаунты не показывают уведомления, пока вы пользуетесь другим аккаунтом.";
+"extera_AccountNotificationsCurrent" = "Уведомления текущего аккаунта показываются всегда.";
+"extera_FilterZalgo" = "Фильтр \"Zalgo\"";
+"extera_FilterZalgoInfo" = "Убирает символы \"%1$@\" из имён и сообщений.";
+"extera_RestartRequired" = "Перезапустите приложение, чтобы изменения вступили в силу.";
+
+// Message Formatting
+"extera_CodeBlock" = "Код";
+"extera_CreateCode" = "Создать блок кода";
+"extera_CreateCodeLanguage" = "Язык";
+
+// Speed
+"extera_DownloadSpeedBoost" = "Увеличение скорости загрузки";
+"extera_UploadSpeedBoost" = "Увеличение скорости отправки";
+"extera_Ultra" = "Ультра";
+"extera_SpeedBoostInfo" = "Ультра ускорение может вызывать проблемы с загрузкой файлов и потоковым воспроизведением видеороликов при медленном интернет соединении.";
+
+// Storage
+"extera_StorageSettings" = "Хранилище";
+"extera_CustomSavePath" = "Своя папка сохранения";
+"extera_CustomSavePathHint" = "Оставьте пустым для сохранения в корень";
+"extera_CustomSavePathDefault" = "Сохранять в корень";
+"extera_CustomSavePathInfo" = "Файлы будут сохраняться напрямую в Pictures, Downloads и т.д.";
+"extera_CustomSavePathInfoFolder" = "Файлы будут сохраняться в Pictures/%1$@, Downloads/%1$@ и т.д.";
+
+// Profile
+"extera_Profile" = "Профиль";
+"extera_HidePhoneNumber" = "Скрыть номер телефона";
+"extera_ShowIdAndDc" = "Показывать ID и DC";
+"extera_ShowIdAndDcInfo" = "Telegram API показывает ID как есть, а Bot API добавляет минус для групп и -100 для супергрупп и каналов.";
+
+// Archive
+"extera_HideArchiveFolder" = "Скрывать папку архива";
+"extera_ArchiveOnPull" = "Открывать архив при вытягивании";
+"extera_DisableUnarchiveSwipe" = "Отключить жест \"Вернуть\"";
+"extera_DisableUnarchiveSwipeInfo" = "Свайп влево не будет убирать чаты из архива.";
+
+// Appearance
+"extera_Appearance" = "Внешний вид";
+
+// Avatars
+"extera_AvatarCorners" = "Закругление аватарок";
+"extera_AvatarCornersLeft" = "Квадрат";
+"extera_AvatarCornersRight" = "Круг";
+"extera_SingleCornerRadius" = "Единый радиус углов";
+"extera_SingleCornerRadiusInfo" = "Форумы получат ту же форму аватаров, что и чаты.";
+
+// Chat List
+"extera_ListOfChats" = "Список чатов";
+"extera_ActionBarTitle" = "Текст заголовка";
+"extera_ActionBarTitleUsername" = "Короткая ссылка";
+"extera_ActionBarTitleName" = "Имя";
+"extera_HideStories" = "Скрыть истории";
+"extera_HideActionBarStatus" = "Скрыть статус";
+"extera_CenterTitle" = "Заголовок по центру";
+"extera_ChatHeader" = "Шапка чата";
+"extera_HideFloatingButton" = "Скрыть плавающую кнопку";
+"extera_HideDialogsSearchBar" = "Скрыть строку поиска";
+"extera_BottomNavigationBarMode" = "Нижняя панель навигации";
+"extera_BottomNavigationModeShow" = "Показывать";
+"extera_BottomNavigationModeHide" = "Скрывать";
+"extera_BottomNavigationModeFloating" = "Плавающая";
+"extera_HideNavigationBarLabels" = "Скрыть подписи";
+"extera_SenderMiniAvatars" = "Мини-аватары отправителей";
+"extera_ListOfChatsInfo" = "Текст заголовка будет меняться в зависимости от имени папки, когда включены только иконки.";
+
+// Folders (Tabs)
+"extera_TabTitleStyle" = "Заголовки папок";
+"extera_TabTitleStyleTextWithIcons" = "Названия и иконки";
+"extera_TabTitleStyleIconsOnly" = "Только иконки";
+"extera_TabTitleStyleTextOnly" = "Только названия";
+"extera_TabCounter" = "Счётчик уведомлений";
+"extera_TabCounterUnmuted" = "Без звука";
+"extera_HideAllChats" = "Скрыть папку \"%1$@\"";
+"extera_FoldersInfo" = "Иконки синхронизируются с Telegram.";
+
+// App Navigation
+"extera_AppNavigation" = "Навигация приложения";
+"extera_AppNavigationInfo" = "Настройки верхнего меню и бокового меню";
+"extera_NavigationDrawer" = "Боковое меню";
+"extera_NavigationDrawerInfo" = "Заменяет верхнее правое меню классическим выдвижным боковым меню и кнопкой-гамбургером.";
+"extera_NavigationDrawerImmersiveAnimation" = "Иммерсивная анимация";
+"extera_NavigationDrawerProxyPingShort" = "%1$d мс";
+"extera_MainMenuItems" = "Элементы меню";
+"extera_MainMenuItemsInfo" = "Тап — показать или скрыть элемент, удержание — изменить порядок. Разметка общая для меню и бокового меню.";
+"extera_MainMenuHiddenItems" = "Скрытые элементы меню";
+"extera_MainMenuDivider" = "Разделитель";
+"extera_MainMenuAddDivider" = "Добавить разделитель";
+"extera_MainMenuRemoveSettingsInfo" = "Настройки нельзя скрыть при отключённой нижней панели навигации.";
+
+// Icon Packs
+"extera_IconPacks" = "Пакеты иконок";
+"extera_IconPacksInfo" = "Замена иконок по всему приложению";
+"extera_IconPickerFilter" = "Фильтр";
+"extera_IconPickerAllIcons" = "Все иконки";
+"extera_IconPickerReplacedIcons" = "Заменённые иконки";
+"extera_IconPickerNotReplacedIcons" = "Иконки без замены";
+"extera_IconPickerSaveAndExit" = "Сохранить и выйти";
+"extera_BasePacks" = "Базовые пакеты";
+"extera_BaseIconPackInfo" = "Базовый пакет служит запасным для иконок, не заменённых другими пакетами.";
+"extera_IconPacksHint" = "Тап — включить или отключить пакет. Удержание — изменить или удалить.";
+"extera_NewIconPack" = "Создать новый пакет иконок";
+"extera_EditIconPackInfo" = "Изменить данные";
+"extera_EnabledPacks" = "Включённые пакеты";
+"extera_AllPacks" = "Все пакеты";
+"extera_PackName" = "Название пакета";
+"extera_AuthorNameOptional" = "Автор (необязательно)";
+"extera_NameCannotBeEmpty" = "Название не может быть пустым.";
+"extera_Version" = "Версия";
+"extera_InstallPack" = "Установить пакет";
+"extera_IconCount_one" = "%1$d иконка";
+"extera_IconCount_two" = "%1$d иконки";
+"extera_IconCount_few" = "%1$d иконки";
+"extera_IconCount_many" = "%1$d иконок";
+"extera_IconCount_other" = "%1$d иконок";
+"extera_UpdatePack" = "Обновить пакет";
+"extera_DeletePack" = "Удалить пакет";
+"extera_DeletePackInfo" = "Вы действительно хотите удалить **%1$@**?";
+"extera_IconPackErrorInvalidArchive" = "Архив пакета иконок недействителен.";
+"extera_IconPackErrorMissingMetadata" = "В архиве пакета нет metadata.json.";
+"extera_IconPackErrorMetadataTooLarge" = "Метаданные пакета слишком велики.";
+"extera_IconPackErrorInvalidMetadata" = "Метаданные пакета недействительны.";
+"extera_IconPackErrorTooManyFiles" = "В пакете слишком много файлов.";
+"extera_IconPackErrorArchiveTooLarge" = "Пакет слишком большой.";
+"extera_IconPackErrorFileTooLarge" = "Один из файлов иконок слишком велик.";
+"extera_IconPackErrorCompressionRatioTooHigh" = "Архив пакета сжат слишком сильно.";
+"extera_IconPackErrorStorage" = "Не удалось сохранить пакет иконок.";
+
+// App Icons
+"extera_IconPack" = "Иконки";
+"extera_AppIconMonet" = "Monet";
+"extera_AppIconSunset" = "Закат";
+"extera_AppIconAurora" = "Аврора";
+"extera_AppIconGoogle" = "Google";
+"extera_AppIconAmethyst" = "Аметист";
+"extera_AppIconInvincible" = "Непобедимый";
+"extera_AppIconCyberpunk" = "Киберпанк";
+"extera_AppIconSpace" = "Космос";
+"extera_AppIconIceAge" = "Ледниковый период";
+"extera_AppIconEditor" = "Редактор";
+"extera_AppIconOrbit" = "Орбита";
+"extera_AppIconSus" = "Самозванец";
+"extera_AppIconWinter" = "Зима";
+"extera_AppIconsApply" = "Выбрать";
+"extera_AppIconsKeep" = "Оставить эту";
+"extera_AppIconDefaultInfo" = "It just works";
+"extera_AppIconWinterInfo" = "Winter is coming";
+"extera_AppIconMonetInfo" = "Any color you like";
+"extera_AppIconOrbitInfo" = "To infinity and beyond";
+"extera_AppIconAuroraInfo" = "Localized entirely in your phone";
+"extera_AppIconSunsetInfo" = "Here comes the sun";
+"extera_AppIconIceAgeInfo" = "Where's my acorn?";
+"extera_AppIconEditorInfo" = "final_v2_FINAL.fig";
+"extera_AppIconSpaceInfo" = "The Final Frontier";
+"extera_AppIconAmethystInfo" = "Perfectly balanced";
+"extera_AppIconCyberpunkInfo" = "Wake up, samurai";
+"extera_AppIconGoogleInfo" = "Don't be evil";
+"extera_AppIconInvincibleInfo" = "Think, Mark!";
+
+// General Appearance
+"extera_MaterialDesign3" = "Material Design 3";
+"extera_Sections" = "Секции";
+"extera_SeparateHeaders" = "Раздельные заголовки";
+"extera_DividerStyle" = "Стиль разделителей";
+"extera_DividerStyleHidden" = "Скрытый";
+"extera_DividerStyleLine" = "Линия";
+"extera_DividerStyleSegments" = "Сегменты";
+"extera_UseSystemFonts" = "Системные шрифты";
+"extera_UseSystemEmoji" = "Системные эмодзи";
+"extera_NewLoadingStyle" = "Стиль загрузки";
+"extera_NewSliderStyle" = "Стиль ползунков";
+"extera_NewSwitchStyle" = "Стиль переключателей";
+"extera_NewFabStyle" = "Плавающая кнопка";
+"extera_NewProfileActionsStyle" = "Кнопки профиля";
+"extera_NewPlayerStyle" = "Плеер";
+"extera_TabletMode" = "Планшетный режим";
+"extera_RemoveMessageTail" = "Убрать хвост сообщения";
+"extera_GooeyAvatarAnimation" = "\"Тягучая\" анимация аватаров";
+"extera_CustomChatThemes" = "Свои темы в чатах";
+"extera_CustomChatThemesInfo" = "В каждом чате будет показываться тема, выбранная именно для него.";
+"extera_PredictiveBackIntensity" = "Интенсивность предиктивного свайпа назад";
+"extera_PredictiveBackMax" = "Максимум";
+"extera_PredictiveBackInfo" = "Регулирует, насколько далеко экран уезжает при свайпе назад.";
+"extera_TransitionAnimation" = "Анимация переходов";
+"extera_TransitionAnimationAosp" = "AOSP";
+"extera_TransitionAnimationSpring" = "Spring";
+"extera_TransitionAnimationInfo" = "AOSP использует стандартный переход Android, Spring — более плавный.";
+
+// Blur & Effects
+"extera_BlurOptions" = "Настройки размытия";
+"extera_GlassOutlineStyle" = "Контур стекла";
+"extera_GlassOutlineGlare" = "Блик";
+"extera_GlassOutlineSolid" = "Сплошной";
+"extera_GlassOutlineHidden" = "Скрытый";
+"extera_ForceBlur" = "Принудительное размытие";
+"extera_ForceBlurInfo" = "Размытие будет применяться на абсолютно все темы.";
+"extera_ForceSnow" = "Принудительный снег";
+"extera_ForceSnowInfo" = "Снег появится в заголовке, боковом меню и на заднем фоне чатов.";
+
+// Chat Media & Appearance
+"extera_StickerSize" = "Размер стикеров";
+"extera_StickerSizeLeft" = "Маленький";
+"extera_StickerSizeRight" = "Большой";
+"extera_StickerSizeDialogMessageReplyTo" = "жесть";
+"extera_StickerSizeDialogMessage" = "ого, он такой милый!";
+"extera_StickerShape" = "Форма стикеров";
+"extera_StickerShapeRounded" = "Закруглённая";
+"extera_StickerShapeRoundedMsg" = "Сообщение";
+"extera_StickerTimeMode" = "Время на стикерах";
+"extera_StickerTimeSide" = "Сбоку";
+"extera_StickerTimeHidden" = "Скрыто";
+"extera_ViewEmojiSet" = "Просмотреть набор эмодзи";
+"extera_UnlimitedRecentStickers" = "Бесконечные недавние стикеры";
+"extera_HideReactions" = "Скрыть реакции";
+"extera_HideReactionsInfo" = "Реакции будут полностью скрыты из интерфейса.";
+"extera_ReplyBackground" = "Фон ответа";
+"extera_ChatSettingsInfo" = "Настройки медиа, иконка приложения и другое";
+
+// AI
+"extera_AIChat" = "AI Chat";
+"extera_AIChatInfo" = "Сервисы, роли и история";
+"extera_AIChatInfo2" = "Генерация текста из сообщений или перед отправкой.";
+
+// AI Services
+"extera_Services" = "Сервисы";
+"extera_ServicesInfo" = "Выберите подходящий сервис для работы с языковыми моделями.";
+"extera_NewService" = "Новый сервис";
+"extera_EditService" = "Изменить сервис";
+"extera_ServiceURL" = "URL";
+"extera_ServiceModel" = "Модель";
+"extera_ServiceKey" = "API-ключ";
+"extera_ServiceInfo" = "О сервисе";
+"extera_ServiceProvider" = "Провайдер";
+"extera_ServiceProviderCustom" = "Свой";
+"extera_ServiceTestAndSave" = "Проверить и сохранить";
+"extera_ServicePasteService" = "Вставить сервис";
+"extera_ServicePasteKey" = "Вставить API-ключ";
+"extera_DeleteServiceInfo" = "Вы действительно хотите удалить **%1$@**?";
+"extera_ServiceAlreadyExists" = "Сервис уже существует";
+"extera_ServiceAlreadyExistsInfo" = "Переключено на существующий сервис.";
+"extera_ServiceDuplicate" = "Другой сервис уже использует этот URL, модель и ключ.";
+
+// AI Roles
+"extera_Roles" = "Роли";
+"extera_RolesInfo" = "Создавайте роли под свои задачи!";
+"extera_Suggestions" = "Предложения";
+"extera_RoleName" = "Название";
+"extera_RolePrompt" = "Промпт";
+"extera_PromptInfo" = "Промпт — начальный текст для модели, чтобы начать генерацию ответа или продолжить диалог.";
+"extera_NewRole" = "Новая роль";
+"extera_EditRole" = "Изменить роль";
+"extera_DeleteRoleInfo" = "Вы действительно хотите удалить **%1$@**?";
+
+// AI History & Behavior
+"extera_HistoryInfo" = "История диалога позволяет ИИ учитывать предыдущие запросы при генерации новых ответов.";
+"extera_AIGeneration" = "Генерация";
+"extera_AIReasoning" = "Размышление";
+"extera_AIReasoningInfo" = "Позволяет поддерживаемым моделям этого сервиса тратить дополнительные токены на размышления перед ответом.";
+"extera_AITemperature" = "Температура";
+"extera_AITemperatureInfo" = "Температура управляет случайностью ответа: выше — креативнее, ниже — сфокусированнее.";
+"extera_ResponseStreaming" = "Стриминг ответа";
+"extera_ResponseStreamingInfo" = "Обеспечивает более плавное и быстрое отображение ответов.";
+"extera_ShowResponseOnly" = "Показывать только ответ";
+"extera_InsertResponseAsQuote" = "Вставлять ответ как цитату";
+"extera_TapToAddApiKey" = "Нажмите, чтобы добавить API-ключ и начать пользоваться функциями ИИ.";
+"extera_Generate" = "Сгенерировать";
+"extera_GenerateWithHistory" = "С историей";
+"extera_GenerateWithPhoto" = "С фото";
+"extera_ClearConversationHistoryInfo" = "Вы точно хотите очистить **всю** историю диалогов с ИИ?";
+
+// AI Errors
+"extera_AIError400" = "Неверный запрос";
+"extera_AIError400Info" = "Проверьте параметры запроса.";
+"extera_AIError401" = "Недействительные учётные данные";
+"extera_AIError401Info" = "API-ключ недействителен или отключён. Проверьте свои учётные данные.";
+"extera_AIError402" = "Недостаточно кредитов";
+"extera_AIError402Info" = "У вашего аккаунта или API-ключа закончились кредиты. Пополните баланс и повторите запрос.";
+"extera_AIError403" = "Доступ запрещён";
+"extera_AIError403Info" = "У вас нет доступа к этой модели или ресурсу. Проверьте API-ключ и права аккаунта.";
+"extera_AIError408" = "Таймаут запроса";
+"extera_AIError408Info" = "Ваш запрос не был обработан вовремя. Попробуйте позже.";
+"extera_AIError429" = "Превышен лимит запросов";
+"extera_AIError429Info" = "Вы отправляете запросы слишком часто. Подождите немного и попробуйте снова.";
+"extera_AIError502" = "Сбой модели";
+"extera_AIError502Info" = "Выбранная модель недоступна или вернула некорректный ответ.";
+"extera_AIError503" = "Сервис недоступен";
+"extera_AIError503Info" = "Сервис временно недоступен или перегружен. Попробуйте позже.";
+"extera_AIError" = "Ошибка сервера";
+"extera_AIErrorInfo" = "Повторите запрос через некоторое время.";
+"extera_AIErrorEmpty" = "Пустой ответ";
+"extera_AIErrorEmptyInfo" = "Модель ничего не вернула. Попробуйте снова или выберите другую модель.";
+"extera_AIOnDevice" = "На устройстве";
+"extera_AIErrorOnDevice" = "Модель на устройстве недоступна";
+"extera_AIErrorOnDeviceInfo" = "Это устройство не может запустить модель на устройстве. Выберите другой сервис.";
+"extera_AIErrorOnDeviceDownload" = "Модель не загружена";
+"extera_AIErrorOnDeviceDownloadInfo" = "Модель на устройстве ещё не загружена.";
+"extera_AIErrorOnDeviceDownloading" = "Модель загружается";
+"extera_AIErrorOnDeviceDownloadingInfo" = "Модель на устройстве всё ещё загружается. Попробуйте позже.";
+"extera_AIErrorOnDeviceTooLong" = "Сообщение слишком длинное";
+"extera_AIErrorOnDeviceTooLongInfo" = "Модель на устройстве не может вместить этот запрос. Сократите его или выберите другой сервис.";
+"extera_AIErrorOnDeviceStopped" = "Модель прервалась";
+"extera_AIErrorOnDeviceStoppedInfo" = "Модель остановилась во время ответа — часто из-за нехватки памяти. Попробуйте снова или выберите более лёгкую модель.";
+"extera_AIOnDeviceDownloadTitle" = "Загрузить модель на устройство";
+"extera_AIOnDeviceDownloadInfo" = "Модель загружается один раз и затем работает полностью на этом устройстве, никуда ничего не отправляя. Загрузка большая и выполняется системными средствами, поэтому её нельзя отменить после начала. Рекомендуется Wi-Fi.";
+"extera_AIOnDeviceDownloadButton" = "Загрузить";
+"extera_AIOnDeviceBadgeReady" = "ГОТОВА";
+"extera_AIOnDeviceBadgeUnavailable" = "НЕДОСТУПНА";
+"extera_AIOnDeviceNotificationChannel" = "ИИ-модель на устройстве";
+"extera_AIOnDeviceNotificationReady" = "Модель готова";
+"extera_AIOnDeviceNotificationReadyInfo" = "Gemini Nano загружена и теперь работает на вашем устройстве.";
+"extera_AIOnDeviceDownloadStarted" = "Загрузка началась. Она продолжится в фоне.";
+"extera_AIOnDeviceBadgeDownload" = "ЗАГРУЗКА";
+"extera_AIOnDeviceBadgeDownloading" = "ЗАГРУЗКА";
+"extera_AIOnDeviceRefresh" = "Обновить статус";
+"extera_AIOnDevicePreviewModel" = "Пробная модель";
+"extera_AIOnDeviceFastModel" = "Быстрая модель";
+"extera_AIReplaceTelegram" = "ИИ Telegram";
+"extera_AIReplaceTelegramEditorInfo" = "Перевод, стилизация и проверка черновиков";
+"extera_AIReplaceTelegramSummariesInfo" = "Пересказ длинных сообщений и постов";
+"extera_AIReplaceTelegramInfo" = "Выбранные функции используют ваш ИИ-сервис вместо серверов Telegram, без ограничений Premium.";
+"extera_AIOnDeviceManage" = "Настройки AICore";
+"extera_AIOnDeviceManageUnavailable" = "Системные настройки AICore недоступны на этом устройстве.";
+"extera_AIChangeModel" = "Сменить";
+"extera_AIAskMore" = "Спросить ещё";
+"extera_AIAssistant" = "Ассистент";
+
+// Chat Actions
+"extera_DoubleTapIncoming" = "Входящие сообщения";
+"extera_DoubleTapOutgoing" = "Исходящие сообщения";
+"extera_DoubleTapInfo" = "Некоторые действия требуют наличия прав администратора в чате или канале.";
+"extera_Gestures" = "Жесты";
+"extera_SwipeActions" = "Действия со свайпом";
+"extera_SwipeActionsInfo" = "Свайпните сообщение влево и, не отпуская палец, двигайте вверх или вниз, чтобы выбрать действие.";
+"extera_SwipeActionsBehavior" = "Поведение";
+"extera_SwipeActionsLoop" = "Зацикливание действий";
+"extera_SwipeActionsReversed" = "Обратная прокрутка";
+"extera_SwipeActionsBehaviorInfo" = "С зацикливанием первое действие идёт сразу за последним. Обратная прокрутка двигает список вместе с пальцем.";
+"extera_SwipeActionsEnabled" = "Действия";
+"extera_SwipeActionsDisabled" = "Отключены";
+"extera_SwipeActionsOrderInfo" = "Тап по действию включает или выключает его, перетаскивание меняет порядок. Верхнее действие выполняется обычным свайпом.";
+"extera_SwipeActionsPreviewReply" = "что если я промахнусь и удалю его?";
+"extera_SwipeActionsPreviewMessage" = "страх убивает разум. тяните медленнее";
+"extera_BottomButton" = "Нижняя кнопка";
+"extera_WidePosts" = "Широкие посты";
+"extera_AIFeatures" = "Функции ИИ";
+"extera_AIFeaturesEditor" = "Редактор";
+"extera_AIFeaturesSummaries" = "Пересказы";
+"extera_AIFeaturesInstantViewSummaries" = "Пересказы Instant View";
+"extera_ChannelDiscussNoCaps" = "Обсуждение";
+"extera_QuickTransitions" = "Быстрый переход свайпом";
+"extera_DisableGreetingSticker" = "Отключить приветственный стикер";
+"extera_AdminShortcuts" = "Быстрые админ-действия";
+"extera_HideKeyboardOnScroll" = "Скрывать клавиатуру при скролле";
+"extera_HideShareButton" = "Скрыть боковую кнопку \"%1$@\"";
+"extera_ReplaceEditedWithIcon" = "Заменить \"%1$@\" иконкой";
+"extera_MessageMenu" = "Меню сообщения";
+"extera_GroupMessageMenu" = "Группированное меню сообщения";
+"extera_GroupMessageMenuInfo" = "Группировка переносит основные действия вниз меню сообщения.";
+"extera_GlassMessageMenu" = "Стеклянное меню сообщения";
+"extera_GlassMessageMenuInfo" = "Меню сообщения, меню шапки и панель реакций становятся матовым стеклом.";
+"extera_GlassMessageMenuBlurOff" = "Для стеклянных меню нужно размытие, которое сейчас выключено.";
+"extera_AddCommaAfterMention" = "Запятая после упоминания";
+"extera_InlineMathResult" = "Инлайн-результаты";
+"extera_InlineMathResultInfo" = "Калькулятор, валюты, единицы измерения и часовые пояса";
+"extera_InlineMathResultHint" = "Результат появляется серым после \"=\". Пробел вставляет его, а Backspace сразу после вставки отменяет.";
+"extera_InlineMathResultAnnouncement" = "Результат: %1$@";
+"extera_InlineShowResults" = "Показывать результаты";
+"extera_InlineFeatures" = "Возможности";
+"extera_InlineCalculator" = "Калькулятор";
+"extera_InlineCurrencies" = "Валюты";
+"extera_InlineUnits" = "Единицы измерения";
+"extera_InlineTimeZones" = "Часовые пояса";
+"extera_InlineDefaultCurrency" = "Валюта по умолчанию";
+"extera_InlineAngleUnit" = "Углы в sin, cos, tan";
+"extera_InlineAngleDegrees" = "Градусы";
+"extera_InlineAngleRadians" = "Радианы";
+"extera_InlineMeasureSystem" = "Система измерения";
+"extera_InlineMeasureMetric" = "Метрическая";
+"extera_InlineMeasureImperial" = "Имперская";
+"extera_InlineDigitGrouping" = "Группировать цифры";
+"extera_InlineAutoCurrencyInfo" = "Автоматически выбирает валюту по номеру телефона.";
+"extera_InlineRatesUpdated" = "Курсы валют обновлены %1$@.";
+"extera_InlineCapabilities" = "Возможности";
+"extera_InlineFeatureOff" = "выкл";
+"extera_InlineTapToCopy" = "Нажмите на пример, чтобы скопировать.";
+"extera_InlineDocArithmetic" = "Арифметика и функции";
+"extera_InlineDocArithmeticInfo" = "Скобки, степени, функции, системы счисления";
+"extera_InlineDocFunctionsText" = "Функции и константы. Аргументы разделяйте \";\" или запятой с пробелом.";
+"extera_InlineDocBasesText" = "bin, oct и hex показывают число в другой системе счисления, а dec(x, n) читает x в системе n.";
+"extera_InlineDocPercent" = "Проценты и сокращения";
+"extera_InlineDocPercentInfo" = "Скидки, наценки, тысячи и миллионы";
+"extera_InlineDocPercentText" = "Процент после + или − берётся от числа слева от него.";
+"extera_InlineDocShorthandsText" = "\"k\" означает тысячу, \"kk\" — миллион. Работают и \"thousand\", и \"million\".";
+"extera_InlineDocCurrenciesInfo" = "Деньги, криптовалюты и Telegram Stars";
+"extera_InlineDocCurrencyText" = "Без \"to\" или \"in\" сумма конвертируется в валюту по умолчанию.";
+"extera_InlineDocUnitsInfo" = "Длина, вес, температура, скорость, время";
+"extera_InlineDocUnitsText" = "Без \"to\" или \"in\" зарубежные единицы конвертируются в вашу систему измерения, а ваши — в более удобную единицу.";
+"extera_InlineDocDurationsText" = "Длительности разбиваются на дни, часы и минуты.";
+"extera_InlineDocTimeInfo" = "Города, аббревиатуры и смещения UTC";
+"extera_InlineDocTimeText" = "Время в другом часовом поясе конвертируется в ваш.";
+"extera_InlineDocCurrentTimeText" = "Добавьте \"in\" и город, чтобы сконвертировать туда. \"now\" показывает текущее время.";
+"extera_HideSendAsPeer" = "Скрыть кнопку \"Отправить как…\"";
+"extera_HideSendAsPeerInfo" = "Меню \"Отправить как…\" доступно по долгому нажатию кнопки Эмодзи/Стикеры/GIF.";
+"extera_ShowPollResultsBeforeVoting" = "Показывать результаты до голосования";
+"extera_ShowPollResultsBeforeVotingHint" = "Просмотр результатов каждого варианта перед отправкой голоса.";
+"extera_ShowOnlineStatus" = "Показывать индикатор онлайна";
+"extera_ShowForwardsCount" = "Показывать счётчик пересылок";
+"extera_MessagePreviewDialogMessage" = "Я могу съесть стекло, и мне не навредит.";
+
+// Chat Search
+"extera_SearchFilterByType" = "Фильтр по типу";
+"extera_SearchFilterPhotos" = "Фотографии";
+"extera_SearchFilterVideos" = "Видео";
+"extera_SearchFilterVoice" = "Голосовые сообщения";
+"extera_SearchFilterRound" = "Видеосообщения";
+"extera_SearchFilterPolls" = "Опросы";
+"extera_SearchFilterLocations" = "Локации";
+"extera_SearchFilterPinned" = "Закреплённые";
+"extera_SearchFilterMentions" = "Упоминания";
+"extera_SearchOfApproximate" = "%1$d из ≈%2$d";
+
+// Voice & Video Recognition
+"extera_RecognitionLanguage" = "Язык распознавания";
+"extera_RecognitionInfo" = "Использует Vosk API. Работает офлайн. Качество расшифрованного текста может быть низким.";
+"extera_MissingLanguageModel" = "Нет языковой модели";
+"extera_DownloadingModel" = "Загрузка модели…";
+"extera_DownloadingModelInfo" = "Не закрывайте это окно, пока загружается языковая модель.";
+"extera_ModelDownload" = "Загрузить (%1$@)";
+"extera_ModelDownloadInfo" = "Чтобы продолжить, скачайте языковую модель \"**%1$@**\".";
+"extera_ModelDownloaded" = "Модель успешно загружена.";
+"extera_ModelError" = "Ошибка при загрузке модели.";
+"extera_ModelUnzipping" = "Распаковка…";
+"extera_DeleteRecognitionModel" = "Удалить модель";
+"extera_DeleteRecognitionModelInfo" = "Вы действительно хотите удалить языковую модель \"**%1$@**\"?";
+"extera_RecognitionModelDeleted" = "Модель успешно удалена.";
+"extera_RecognitionModelDeleteError" = "Ошибка при удалении модели.";
+"extera_PostProcessingWithAi" = "Использовать ИИ для постобработки";
+"extera_PostProcessingWithAiInfo" = "ИИ улучшит читаемость: исправит ошибки, поставит знаки препинания и уточнит непонятные места.";
+
+// Camera
+"extera_CameraType" = "Тип камеры";
+"extera_ExtendedSettings" = "Расширенные настройки";
+"extera_SeamlessSwitching" = "Плавное переключение";
+"extera_ExtendedFramesPerSecond" = "Расширенный диапазон FPS";
+"extera_CameraStabilization" = "Стабилизация";
+"extera_CameraMirrorMode" = "Зеркальный режим";
+"extera_StartWithWideAngleCamera" = "Начинать с широкоугольной";
+"extera_ZoomSlider" = "Слайдер зума";
+"extera_ZoomSliderInfo" = "Показывает управление зумом под камерой видеосообщений.";
+"extera_StaticZoom" = "Статичный зум";
+"extera_StaticZoomInfo" = "Зум при записи видеосообщений не будет сбрасываться, если вы отпустите пальцы.";
+"extera_VideoMessagesCamera" = "Камера в видеосообщениях";
+"extera_VideoMessagesCameraRear" = "Основная";
+"extera_VideoMessagesCameraFront" = "Фронтальная";
+"extera_VideoMessagesCameraAsk" = "Спрашивать";
+"extera_RearCamera" = "Основная";
+"extera_FrontCamera" = "Фронтальная";
+"extera_RememberLastUsedCamera" = "Запоминать выбранную камеру";
+"extera_RememberLastUsedCameraInfo" = "При записи видеосообщений будет использоваться последняя выбранная камера.";
+
+// Photo
+"extera_AlwaysSendInHD" = "Всегда отправлять в HD";
+"extera_HideCameraTile" = "Скрыть плитку камеры в галерее";
+"extera_HideCameraTileInfo" = "Плитка камеры будет заменена плавающей кнопкой. При нажатии на кнопку запустится камера Telegram, при удержании - системная камера.";
+"extera_ShortStandardQuality" = "SD";
+
+// Playback
+"extera_DoubleTapSeekDuration" = "Перемотка по двойному нажатию";
+"extera_PreferOriginalQuality" = "Предпочитать оригинальное качество";
+"extera_PauseOnMinimize" = "Авто-пауза";
+"extera_PauseOnMinimizeVideo" = "Видео";
+"extera_PauseOnMinimizeVoice" = "Голосовые";
+"extera_PauseOnMinimizeRound" = "Кружочки";
+"extera_PauseOnMinimizeInfo" = "Останавливает видео, когда девайс блокируется или приложение сворачивается.";
+"extera_SwipeToPip" = "Свайп к PiP";
+"extera_UnmuteWithVolumeButtons" = "Включать звук видео кнопками громкости";
+"extera_UnmuteWithVolumeButtonsInfo" = "Нажатие кнопки громкости включит звук видео вместо изменения системной громкости.";
+
+// Google
+"extera_AnalyticsInfo" = "Когда эти опции включены, данные об устройстве собираются и отправляются в Google Analytics и Crashlytics, что позволяет нам вести статистику использования и отслеживать ошибки в приложении. \n\nОднако если опции выключены, сбор данных прекращается, а отправленные данные мгновенно удаляются.";
+
+// Backup & Restore
+"extera_WriteFileName" = "Введите имя файла…";
+"extera_ExportSettings" = "Экспортировать настройки";
+"extera_ApplySettings" = "Применить настройки";
+"extera_ImportTitle" = "Вы уверены, что хотите применить эти настройки?";
+"extera_ImportConfirm" = "Да, применить";
+"extera_CancelConfirm" = "Нет, оставить как есть";
+"extera_SettingsSaved" = "Файл настроек успешно сохранён.";
+"extera_SettingsImported" = "Настройки успешно применены.";
+"extera_ImportChanges_one" = "К текущим настройкам будет применено **%1$d** изменение.";
+"extera_ImportChanges_two" = "К текущим настройкам будут применены **%1$d** изменения.";
+"extera_ImportChanges_few" = "К текущим настройкам будут применены **%1$d** изменения.";
+"extera_ImportChanges_many" = "К текущим настройкам будут применены **%1$d** изменений.";
+"extera_ImportChanges_other" = "К текущим настройкам будут применены **%1$d** изменений.";
+"extera_SameSettings" = "Похоже, настройки совпадают с текущими.";
+
+// Export data
+"extera_ExportData" = "Экспорт данных";
+"extera_ExportDelay" = "По соображениям безопасности начать скачивание данных можно будет через %1$@. Мы уведомили все ваши устройства о запросе экспорта, чтобы убедиться, что он авторизован, и дать вам время отреагировать, если нет.\n\nВернитесь %2$@ и повторите запрос с того же устройства.";
+"extera_ExportDelayLessThanHour" = "меньше часа";
+"extera_ExportInvalid" = "К сожалению, вы начали новый экспорт данных, поэтому этот экспорт был отменён.";
+
+// Settings Management
+"extera_DeleteAccount" = "Удалить аккаунт";
+"extera_ResetSettings" = "Сбросить настройки";
+"extera_ResetPreferences" = "Настройки **exteraGram** сброшены.";
+"extera_ResetPreferencesInfo" = "Вы уверены, что хотите сбросить **все** настройки exteraGram к значениям по умолчанию?";
+
+// Donates
+"extera_SupportDevelopment" = "Поддержать разработку";
+"extera_SupportDevelopmentInfo" = "Поддерживая проект, вы не только вносите вклад в его развитие, но и получаете уникальный значок.";
+"extera_MakeDonation" = "Сделать пожертвование";
+"extera_MakeDonationInfo" = "Переведите сумму %1$@ (%2$@) на любой платёжный реквизит проекта. Они перечислены в разделе **Другое** настроек приложения.";
+"extera_SendProof" = "Отправить подтверждение платежа";
+"extera_SendProofInfo" = "Отправьте фото подтверждения оплаты в **@exteraOwner**. На фото должны быть хорошо видны сумма, дата и время перевода.";
+"extera_ReceiveBadge" = "Получить свой значок";
+"extera_ReceiveBadgeInfo" = "После проверки оплаты вы получите уникальный значок: он будет виден в вашем профиле другим пользователям.";
+"extera_GetBadgeInfo" = "**Поддержите разработку** и получите уникальный значок!";
+"extera_NowPlaying" = "Сейчас играет";
+"extera_ScrobblingService" = "Сервис скроббинга";
+"extera_SelectService" = "Выберите сервис";
+"extera_SelectServiceInfo" = "Показывает текущий трек карточкой в профиле, полученной от сервиса скроббинга.";
+"extera_EnterUsername" = "Введите юзернейм";
+"extera_EnterUsernameInfo" = "Юзернейм на сервисе можно получить на **официальном сайте**.";
+"extera_BoostyPeopleCount_one" = "%1$d человек";
+"extera_BoostyPeopleCount_two" = "%1$d человека";
+"extera_BoostyPeopleCount_few" = "%1$d человека";
+"extera_BoostyPeopleCount_many" = "%1$d человек";
+"extera_BoostyPeopleCount_other" = "%1$d человека";
+"extera_BoostyInfo" = "Активно поддерживайте **exteraGram** на **Boosty**.";
+"extera_BoostyInfo2" = "Спасибо за поддержку!";
+
+// Plugins
+"extera_PluginsNotSupported" = "Установка плагинов доступна только в версии **Full** приложения **exteraGram**.";
+"extera_Plugins" = "Плагины";
+"extera_PluginsEngine" = "Движок плагинов";
+"extera_EnablePluginsEngine" = "Включить движок плагинов";
+"extera_PluginsInfo" = "Плагины можно найти в @exteraPlugins.";
+"extera_PluginsNotFound" = "Плагины не найдены.";
+"extera_PluginsEmptyTitle" = "Пока нет плагинов";
+"extera_PluginsEmptyInfo" = "Выбирайте плагины в каталоге или ищите ещё в @exteraPlugins.";
+"extera_PluginCatalogOpen" = "Открыть каталог";
+"extera_PluginCatalog" = "Каталог плагинов";
+"extera_PluginCatalogInfo" = "Просматривайте плагины, опубликованные в телеграм-каналах, и устанавливайте их одним тапом.";
+"extera_PluginCatalogVerified" = "Проверенные";
+"extera_PluginCatalogYourRepositories" = "Ваши репозитории";
+"extera_PluginCatalogAddRepository" = "Добавить репозиторий";
+"extera_PluginCatalogRemoveRepository" = "Удалить репозиторий";
+"extera_PluginCatalogRepositoriesInfo" = "Репозитории — каналы, публикующие плагины. Плагины из непроверенных каналов можно ставить только при включённых неизвестных источниках.";
+"extera_PluginCatalogChooseChannel" = "Выберите канал";
+"extera_PluginCatalogEnterLink" = "Введите ссылку";
+"extera_PluginCatalogLinkHint" = "t.me/channel или @channel";
+"extera_PluginCatalogChannelNotFound" = "Канал не найден.";
+"extera_PluginCatalogRepositoryAdded" = "**%1$@** добавлен в репозитории.";
+"extera_PluginCatalogRepositoryRemoved" = "**%1$@** убран из репозиториев.";
+"extera_PluginCatalogRepositoryExists" = "Этот канал уже в списке.";
+"extera_PluginCatalogAddRepositoryConfirm" = "Добавить **%1$@** в репозитории плагинов?";
+"extera_PluginRepositoryLinkToSavedMessages" = "Ссылка на репозиторий отправлена в **Сохранённое**.";
+"extera_PluginRepositoryLinkToUser" = "Ссылка на репозиторий отправлена в **%1$@**.";
+"extera_PluginRepositoryLinkToChats" = "Ссылка на репозиторий отправлена в **%1$@**.";
+"extera_PluginCatalogPlugins_one" = "%1$d плагин";
+"extera_PluginCatalogPlugins_two" = "%1$d плагина";
+"extera_PluginCatalogPlugins_few" = "%1$d плагина";
+"extera_PluginCatalogPlugins_many" = "%1$d плагинов";
+"extera_PluginCatalogPlugins_other" = "%1$d плагинов";
+"extera_PluginCatalogUpdating" = "Обновление…";
+"extera_PluginCatalogNotLoaded" = "Ещё не загружен";
+"extera_PluginCatalogUpdates" = "Обновления";
+"extera_PluginCatalogInstalled" = "Установлено";
+"extera_PluginCatalogSortUpdated" = "Недавно обновлённые";
+"extera_PluginCatalogSortPopular" = "Самые просматриваемые";
+"extera_PluginCatalogSortNewest" = "Новые";
+"extera_PluginCatalogSortName" = "По названию";
+"extera_PluginCatalogNew" = "НОВОЕ";
+"extera_PluginCatalogRefreshFailed" = "Не удалось обновить каталог.";
+"extera_PluginCatalogUpToDate" = "Новых плагинов и версий нет.";
+"extera_PluginCatalogNewVersions_one" = "Найдена новая версия: **%1$d**.";
+"extera_PluginCatalogNewVersions_two" = "Найдены новые версии: **%1$d**.";
+"extera_PluginCatalogNewVersions_few" = "Найдены новые версии: **%1$d**.";
+"extera_PluginCatalogNewVersions_many" = "Найдены новые версии: **%1$d**.";
+"extera_PluginCatalogNewVersions_other" = "Найдены новые версии: **%1$d**.";
+"extera_PluginCatalogAllPlugins" = "Все плагины";
+"extera_PluginCatalogEmpty" = "В этом канале пока нет плагинов.";
+"extera_PluginCatalogInfoLoading" = "Загрузка подробностей…";
+"extera_PluginCatalogInfoFailed" = "Не удалось прочитать сведения о плагине";
+"extera_PluginCatalogInfoUnavailable" = "Подробности недоступны";
+"extera_PluginCatalogEngineUnavailable" = "Движок плагинов не запущен, подробности недоступны.";
+"extera_PluginCategoryAppearance" = "Внешний вид";
+"extera_PluginCategoryChats" = "Чаты";
+"extera_PluginCategoryMedia" = "Медиа";
+"extera_PluginCategoryPrivacy" = "Приватность";
+"extera_PluginCategoryTools" = "Инструменты";
+"extera_PluginCategoryIntegrations" = "Интеграции";
+"extera_PluginCategoryFun" = "Развлечения";
+"extera_PluginCategoryLibraries" = "Библиотеки";
+"extera_PluginCatalogDownloadFailed" = "Не удалось скачать **%1$@**.";
+"extera_InstallPlugin" = "Установить";
+"extera_UpdatePlugin" = "Обновить";
+"extera_PluginNotEnabled" = "Чтобы установить **%1$@**, включите **Движок плагинов**.";
+"extera_PluginInstalled" = "**%1$@** успешно установлен.";
+"extera_PluginUpdated" = "**%1$@** успешно обновлён.";
+"extera_PluginEnableError" = "Не удалось включить **%1$@**.";
+"extera_PluginDisableError" = "Не удалось отключить **%1$@**.";
+"extera_PluginInstallError" = "Не удалось установить **%1$@**.";
+"extera_PluginSourceTrusted" = "Надёжный источник";
+"extera_PluginSourceTrustedInfo" = "Плагины из этого источника **проверены** и безопасны.";
+"extera_PluginSourceUnknown" = "Неизвестный источник";
+"extera_PluginSourceUnknownInfo" = "Плагины из этого источника **не проверены** и могут представлять риск безопасности.";
+"extera_PluginInstallBlocked" = "Установка заблокирована";
+"extera_PluginInstallBlockedInfo" = "Разрешите неизвестные источники в настройках плагинов";
+"extera_PluginVersion" = "Версия";
+"extera_PluginVersionValue" = "Версия %1$@";
+"extera_PluginRequired" = "Необходимые плагины";
+"extera_PluginRequiredMissing" = "Не установлен";
+"extera_PluginRequiredVersion" = "Требуется версия %1$@";
+"extera_PluginRequiredDisabled" = "Установлен, но отключён";
+"extera_PluginRequiredOutdated" = "Версия %1$@, требуется %2$@";
+"extera_PluginRequiredDownload" = "Скачать";
+"extera_PluginRequiredUpdate" = "Обновить";
+"extera_PluginRequiredInstalled" = "Установлен";
+"extera_PluginBundledPackages" = "Встроенные пакеты";
+"extera_PluginRequirements" = "Требования";
+"extera_PluginNoDescription" = "Описание не задано.";
+"extera_PluginIsNotResponding" = "Плагин не отвечает.";
+"extera_PluginIsNotRespondingAlert" = "%1$@ не отвечает";
+"extera_PluginNoAuthor" = "Неизвестный автор";
+"extera_EnableAfterInstallation" = "Включить после установки";
+"extera_EnterValue" = "Введите значение";
+"extera_PluginDelete" = "Удалить плагин";
+"extera_PluginDeleteInfo" = "Вы действительно хотите удалить **%1$@**?";
+"extera_ResetPluginSettings" = "Настройки **%1$@** сброшены.";
+"extera_ResetPluginSettingsInfo" = "Вы уверены, что хотите сбросить настройки **%1$@** к значениям по умолчанию?";
+"extera_PluginsUnknownSources" = "Неизвестные источники";
+"extera_PluginsUnknownSourcesInfo" = "Вы соглашаетесь устанавливать плагины из неизвестных источников. Каждый плагин имеет:";
+"extera_PluginsUnknownSourcesInfo2" = "Разрешить установку плагинов из непроверенных источников.";
+"extera_PluginsUnknownSourcesAccount" = "Полный доступ к вашему аккаунту";
+"extera_PluginsUnknownSourcesAccountInfo" = "Действуют от вашего имени: читают, отправляют и удаляют сообщения.";
+"extera_PluginsUnknownSourcesFiles" = "Файлы и данные приложения";
+"extera_PluginsUnknownSourcesFilesInfo" = "Читают кэш чатов, медиа, настройки и данные авторизации.";
+"extera_PluginsUnknownSourcesCode" = "Неограниченный код";
+"extera_PluginsUnknownSourcesCodeInfo" = "Запускают любой код и отправляют любые данные куда угодно.";
+"extera_PluginsUnknownSourcesWarning" = "Вредоносный плагин может захватить ваш аккаунт.";
+"extera_PluginsStaticAnalysis" = "Статический анализ";
+"extera_PluginsStaticAnalysisInfo" = "Проверяет код плагина перед установкой и показывает, что он умеет.";
+"extera_PluginAnalyzing" = "Анализ…";
+"extera_PluginAnalysisRunning" = "Проверяем код…";
+"extera_PluginAnalysisRunningInfo" = "Обычно занимает несколько секунд";
+"extera_PluginAnalysisCaution" = "Найдены предупреждения";
+"extera_PluginAnalysisClean" = "Угроз не обнаружено";
+"extera_PluginAnalysisNewInVersion" = "Новое в этой версии";
+"extera_PluginAnalysisLimitations" = "Статический анализ не видит код, который плагин скачивает или расшифровывает во время работы.";
+"extera_PluginAnalysisFailed" = "Анализ не завершён";
+"extera_PluginAnalysisFailedTimeout" = "Анализатор работал слишком долго и был остановлен.";
+"extera_PluginAnalysisFailedCrash" = "Анализатор неожиданно остановился.";
+"extera_PluginAnalysisFailedTooLarge" = "Файл слишком большой для анализа.";
+"extera_PluginAnalysisFailedMemory" = "Анализатор использовал слишком много памяти и был остановлен.";
+"extera_PluginAnalysisFailedError" = "Анализатор сообщил об ошибке.";
+"extera_PluginAnalysisCautionInfo" = "Нет критических или опасных проблем";
+"extera_PluginAnalysisThreats" = "Найдены угрозы";
+"extera_PluginAnalysisCleanInfo" = "Ничего подозрительного не найдено";
+"extera_PluginAnalysisCriticalCount_one" = "%1$d критическая";
+"extera_PluginAnalysisCriticalCount_two" = "%1$d критических";
+"extera_PluginAnalysisCriticalCount_few" = "%1$d критических";
+"extera_PluginAnalysisCriticalCount_many" = "%1$d критических";
+"extera_PluginAnalysisCriticalCount_other" = "%1$d критических";
+"extera_PluginAnalysisDangerCount_one" = "%1$d опасная";
+"extera_PluginAnalysisDangerCount_two" = "%1$d опасных";
+"extera_PluginAnalysisDangerCount_few" = "%1$d опасных";
+"extera_PluginAnalysisDangerCount_many" = "%1$d опасных";
+"extera_PluginAnalysisDangerCount_other" = "%1$d опасных";
+"extera_PluginAnalysisNameDynamicCode" = "Динамический код";
+"extera_PluginAnalysisNameEmbeddedCode" = "Упакованный код";
+"extera_PluginAnalysisNameReflectionDynamic" = "Динамические вызовы";
+"extera_PluginAnalysisNameNativeCode" = "Нативный код";
+"extera_PluginAnalysisNameAntiAnalysis" = "Антианализ";
+"extera_PluginAnalysisNameHiddenParts" = "Нечитаемые части";
+"extera_PluginAnalysisNameRemoteCode" = "Удалённый код";
+"extera_PluginAnalysisNameRemoteControl" = "Удалённое управление";
+"extera_PluginAnalysisNameHidesBehavior" = "Скрытое поведение";
+"extera_PluginAnalysisNameNetwork" = "Доступ в интернет";
+"extera_PluginAnalysisNameExfiltrateMessages" = "Выгрузка данных";
+"extera_PluginAnalysisNameDeviceIdUpload" = "Выгрузка ID устройства";
+"extera_PluginAnalysisNameFiles" = "Доступ к файлам";
+"extera_PluginAnalysisNameTelegramFiles" = "Загрузки Telegram";
+"extera_PluginAnalysisNameProcesses" = "Системные процессы";
+"extera_PluginAnalysisNameAppExit" = "Перезапуск приложения";
+"extera_PluginAnalysisNameHostTampering" = "Вмешательство в приложение";
+"extera_PluginAnalysisNameJavaHooks" = "Хуки методов";
+"extera_PluginAnalysisNameUiHooks" = "Хуки чувствительных экранов";
+"extera_PluginAnalysisNamePersistence" = "Управление плагинами";
+"extera_PluginAnalysisNameAppSettings" = "Настройки приложения";
+"extera_PluginAnalysisNameWalletAccess" = "Криптокошелёк";
+"extera_PluginAnalysisNamePrivacy" = "Личные данные";
+"extera_PluginAnalysisNameSystemOverlay" = "Поверх других приложений";
+"extera_PluginAnalysisNameExfiltrateFiles" = "Выгрузка файлов";
+"extera_PluginAnalysisNameTelegramLeak" = "Утечка данных через Telegram";
+"extera_PluginAnalysisNameSessionViaTelegram" = "Утечка сессии";
+"extera_PluginAnalysisNameSms" = "SMS";
+"extera_PluginAnalysisNameScreenCapture" = "Захват экрана";
+"extera_PluginAnalysisNameInstallsApps" = "Установка приложений";
+"extera_PluginAnalysisNameMediaLibrary" = "Фото и медиа";
+"extera_PluginAnalysisNameWebviewBridge" = "Мост веб-страниц";
+"extera_PluginAnalysisNameBackground" = "Работа в фоне";
+"extera_PluginAnalysisNameIntents" = "Другие приложения";
+"extera_PluginAnalysisNameNotifications" = "Уведомления";
+"extera_PluginAnalysisNameThirdPartyCode" = "Непроверенные пакеты";
+"extera_PluginAnalysisNameTelegramApi" = "Запросы Telegram";
+"extera_PluginAnalysisNameSensitiveRequests" = "Операции с аккаунтом";
+"extera_PluginAnalysisNameInterceptsRequests" = "Перехват запросов";
+"extera_PluginAnalysisNameSessionData" = "Данные сессии";
+"extera_PluginAnalysisNameHiddenAccountActions" = "Скрытые действия с аккаунтом";
+"extera_PluginAnalysisNameAccountTakeover" = "Захват аккаунта";
+"extera_PluginAnalysisNameMessagesRead" = "Чтение сообщений";
+"extera_PluginAnalysisNameMessagesSend" = "Отправка сообщений";
+"extera_PluginAnalysisNameMessagesDelete" = "Удаление сообщений";
+"extera_PluginAnalysisNameContacts" = "Доступ к контактам";
+"extera_PluginAnalysisNameForwardMessages" = "Пересылка сообщений";
+"extera_PluginAnalysisViewReport" = "Посмотреть отчёт";
+"extera_PluginAnalysisConfirmInstall" = "Я понимаю риски, установить";
+"extera_PluginAnalysisConfirmUpdate" = "Я понимаю риски, обновить";
+"extera_PluginAnalysisReport" = "Отчёт анализа";
+"extera_PluginAnalysisGroupCritical" = "Критические";
+"extera_PluginAnalysisGroupDanger" = "Опасные";
+"extera_PluginAnalysisGroupCaution" = "Требуют внимания";
+"extera_PluginAnalysisGroupInfo" = "Другое";
+"extera_PluginAnalysisGroupLimits" = "Ограничения анализа";
+"extera_PluginAnalysisMorePlaces" = "Ещё мест: %d";
+"extera_PluginAnalysisMoreValues" = "Ещё: %d";
+"extera_PluginAnalysisDecodedCode" = "Распакованный код";
+"extera_PluginAnalysisCompiledCode" = "Компилированный код";
+"extera_PluginAnalysisNativeLibrary" = "Нативная библиотека";
+"extera_PluginAnalysisHiddenInComment" = "Скрыто в комментарии, строки %1$d–%2$d";
+"extera_PluginAnalysisEncodedData" = "Закодированные данные · %1$@";
+"extera_PluginAnalysisLimitTime" = "Достигнут лимит времени";
+"extera_PluginAnalysisLimitTimeInfo" = "Анализ остановился до проверки всего кода";
+"extera_PluginAnalysisLimitIncomplete" = "Неполный анализ";
+"extera_PluginAnalysisLimitIncompleteInfo" = "Часть плагина слишком сложна для полного анализа";
+"extera_PluginAnalysisUnresolvedRequests" = "Тип некоторых запросов определить не удалось";
+"extera_PluginAnalysisUnresolvedHooks" = "Цель некоторых хуков определить не удалось";
+"extera_PluginAnalysisNewBadge_one" = "%1$d новое";
+"extera_PluginAnalysisNewBadge_two" = "%1$d новых";
+"extera_PluginAnalysisNewBadge_few" = "%1$d новых";
+"extera_PluginAnalysisNewBadge_many" = "%1$d новых";
+"extera_PluginAnalysisNewBadge_other" = "%1$d новых";
+"extera_PluginAnalysisCategoryCode" = "Код";
+"extera_PluginAnalysisCategoryAccount" = "Аккаунт";
+"extera_PluginAnalysisCategoryMessages" = "Сообщения";
+"extera_PluginAnalysisCategoryNetwork" = "Сеть";
+"extera_PluginAnalysisCategoryFiles" = "Файлы";
+"extera_PluginAnalysisCategoryDevice" = "Устройство";
+"extera_PluginAnalysisCategoryApp" = "Приложение";
+"extera_PluginAnalysisCategoryPackages" = "Пакеты";
+"extera_PluginAnalysisCategoryOther" = "Другое";
+"extera_PluginAnalysisStatementDynamicCode" = "Запускает код, которого нет в файле плагина";
+"extera_PluginAnalysisStatementEmbeddedCode" = "Содержит упакованный код";
+"extera_PluginAnalysisStatementLoadsCode" = "Загружает дополнительный компилированный код";
+"extera_PluginAnalysisStatementReflectionDynamic" = "Выбирает, что вызывать во время работы";
+"extera_PluginAnalysisStatementNativeCode" = "Запускает нативный код, который нельзя проверить";
+"extera_PluginAnalysisStatementAntiAnalysis" = "Пытается скрыть то, что делает";
+"extera_PluginAnalysisStatementHiddenParts" = "Есть части, которые не удалось прочитать";
+"extera_PluginAnalysisStatementRemoteCode" = "Может скачивать и запускать код, которого вы не видели";
+"extera_PluginAnalysisStatementRemoteControl" = "Может управляться удалённо";
+"extera_PluginAnalysisStatementHidesBehavior" = "Скрывает часть своего поведения";
+"extera_PluginAnalysisStatementNetwork" = "Подключается к интернету";
+"extera_PluginAnalysisStatementExfiltrateMessages" = "Может отправлять ваши сообщения или контакты в интернет";
+"extera_PluginAnalysisStatementDeviceIdUpload" = "Отправляет идентификаторы устройства в интернет";
+"extera_PluginAnalysisStatementFiles" = "Читает и пишет файлы";
+"extera_PluginAnalysisStatementTelegramFiles" = "Скачивает файлы через Telegram";
+"extera_PluginAnalysisStatementProcesses" = "Запускает системные процессы";
+"extera_PluginAnalysisStatementAppExit" = "Может закрыть или перезапустить приложение";
+"extera_PluginAnalysisStatementHostTampering" = "Меняет работу приложения или других плагинов";
+"extera_PluginAnalysisStatementJavaHooks" = "Меняет поведение приложения хуками";
+"extera_PluginAnalysisStatementUiHooks" = "Меняет экраны входа, оплаты или безопасности";
+"extera_PluginAnalysisStatementPersistence" = "Может устанавливать или менять плагины";
+"extera_PluginAnalysisStatementAppSettings" = "Меняет настройки приложения";
+"extera_PluginAnalysisStatementWalletAccess" = "Получает доступ к вашему криптокошельку";
+"extera_PluginAnalysisStatementPrivacy" = "Получает доступ к личным данным устройства";
+"extera_PluginAnalysisStatementSystemOverlay" = "Может показывать свои окна поверх других приложений";
+"extera_PluginAnalysisStatementExfiltrateFiles" = "Может отправлять ваши файлы в интернет";
+"extera_PluginAnalysisStatementTelegramLeak" = "Отправляет ваши личные данные через сообщения Telegram";
+"extera_PluginAnalysisStatementSessionViaTelegram" = "Может отправить сессию вашего аккаунта через Telegram";
+"extera_PluginAnalysisStatementSms" = "Может читать или отправлять SMS с вашего телефона";
+"extera_PluginAnalysisStatementScreenCapture" = "Может захватывать экран или отключать защиту от скриншотов";
+"extera_PluginAnalysisStatementInstallsApps" = "Может устанавливать другие приложения";
+"extera_PluginAnalysisStatementMediaLibrary" = "Читает ваши фото и медиа";
+"extera_PluginAnalysisStatementWebviewBridge" = "Позволяет веб-страницам обращаться к приложению";
+"extera_PluginAnalysisStatementBackground" = "Работает в фоне или реагирует на события системы";
+"extera_PluginAnalysisStatementIntents" = "Открывает другие приложения или передаёт им данные";
+"extera_PluginAnalysisStatementNotifications" = "Читает уведомления приложения";
+"extera_PluginAnalysisStatementThirdPartyCode" = "Устанавливает пакеты, которые не были проверены";
+"extera_PluginAnalysisStatementTelegramApi" = "Отправляет запросы от вашего имени";
+"extera_PluginAnalysisStatementSensitiveRequests" = "Может перемещать деньги, подарки или контроль над аккаунтом";
+"extera_PluginAnalysisStatementInterceptsRequests" = "Читает и изменяет запросы Telegram";
+"extera_PluginAnalysisStatementSessionData" = "Прикасается к данным сессии аккаунта";
+"extera_PluginAnalysisStatementHiddenAccountActions" = "Может действовать с вашим аккаунтом и скрывать это";
+"extera_PluginAnalysisStatementAccountTakeover" = "Может захватить ваш аккаунт";
+"extera_PluginAnalysisStatementMessagesRead" = "Читает ваши сообщения и чаты";
+"extera_PluginAnalysisStatementMessagesSend" = "Отправляет, пересылает или редактирует сообщения";
+"extera_PluginAnalysisStatementMessagesDelete" = "Удаляет сообщения";
+"extera_PluginAnalysisStatementContacts" = "Читает ваши контакты";
+"extera_PluginAnalysisStatementForwardMessages" = "Может пересылать ваши сообщения внутри Telegram";
+"extera_PluginsSafeMode" = "Безопасный режим";
+"extera_PluginsSafeModeShortcut" = "Запустить в безопасном режиме";
+"extera_PluginsSafeModeInfo" = "Движок плагинов отключён из-за сбоя. Отключение безопасного режима может привести к непредсказуемым последствиям.";
+"extera_PluginsSafeModeInfo2" = "В безопасном режиме все плагины неактивны. Так вы спокойно найдёте и отключите проблемный плагин.";
+"extera_PluginsDevMode" = "Режим разработчика";
+"extera_PluginsCompactView" = "Компактный список плагинов";
+"extera_PluginsDocumentation" = "Документация";
+"extera_PluginsTrusted" = "Доверенные плагины";
+"extera_PluginsDevServerLaunched" = "Сервер разработчика запущен.";
+"extera_PluginsDevServerStopped" = "Сервер разработчика остановлен.";
+"extera_PluginsPoweredBy" = "Работает на движке Chaquopy.";
+"extera_PluginEngineNotEnabled" = "Чтобы открыть настройки **%1$@**, включите **Движок плагинов**.";
+"extera_PluginNotFound" = "**%1$@** не найден.";
+"extera_PluginHasNoSettings" = "У **%1$@** нет настроек.";
+"extera_PluginsPySdkUpdate" = "Обновление PySDK";
+"extera_PluginsPySdkAutoUpdate" = "Обновлять автоматически";
+"extera_PluginsPySdkEnableBetaVersion" = "Устанавливать бета-версии";
+"extera_PluginsPySdkCheckUpdates" = "Проверить обновления";
+"extera_CheckingForUpdates" = "Ищем обновления…";
+"extera_LatestVersionInstalled" = "Установлена последняя версия";
+"extera_RestartPluginSystemToApplyUpdate" = "Обновление загружено, перезапустите движок плагинов";
+"extera_LoadingUpdate" = "Загрузка обновления…";
+"extera_RestoreSdkFromApk" = "Восстановить SDK из установщика";
+"extera_PluginsPySdkEngineDisabled" = "Движок плагинов отключён";
+"extera_PluginsPySdkNotInstalled" = "SDK не установлен";
+"extera_PluginsPySdkStarting" = "Запуск…";
+"extera_PluginsPySdkPythonFailed" = "Python не смог запуститься";
+"extera_PluginsPySdkInstallFailed" = "Не удалось установить SDK, перезапустите приложение";
+"extera_PluginsPySdkStartFailed" = "Не удалось запустить SDK, перезапустите приложение";
+"extera_EnableAutoUpdate" = "Включить автообновление";
+"extera_PluginsDisableArt" = "Режим совместимости";
+"extera_PluginsDisableArtInfo" = "Предотвращает сбои хуков плагинов отключением ART Profile Saver.";
+
+// Updates
+"extera_UpdateInstalling" = "Идёт обновление…";
+"extera_UpdateInstallingRelaunch" = "Приложение перезапустится после завершения обновления.";
+"extera_UpdateInstallingNotification" = "Вам сообщат, когда обновление завершится.";
+"extera_UpdateInstalledNotification" = "Обновление завершено. Нажмите, чтобы открыть приложение.";
+"extera_UpdateFailedToInstall" = "Не удалось установить обновление, код ошибки: %d";
+"extera_UpdateAvailable" = "Доступно обновление!";
+
+// Message Details
+"extera_Details" = "Детали";
+"extera_Date" = "Дата";
+"extera_EditedDate" = "Дата изменения";
+"extera_ForwardedDate" = "Дата пересылки";
+"extera_FileSize" = "Размер файла";
+"extera_FileName" = "Название файла";
+"extera_FilePath" = "Путь к файлу";
+"extera_Platform" = "Платформа";
+"extera_SentFrom" = "Отправлено с %1$@";
+"extera_Resolution" = "Разрешение";
+"extera_Bitrate" = "Битрейт";
+"extera_Duration" = "Длительность";
+"extera_MimeType" = "Тип медиа";
+"extera_Datacenter" = "Датацентр";
+
+// Date Formatting
+"extera_DateFormatOption" = "Формат:";
+"extera_DateFormatOptionNone" = "Нет";
+"extera_DateFormatOptionRelative" = "Относительный";
+"extera_DateFormatOptionShortTime" = "Короткое время";
+"extera_DateFormatOptionLongTime" = "Полное время";
+"extera_DateFormatOptionShortDate" = "Короткая дата";
+"extera_DateFormatOptionLongDate" = "Полная дата";
+"extera_DateFormatOptionDayOfWeek" = "День недели";
+
+// Login & QR
+"extera_LoginQrTitle" = "Вход по QR-коду";
+"extera_LoginQrSubtitle" = "Отсканируйте этот QR-код другим устройством.";
+"extera_WifiConnect" = "Подключиться";
+"extera_WifiDisabled" = "Wi-Fi отключён.";
+"extera_WifiFailed" = "Не удалось подключиться к Wi-Fi.";
+"extera_WifiSuccess" = "Wi-Fi подключён успешно.";
+"extera_AreYouSureToLogin" = "Вы уверены, что хотите войти в этот аккаунт на другом устройстве?";
+
+// AdBlock
+"extera_PageBlocked" = "Страница заблокирована";
+"extera_PageBlockedDescription" = "exteraGram запретил загрузку следующей страницы:\n**%1$@**";
+"extera_PageBlockedGoBack" = "Назад";
+"extera_PageBlockedProceed" = "Продолжить";
+"extera_BlockAds" = "Блокировать рекламу";
+"extera_BlockedRequests_one" = "%1$d заблокировано";
+"extera_BlockedRequests_two" = "%1$d заблокировано";
+"extera_BlockedRequests_few" = "%1$d заблокировано";
+"extera_BlockedRequests_many" = "%1$d заблокировано";
+"extera_BlockedRequests_other" = "%1$d заблокировано";
+"extera_AdBlockFiltersLoading" = "Загрузка фильтров…";
+
+// Other
+"extera_SetAsBadge" = "Установить как значок";
+"extera_AutoLockInstant" = "Мгновенно";
+"extera_TestBackend" = "Тестовый бэкенд";
+"extera_SearchPhotoInfo" = "Сервисы могут использовать изображения согласно их политике конфиденциальности и условиям использования.";
+"extera_PhotoUploadFailed" = "Не удалось загрузить фото.";
+"extera_TrackSaved" = "Трек сохранен в **%1$@**.";
+"extera_ChannelToSaveChanged" = "Треки будут сохраняться в **%1$@**.";
+"extera_DeletedMessage" = "Удалённое сообщение";
+
+// Bot Button Context Menu
+"extera_CopyTitle" = "Скопировать название";
+"extera_CopyCallback" = "Скопировать данные callback";
+"extera_CopyInlineQuery" = "Скопировать инлайн-запрос";
+"extera_CopyID" = "Скопировать ID пользователя";
+
+// Information Toasts & Dialogs
+"extera_SetAsBadgeStatusInfo" = "Статус значка установлен.";
+"extera_UserNotFound" = "Пользователь с этим **ID** не найден.";
+"extera_ChatNotFound" = "Чат с этим **ID** не найден.";
+"extera_PhotoCopied" = "Фото скопировано в буфер обмена.";
+"extera_FrameCopied" = "Кадр скопирован в буфер обмена.";
+"extera_TapToCopy" = "Нажмите, чтобы скопировать";
+"extera_ProfileUsesEmojiPack" = "Этот профиль использует эмодзи из набора %@ для фона.";
+"extera_ProfileUsesEmojiPacks" = "Этот профиль использует эмодзи из наборов **%d** для фона.";
+"extera_ReplyUsesEmojiPacks" = "Этот ответ использует эмодзи из набора %@ для фона.";
+"extera_StickerSavedHint" = "Стикер сохранён в галерею.";
+"extera_EmojiSavedHint" = "Эмодзи сохранено в галерею.";
+"extera_GifGallerySavedHint" = "GIF сохранён в галерею.";
+"extera_MutualContactInfo" = "Это взаимный контакт.";
+"extera_LocalPremiumEmojiHint" = "У вас нет подписки **Telegram Premium**, поэтому это эмодзи увидят только пользователи **exteraGram**.";
+
+// Main Tabs
+"extera_HideContactsTab" = "Скрыть вкладку \"Контакты\"";
+"extera_ShowContactsTab" = "Показать вкладку \"Контакты\"";
+"extera_ContactsTabWasShownTitle" = "Вкладка **Контакты** снова видима.";
+"extera_ContactsTabWasHiddenTitle" = "Вкладка **Контакты** скрыта.";
+
+// Passkeys
+"extera_PasskeyInfo2" = "Работает только с менеджерами паролей, где можно управлять доверием к привилегированным приложениям, например **Bitwarden** или **KeePassDX**.";
+"extera_PasskeyUnsupportedTitle" = "Неподдерживаемый менеджер паролей";
+"extera_PasskeyUnsupportedMessage" = "Попробуйте другие менеджеры паролей, например **Bitwarden** или **KeePassDX**.";
+
+// Date Information
+"extera_CreationDateUserApproximately" = "**%1$@** создал аккаунт примерно **%2$@**.";
+"extera_CreationDateUserEarlier" = "**%1$@** создал аккаунт раньше **%2$@**.";
+"extera_CreationDateUserLater" = "**%1$@** создал аккаунт позже **%2$@**.";
+"extera_CreationDateChat" = "**%1$@** был создан **%2$@**.";
+"extera_CreationDateSelfApproximately" = "Вы создали аккаунт примерно **%1$@**.";
+"extera_CreationDateSelfEarlier" = "Вы создали аккаунт раньше **%1$@**.";
+"extera_CreationDateSelfLater" = "Вы создали аккаунт позже **%1$@**.";
+"extera_JoinDateChat" = "Вы присоединились к **%1$@** **%2$@**.";
+"extera_GroupMemberJoined" = "присоединился к %1$@";
+
+// Menu Items
+"extera_SendVideoWithoutCompression" = "Отправить без сжатия";
+"extera_ToBeginning" = "В начало";
+"extera_MessageHistory" = "История сообщений";
+"extera_BoldItalic" = "Жирный курсив";
+"extera_CopyPhoto" = "Копировать фото";
+"extera_CopyFrame" = "Копировать кадр";
+"extera_Repeat" = "Повторить";
+"extera_Subtitles" = "Субтитры";
+"extera_ChooseSubtitles" = "Выбрать субтитры";
+"extera_DisableSubtitles" = "Отключить субтитры";
+"extera_SubtitlesAdded" = "Субтитры включены.";
+"extera_SubtitlesRemoved" = "Субтитры отключены.";
+"extera_SubtitlesLoadError" = "Не удалось загрузить субтитры.";
+"extera_SubtitlesUnsupportedFormat" = "Неподдерживаемый формат субтитров.";
+
+// Sticker Maker
+"extera_StickerCornerRadius" = "Углы стикера";
+"extera_StickerCornerRadiusInfo" = "Выберите, насколько закруглёнными должны выглядеть углы стикера.";
+"extera_StickerCornerRadiusLarge" = "Большое";
+"extera_StickerCornerRadiusMedium" = "Среднее";
+"extera_StickerCornerRadiusSmall" = "Малое";
+"extera_StickerCornerRadiusNone" = "Нет";
+
+// Feed
+"extera_Feed" = "Лента";
+"extera_FeedShownChannels" = "Показаны в ленте";
+"extera_FeedHiddenChannels" = "Скрытые";
+"extera_FeedChannels" = "Каналы";
+"extera_FeedChannelsInfo" = "Снимите галочку с канала, чтобы скрыть его посты из «Все». В категориях они останутся. Новые каналы показываются автоматически.";
+"extera_FeedSettings" = "Настройки ленты";
+"extera_FeedNoPosts" = "В каналах пока нет постов.";
+"extera_FeedAllChannelsExcluded" = "Все каналы исключены из ленты.";
+"extera_FeedMarkAllRead" = "Отметить всё прочитанным";
+"extera_FeedMarkAllReadConfirm" = "Отметить все посты ваших ленточных каналов прочитанными? В исходных каналах они тоже будут отмечены.";
+"extera_FeedMarkAllReadDone" = "Все посты отмечены прочитанными";
+"extera_FeedIncludeArchived" = "Показывать чаты из архива";
+"extera_FeedIncludeArchivedInfo" = "Также включитe в ленту каналы из ваших архивных чатов.";
+"extera_FeedHideChannel" = "Скрыть из ленты";
+"extera_FeedChannelHidden" = "**%1$@** скрыт из ленты";
+"extera_FeedBottomTab" = "Показывать в нижних вкладках";
+"extera_FeedBottomTabInfo" = "Показывает ленту вкладкой нижней навигации вместо вкладки «Контакты».";
+"extera_WidePostsInFeed" = "Широкие посты в ленте";
+"extera_FeedUnreadCounter" = "Счётчик непрочитанных постов";
+"extera_FeedCategories" = "Категории";
+"extera_FeedCategoriesInfo" = "Категории отображаются вкладками вверху ленты. Перетаскивайте, чтобы менять порядок; тап по глазу скрывает вкладку.";
+"extera_FeedCategoryCreate" = "Создать категорию";
+"extera_FeedCategoryNew" = "Новая категория";
+"extera_FeedCategoryEdit" = "Изменить категорию";
+"extera_FeedCategoryName" = "Название категории";
+"extera_FeedCategoryChannelsInfo" = "Посты выбранных каналов появляются, когда открыта эта категория, даже если канал скрыт из «Все». Один канал может быть в нескольких категориях.";
+"extera_FeedCategoryDelete" = "Удалить категорию";
+"extera_FeedCategoryDeleteConfirm" = "Удалить категорию **%1$@**? Её каналы останутся в ленте.";
+"extera_FeedCategoryHide" = "Скрыть категорию";
+"extera_FeedCategoryShow" = "Показать категорию";
+"extera_FeedCategoryHiddenInfo" = "**%1$@** скрыта. Вернуть можно в настройках ленты.";
+"extera_FeedCategoryUnsavedChanges" = "Вы изменили эту категорию. Сохранить изменения?";
+"extera_FeedCategoryEmpty" = "В этой категории нет каналов.";
+"extera_FeedHiddenFromAll" = "Скрыт из «Все»";
+"extera_FeedCategoryEmptyInfo" = "Добавьте каналы, и их посты появятся здесь.";
+"extera_FeedCategoryAddChannels" = "Добавить каналы";
+"extera_FeedAllChannelsExcludedInfo" = "Скрытые каналы всё равно присутствуют в своих категориях.";
+"extera_HideFeedTab" = "Скрыть вкладку ленты";
+"extera_DisableMarkdown" = "Отключить Markdown";
+"extera_EnableMarkdown" = "Включить Markdown";
+
+// Player
+"extera_PlayerCollapse" = "Свернуть плеер";
+"extera_PlayerShowRemaining" = "Показывать оставшееся время";
+"extera_PlayerShowDuration" = "Показывать длительность";
+"extera_PlayerTimeRemaining" = "−%1$@";
+"extera_PlayerLyrics" = "Текст песни";
+"extera_PlayerQueue" = "Очередь";
+"extera_PlayerQueueSearch" = "Поиск в очереди";
+"extera_PlayerQueueAdd" = "Добавить музыку";
+"extera_PlayerCoverColors" = "Цвета обложки";
+"extera_PlayerLyricsOnline" = "Онлайн-текст";
+"extera_PlayerMotionCovers" = "Анимированные обложки";
+"extera_PlayerMotionCoversEnabled" = "Обложки будут подгружаться из Apple Music по названию трека и исполнителю.";
+"extera_PlayerRhythmBackground" = "Ритм-фон";
+"extera_PlayerRhythmBackgroundInfo" = "Фон пульсирует в ритм музыки.";
+"extera_PlayerParticles" = "Частицы";
+"extera_PlayerParticlesInfo" = "Искры летят от обложки в такт музыке.";
+"extera_PlayerSettings" = "Настройки плеера";
+"extera_PlayerQualityKbps" = "%1$d кбит/с";
+"extera_PlayerQualityKhz" = "%1$@ кГц";
+"extera_PlayerQualityBits" = "%1$d бит";
+"extera_PlayerInfoFormat" = "Формат";
+"extera_PlayerInfoSampleRate" = "Частота дискретизации";
+"extera_PlayerInfoBitDepth" = "Битовая глубина";
+"extera_PlayerSpeedPitch" = "Изменение высоты тона";
+"extera_PlayerCoverColorsFull" = "Полный плеер";
+"extera_PlayerCoverColorsMini" = "Мини-плеер";
+"extera_PlayerLyricsOnlineInfo" = "Ищет текст песни онлайн, когда у трека его нет.";
+"extera_PlayerLyricsProgress" = "Прогресс строки";
+"extera_PlayerLyricsProgressHorizontal" = "Слева направо";
+"extera_PlayerLyricsProgressVertical" = "Сверху вниз";
+"extera_PlayerLyricsProgressInfo" = "Как заполняется текущая строка во время её исполнения.";
+"extera_PlayerTrackOf" = "Трек %1$d из %2$d";
+"extera_PlayerSpeedDescription" = "Скорость воспроизведения %1$@. Удерживайте для дополнительных опций";
+"extera_LyricsCredit" = "Текст: %1$@";
+"extera_LyricsOfferTitle" = "Найти текст песни?";
+"extera_LyricsOfferText" = "Название трека и исполнитель отправятся напрямую в LRCLIB (lrclib.net) и lrcmux, а не через Telegram. Можно отключить в меню плеера.";
+"extera_LyricsOfferButton" = "Искать текст";
+"extera_LyricsNotFoundTitle" = "Текст песни не найден";
+"extera_LyricsNotFoundText" = "Для этого трека нет текста ни в тегах файла, ни онлайн.";
+"extera_LyricsNotFoundTextOffline" = "Для этого трека нет текста в тегах файла. Онлайн-поиск отключён в меню плеера.";
+"extera_LyricsInstrumentalTitle" = "Инструментал";
+"extera_LyricsInstrumentalText" = "Этот трек помечен как не имеющий слов.";
+"extera_LyricsErrorTitle" = "Не удалось загрузить текст";
+"extera_LyricsErrorText" = "Сервер не ответил. Проверьте соединение и попробуйте снова.";
+
+// Non-translatable
+"extera_formatterDay24HSec" = "HH:mm:ss";
+"extera_formatterDay12HSec" = "h:mm:ss a";
+"extera_PhotoEditorTypefaceImpact" = "Impact";
+"extera_SensitiveRequestTitle" = "Подтвердите действие";
+"extera_SensitiveRequestWarning" = "Если вы не начинали это сами, нажмите «Отклонить»: возможно, это запустил плагин.";
+"extera_SensitiveRequestCategoryPayments" = "Платежи";
+"extera_SensitiveRequestCategoryChatManagement" = "Управление чатом";
+"extera_SensitiveRequestMethod" = "Запрос";
+"extera_SensitiveRequestChat" = "Чат";
+"extera_SensitiveRequestUser" = "Пользователь";
+"extera_SensitiveRequestAmount" = "Сумма";
+"extera_SensitiveRequestDebit" = "Будет списано";
+"extera_SensitiveRequestUnknownAmount" = "Сумму определить не удалось. Это не значит, что операция бесплатна.";
+"extera_SensitiveRequestAnonymous" = "Скрыть имя отправителя";
+"extera_SensitiveRequestUpgradeIncluded" = "Предоплата апгрейда подарка";
+"extera_SensitiveRequestGiftMessage" = "ID сообщения подарка";
+"extera_SensitiveRequestSavedGift" = "ID сохранённого подарка";
+
+// Main Menu
+"extera_AboutExteraDescription" = "Экспериментальный Telegram-клиент, основанный на официальном исходном коде!";
+"extera_Channel" = "Канал";
+"extera_SourceCode" = "Исходный код";
+
+// Appearance
+"extera_TabStyle" = "Стиль папок";
+"extera_TabStyleTextOnly" = "Текст";
+"extera_TabStyleRounded" = "Закруглённый";
+"extera_TabStyleChips" = "Чипсы";
+"extera_TabStylePills" = "Таблетки";
+"extera_SolarIcons" = "Использовать набор \"Solar\"";
+"extera_SolarIconsInfo" = "Powered by @Design480 × @TierOhneNation";
+"extera_DisableDividers" = "Отключить разделители";
+"extera_AlternativeNavigation" = "Альтернативная навигация";
+"extera_AlternativeNavigationInfo" = "Экспериментальная опция, включающая новые, более плавные анимации перехода между экранами.";
+"extera_DrawerOptions" = "Настройки бокового меню";
+"extera_DrawerIconSet" = "Cтиль иконок";
+"extera_DrawerAlternativeOpeningAnimation" = "Новая анимация открытия";
+"extera_DependsOnTheDate" = "Зависит от даты";
+"extera_NewYear" = "Новый год";
+"extera_ValentinesDay" = "День святого Валентина";
+"extera_Halloween" = "Хэллоуин";
+"extera_DrawerElements" = "Элементы бокового меню";
+
+// General
+"extera_CameraTypeSystem" = "Системная";
+"extera_DefaultCameraInfo" = "Встроенная камера Telegram.";
+"extera_CameraXInfo" = "CameraX поддерживается только на выбранных устройствах, эффекты и линзы зависят от вашего производителя.";
+"extera_SystemCameraInfo" = "Позволяет получить доступ напрямую к системной камере (не применимо к видеосообщениям).";
+"extera_PerformanceMode" = "Производительный режим";
+"extera_PerformanceModeInfo" = "Качество CameraX будет снижено в пользу производительности.";
+"extera_CameraQuality" = "Качество камеры";
+
+// Chats
+"extera_StickerTime" = "Скрыть время под стикером";
+"extera_HideCategories" = "Скрыть категории";
+"extera_HideCategoriesInfo" = "Категории исчезнут из строки поиска в диалоговом окне выбора реакций и панели эмодзи.";
+"extera_DoubleTap" = "Двойное нажатие";
+"extera_DisableJumpToNextChannel" = "Отключить \"Перейти в новый канал\"";
+"extera_ShowActionTimestamps" = "Показывать время у действий";
+"extera_AddCommaAfterMentionInfo" = "Запятая будет ставиться автоматически после нажатия на пользователя, которого вы хотите упомянуть.";
+"extera_HidePhotoCounter" = "Скрыть счетчик фотографий";
+"extera_HidePhotoCounterInfo" = "Надоедливый счетчик фотографий в верхней части экрана исчезнет из вашего поля зрения.";
+"extera_DisablePlayback" = "Отключить авто-проигрывание";
+"extera_DisablePlaybackInfo" = "Отключает автоматическое проигрывание видео при нажатии на кнопку громкости.";
+
+// Boost
+"extera_Encryptors" = "Методы шифрования";
+"extera_Encrypt" = "Зашифровать";
+"extera_Decrypt" = "Расшифровать";
+"extera_EncryptionKeyInfo" = "Данный ключ будет использоваться для шифровки и расшифровки сообщений в этом чате.";
+
+// Updates
+"extera_LastCheck" = "Последняя проверка";
+"extera_CurrentVersion" = "Текущая версия";
+"extera_BuildType" = "Тип сборки";
+"extera_BTRelease" = "Релиз";
+"extera_BTBeta" = "Бета";
+"extera_CheckOnLaunch" = "Проверять при запуске";
+"extera_ClearUpdatesCache" = "Очистить кэш обновлений";
+"extera_ClearedUpdatesCache" = "Очищено **%1$@** кэша.";
+"extera_NothingToClear" = "Нечего очищать.";
+"extera_CheckForUpdates" = "Проверить обновления";
+"extera_NoUpdates" = "Обновлений не найдено.";
+"extera_UpdateSize" = "Размер обновления";
+"extera_Changelog" = "Список изменений:";
+
+// Other
+"extera_ResetSettingsBulletin" = "Настройки **exteraGram** сброшены.";
+"extera_MutualContact" = "взаимный контакт";
+"extera_OpenPremiumBot" = "Открыть официального бота";
+"extera_CopySticker" = "Копировать стикер";
+"extera_SaveMessage" = "Сохранить сообщение";
+"extera_ConfirmCall" = "Подтверждение звонка";
+"extera_CallTo" = "Позвонить **%1$@**?";
+"extera_AppIconGradient" = "Градиент";
+"extera_AppIconNeo" = "Нео";
+"extera_AppIcon480DSGN" = "480 DSGN";
+
+// Categories
+"extera_General" = "Общие";
+"extera_Chats" = "Чаты";
+"extera_Other" = "Другое";
+
+// Option labels
+"extera_OptionOff" = "Выключено";
+"extera_OptionDefault" = "По умолчанию";
+"extera_OptionApi" = "API";
+"extera_OptionBotApi" = "Bot API";
+"extera_OptionFast" = "Быстро";
+"extera_SecondsShort" = "%1$d с";
+"extera_PixelsShort" = "%1$d px";
+
+// Preferences port
+"extera_Advanced" = "Расширенные";
+"extera_BackupAndRestore" = "Резервное копирование";
+"extera_ComingSoon" = "Этот раздел появится позже.";
+"extera_Boost2x" = "Ускорение (2×)";
+"extera_Boost4x" = "Ускорение (4×)";
+"extera_SendPhotosQuality" = "Качество фото";
+"extera_ShowDetailsButton" = "Показывать кнопку деталей сообщения";
+"extera_DetailsInfo" = "Добавляет в меню сообщения пункт с технической информацией: идентификаторами и временем.";
+"extera_ImportFailed" = "Не удалось прочитать файл настроек.";
