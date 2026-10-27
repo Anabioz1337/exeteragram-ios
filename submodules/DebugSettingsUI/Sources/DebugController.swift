@@ -9,9 +9,7 @@ import TelegramPresentationData
 import TelegramUIPreferences
 import ExteraTranslator
 import ChatListUI
-import ChatListUI
 import ItemListUI
-import ExteraPluginUI
 import ExteraPluginUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -27,6 +25,7 @@ import AlertCheckComponent
 import WalletContext
 import CpuProfiler
 import CrashReporting
+import exteraAICore
 import ContextUI
 
 @objc private final class DebugControllerMailComposeDelegate: NSObject, MFMailComposeViewControllerDelegate {
@@ -768,6 +767,8 @@ private enum DebugControllerEntry: ItemListNodeEntry {
     case restorePurchases(PresentationTheme)
     case logTranslationRecognition(Bool)
     case resetTranslationStates
+    case exteraAI
+    case exteraAIChat
     case exteraPluginsUI
     case exteraTranslator
     case exteraPillStack
@@ -798,7 +799,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return DebugControllerSection.experiments.rawValue
         case .inputDecTextBackend, .springSendAnimation, .fakeWalletTransfers, .exteraPillStack, .exteraPluginsUI:
             return DebugControllerSection.experiments.rawValue
-        case .logTranslationRecognition, .resetTranslationStates, .exteraTranslator:
+        case .logTranslationRecognition, .resetTranslationStates, .exteraAI, .exteraAIChat, .exteraTranslator:
             return DebugControllerSection.translation.rawValue
         case .disableVideoAspectScaling, .enableNetworkFramework, .enableNetworkExperiments, .rustMTProtoEngine, .networkEngineInfo:
             return DebugControllerSection.videoExperiments2.rawValue
@@ -919,6 +920,10 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             return 69
         case .exteraTranslator:
             return 70
+        case .exteraAI:
+            return 75
+        case .exteraAIChat:
+            return 76
         case .compressedEmojiCache:
             return 55
         case .storiesJpegExperiment:
@@ -1145,13 +1150,21 @@ private enum DebugControllerEntry: ItemListNodeEntry {
                     ]).start()
                 }
             })
+        case .exteraAI:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera AI", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                if let context = arguments.context {
+                    arguments.pushController(exteraAISettingsController(context: context))
+                }
+            })
+        case .exteraAIChat:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera AI Chat", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                if let context = arguments.context {
+                    arguments.pushController(exteraAIChatController(context: context))
+                }
+            })
         case .exteraPluginsUI:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Plugins", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
                 arguments.pushController(ExteraPluginsScreen())
-            })
-        case .exteraTranslator:
-            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Translator", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
-                arguments.pushController(ExteraTranslatorScreen())
             })
         case .exteraPillStack:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Pill Stack", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
@@ -2022,6 +2035,8 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
         entries.append(.logTranslationRecognition(experimentalSettings.logLanguageRecognition))
         entries.append(.resetTranslationStates)
         entries.append(.exteraTranslator)
+        entries.append(.exteraAI)
+        entries.append(.exteraAIChat)
         entries.append(.exteraPluginsUI)
     }
 
