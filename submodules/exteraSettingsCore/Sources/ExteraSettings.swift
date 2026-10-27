@@ -59,6 +59,7 @@ public struct ExteraSettings: Codable, Equatable {
     public var disablePlayback: Bool = true
 
     public var filterZalgo: Bool = false
+    public var dateFormat: Int32 = 0
     public var checkUpdatesOnLaunch: Bool = true
 
     private static let booleanKeys: [String] = [
@@ -105,6 +106,8 @@ public struct ExteraSettings: Codable, Equatable {
         "checkUpdatesOnLaunch"
     ]
 
+    private static let dateFormatIntegerKey = "dateFormat"
+
     private static let integerKeys: [String] = [
         "downloadSpeedBoost",
         "showIdAndDc",
@@ -118,7 +121,8 @@ public struct ExteraSettings: Codable, Equatable {
         "doubleTapSeekDuration",
         "bottomButton",
         "sendPhotosQuality",
-        "videoMessagesCamera"
+        "videoMessagesCamera",
+        ExteraSettings.dateFormatIntegerKey
     ]
 
     public init() {
@@ -213,7 +217,8 @@ public struct ExteraSettings: Codable, Equatable {
         "doubleTapSeekDuration": \.doubleTapSeekDuration,
         "bottomButton": \.bottomButton,
         "sendPhotosQuality": \.sendPhotosQuality,
-        "videoMessagesCamera": \.videoMessagesCamera
+        "videoMessagesCamera": \.videoMessagesCamera,
+        ExteraSettings.dateFormatIntegerKey: \.dateFormat
     ]
 }
 
