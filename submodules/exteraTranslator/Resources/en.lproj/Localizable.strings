@@ -1,0 +1,9 @@
+"ExteraTranslator.ServiceTitle" = "extera Translator";
+"ExteraTranslator.Enabled" = "Enable chat translation (free)";
+"ExteraTranslator.Provider" = "Provider";
+"ExteraTranslator.TargetLanguage" = "Translate to";
+"ExteraTranslator.FollowAppLanguage" = "Follow App Language";
+"ExteraTranslator.ProviderGoogle" = "Google";
+"ExteraTranslator.ProviderYandex" = "Yandex";
+"ExteraTranslator.YandexApiKey" = "Yandex API key";
+"ExteraTranslator.TranslateBeforeSend" = "Translate";

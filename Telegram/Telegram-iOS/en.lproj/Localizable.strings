@@ -16207,6 +16207,20 @@ Error: %8$@";
 "TextProcessing.ActionValueNonPremium" = "X50";
 "TextProcessing.ActionApply" = "Apply";
 "TextProcessing.ActionClose" = "Close";
+
+"Extera.Speech.Popup.Title" = "Transcript";
+"Extera.Speech.Popup.Copy" = "Copy";
+"Extera.Speech.Popup.Copied" = "Transcript Copied";
+
+"Extera.Speech.Settings.Title" = "Voice Recognition";
+"Extera.Speech.Settings.Enable" = "Enable Recognition";
+"Extera.Speech.Settings.Language" = "Recognition Language";
+"Extera.Speech.Settings.Language.Auto" = "Auto (%@)";
+"Extera.Speech.Settings.UseTextCorrection" = "Improve With AI";
+"Extera.Speech.Settings.HeaderText" = "Voice messages are transcribed on device. Recognized text can be refined by the configured AI service.";
+
+"Extera.Speech.Error.NoSpeech" = "No speech detected";
+"Extera.Speech.Error.Failed" = "Could not transcribe this message";
 "TextProcessing.LimitToast.Title" = "Daily limit reached";
 "TextProcessing.LimitToast.Text" = "Get **Telegram Premium** for **50x** more text edits per day.";
 "TextProcessing.Emojify" = "Emojify";
@@ -17263,7 +17277,6 @@ Error: %8$@";
 "Extera.Weather.PermissionGrant" = "Grant Permission";
 "Extera.Weather.ServicesEnable" = "Enable Location";
 "Extera.Weather.TopInfo" = "Weather widget settings for Pill Stack.";
-
 "Extera.Inline.Title" = "Inline Results";
 "Extera.Inline.Info" = "Calculator, Currencies, Units, and Time Zones";
 "Extera.Inline.ShowResults" = "Show Results";

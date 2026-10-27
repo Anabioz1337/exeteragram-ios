@@ -4,6 +4,7 @@ import SwiftSignalKit
 import TelegramCore
 import AccountContext
 import TelegramUIPreferences
+import ExteraTranslator
 
 public struct ChatTranslationState: Codable {
     enum CodingKeys: String, CodingKey {
@@ -201,6 +202,9 @@ public func translateMessageIds(context: AccountContext, messageIds: [EngineMess
         default:
             break
         }
+        if ExteraTranslatorSettings.shared.current.enabled {
+            enableLocalIfPossible = true
+        }
         return context.engine.messages.translateMessages(messageIds: messageIdsToTranslate, fromLang: fromLang, toLang: toLang, enableLocalIfPossible: enableLocalIfPossible)
         |> `catch` { _ -> Signal<Never, NoError> in
             return .complete()
@@ -213,7 +217,7 @@ public func chatTranslationState(context: AccountContext, peerId: EnginePeer.Id,
         return .single(nil)
     }
     
-    guard canTranslateChats(context: context) else {
+    guard canTranslateChats(context: context) || ExteraTranslatorSettings.shared.current.enabled else {
         return .single(nil)
     }
     
@@ -234,7 +238,7 @@ public func chatTranslationState(context: AccountContext, peerId: EnginePeer.Id,
             context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.AutoTranslateEnabled(id: peerId))
         )
         |> mapToSignal { settings, autoTranslateEnabled in
-            if !settings.translateChats && !autoTranslateEnabled {
+            if !settings.translateChats && !autoTranslateEnabled && !ExteraTranslatorSettings.shared.current.enabled {
                 return .single(nil)
             }
             
@@ -349,7 +353,7 @@ public func chatTranslationState(context: AccountContext, peerId: EnginePeer.Id,
                             let isEnabled: Bool
                             if let currentIsEnabled = cached?.isEnabled {
                                 isEnabled = currentIsEnabled
-                            } else if autoTranslateEnabled {
+                            } else if autoTranslateEnabled || ExteraTranslatorSettings.shared.current.enabled {
                                 isEnabled = true
                             } else {
                                 isEnabled = false

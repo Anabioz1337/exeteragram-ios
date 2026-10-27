@@ -10,6 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        "//submodules/exteraTranslator:ExteraTranslator",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/CrashReporting:CrashReporting",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
