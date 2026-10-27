@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
+import exteraAppearance
 
 private final class SwitchNodeViewLayer: CALayer {
     override func setNeedsDisplay() {
@@ -24,7 +25,7 @@ open class SwitchNode: ASDisplayNode {
         didSet {
             if self.isNodeLoaded {
                 if oldValue != self.frameColor {
-                    (self.view as! UISwitch).tintColor = self.frameColor
+                    (self.view as! UISwitch).tintColor = self.effectiveFrameColor
                 }
             }
         }
@@ -74,11 +75,11 @@ open class SwitchNode: ASDisplayNode {
         self.view.isAccessibilityElement = false
         
         (self.view as! UISwitch).backgroundColor = self.backgroundColor
-        (self.view as! UISwitch).tintColor = self.frameColor
+        (self.view as! UISwitch).tintColor = self.effectiveFrameColor
         (self.view as! UISwitch).onTintColor = self.contentColor
-        
+
         (self.view as! UISwitch).setOn(self._isOn, animated: false)
-        
+
         (self.view as! UISwitch).addTarget(self, action: #selector(switchValueChanged(_:)), for: .valueChanged)
     }
     
@@ -87,6 +88,15 @@ open class SwitchNode: ASDisplayNode {
         if self.isNodeLoaded {
             (self.view as! UISwitch).setOn(value, animated: animated)
         }
+    }
+
+    /// The extera MD3 style reads as a flat filled track, so the off state's border ring is
+    /// softened relative to the legacy solid outline.
+    private var effectiveFrameColor: UIColor {
+        if ExteraAppearanceSettings.shared.newSwitchStyle {
+            return self.frameColor.withAlphaComponent(0.45)
+        }
+        return self.frameColor
     }
     
     override open func calculateSizeThatFits(_ constrainedSize: CGSize) -> CGSize {
