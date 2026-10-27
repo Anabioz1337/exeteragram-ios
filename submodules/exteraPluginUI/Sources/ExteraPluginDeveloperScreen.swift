@@ -31,9 +31,8 @@ public final class ExteraPluginDeveloperScreen: UITableViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.keyboardDismissMode = .onDrag
-        self.stateDisposable = self.store.logs.get()
-        |> deliverOnMainQueue
-        |> start(next: { [weak self] logs in
+        self.stateDisposable = (self.store.logs.get()
+        |> deliverOnMainQueue).startStrict(next: { [weak self] logs in
             guard let self else {
                 return
             }

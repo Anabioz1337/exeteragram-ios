@@ -41,12 +41,11 @@ public final class ExteraPluginCatalogScreen: UITableViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.stateDisposable = combineLatest(
+        self.stateDisposable = (combineLatest(
             self.store.verifiedSourcesOnly.get(),
             self.store.sorting.get()
         )
-        |> deliverOnMainQueue
-        |> start(next: { [weak self] verifiedOnly, sorting in
+        |> deliverOnMainQueue).startStrict(next: { [weak self] verifiedOnly, sorting in
             guard let self else {
                 return
             }
