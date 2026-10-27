@@ -296,7 +296,7 @@ final class ChatListContainerItemNode: ASDisplayNode {
             return presentationData.strings.VoiceOver_ScrollStatus(row, count).string
         }
         
-        self.listNode.updateThemeAndStrings(theme: presentationData.theme, fontSize: presentationData.listsFontSize, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameSortOrder: presentationData.nameSortOrder, nameDisplayOrder: presentationData.nameDisplayOrder, disableAnimations: true)
+        self.listNode.updateThemeAndStrings(theme: presentationData.theme, fontSize: presentationData.listsFontSize, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameSortOrder: presentationData.nameSortOrder, nameDisplayOrder: presentationData.nameDisplayOrder, disableAnimations: true, exteraSwipeSettings: presentationData.exteraSwipeSettings)
         
         self.emptyNode?.updateThemeAndStrings(theme: presentationData.theme, strings: presentationData.strings)
     }

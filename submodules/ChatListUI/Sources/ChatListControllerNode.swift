@@ -116,7 +116,10 @@ public final class ChatListContainerNode: ASDisplayNode, ASGestureRecognizerDele
     private var enableAdjacentFilterLoading: Bool = false
     
     private var panRecognizer: InteractiveTransitionGestureRecognizer?
-    
+
+    private let exteraSwipeSettingsDisposable = MetaDisposable()
+    private var folderSwipeNavigationEnabled = true
+
     let leftSeparatorLayer: SimpleLayer
     
     private let _ready = Promise<Bool>()
@@ -570,7 +573,13 @@ public final class ChatListContainerNode: ASDisplayNode, ASGestureRecognizerDele
                 }
             }
             if self.availableFilters.count > 1 {
-                return [.leftCenter, .rightCenter]
+                if self.folderSwipeNavigationEnabled {
+                    return [.leftCenter, .rightCenter]
+                } else if self.controller?.isStoryPostingAvailable == true && !(self.context.sharedContext.callManager?.hasActiveCall ?? false) {
+                    return [.rightEdge]
+                } else {
+                    return []
+                }
             } else {
                 return [.rightEdge]
             }
@@ -580,11 +589,25 @@ public final class ChatListContainerNode: ASDisplayNode, ASGestureRecognizerDele
         panRecognizer.cancelsTouchesInView = true
         self.panRecognizer = panRecognizer
         self.view.addGestureRecognizer(panRecognizer)
-        
+
+        self.exteraSwipeSettingsDisposable.set(
+            (self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSwipeSettings])
+            |> map { sharedData -> Bool in
+                if let entry = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSwipeSettings], let settings = entry.get(ExteraSwipeSettings.self) {
+                    return settings.folderSwipeNavigation
+                }
+                return true
+            }
+            |> deliverOnMainQueue).start(next: { [weak self] folderSwipeNavigationEnabled in
+                self?.folderSwipeNavigationEnabled = folderSwipeNavigationEnabled
+            })
+        )
+
         self.view.layer.addSublayer(self.leftSeparatorLayer)
     }
     
     deinit {
+        self.exteraSwipeSettingsDisposable.dispose()
         self.pendingItemNode?.2.dispose()
     }
     

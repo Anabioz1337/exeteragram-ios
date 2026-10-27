@@ -153,6 +153,8 @@ extension PeerInfoScreenNode {
             push(exteraSettingsScreen(context: self.context))
         case .exteraSpeech:
             push(exteraSpeechSettingsController(context: self.context))
+        case .exteraSwipe:
+            push(exteraSwipeSettingsController(context: self.context))
         case .exteraAbout:
             push(exteraAboutController(context: self.context))
         case .appearance:

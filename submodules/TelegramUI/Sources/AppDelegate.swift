@@ -288,6 +288,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
     
     private var replyFromNotificationsDisposables = DisposableSet()
     private var watchedCallsDisposables = DisposableSet()
+
+    private var exteraTransitionSettingsDisposable: Disposable?
     
     private var _notificationTokenPromise: Promise<Data>?
     private let voipTokenPromise = Promise<Data>()
@@ -1185,6 +1187,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             }
             
             presentationDataPromise.set(sharedContext.presentationData)
+
+            let exteraTransitionSettingsDisposable = MetaDisposable()
+            self.exteraTransitionSettingsDisposable = exteraTransitionSettingsDisposable
+            exteraTransitionSettingsDisposable.set((sharedContext.presentationData
+            |> deliverOnMainQueue).start(next: { presentationData in
+                UIView.setAnimationDurationFactor(presentationData.exteraSwipeSettings.quickTransitionsFactor)
+                navigationExpansionCommitIntensity = presentationData.exteraSwipeSettings.predictiveBackIntensity
+            }))
             #if targetEnvironment(simulator)
             if CommandLine.arguments.contains("--context-menu-morph-gallery") {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in

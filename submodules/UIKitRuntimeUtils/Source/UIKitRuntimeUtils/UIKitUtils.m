@@ -3,16 +3,27 @@
 #import <ObjCRuntimeUtils/RuntimeUtils.h>
 
 #import <objc/runtime.h>
+#include <stdatomic.h>
 
 #if TARGET_IPHONE_SIMULATOR
 UIKIT_EXTERN float UIAnimationDragCoefficient();
 #endif
 
+static _Atomic double exteraTransitionSpeedFactor = 1.0;
+
 double animationDurationFactorImpl() {
+    double speed = atomic_load(&exteraTransitionSpeedFactor);
 #if TARGET_IPHONE_SIMULATOR
+    if (speed != 1.0) {
+        return (double)UIAnimationDragCoefficient() * speed;
+    }
     return (double)UIAnimationDragCoefficient();
-#endif   
-    return 1.0f;
+#endif
+    return speed;
+}
+
+void setAnimationDurationFactorImpl(double value) {
+    atomic_store(&exteraTransitionSpeedFactor, value <= 0.05 ? 1.0 : value);
 }
 
 @interface CASpringAnimation ()

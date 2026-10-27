@@ -5,6 +5,7 @@ import Display
 import SwiftSignalKit
 import TelegramCore
 import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AvatarNode
@@ -915,6 +916,49 @@ private func leftRevealOptions(strings: PresentationStrings, theme: Presentation
     }
 }
 
+private let exteraRevealKeysByAction: [ExteraSwipeAction: Set<Int32>] = [
+    .pin: Set([RevealOptionKey.pin.rawValue, RevealOptionKey.unpin.rawValue]),
+    .mute: Set([RevealOptionKey.mute.rawValue, RevealOptionKey.unmute.rawValue]),
+    .markAsRead: Set([RevealOptionKey.toggleMarkedUnread.rawValue]),
+    .archive: Set([RevealOptionKey.archive.rawValue, RevealOptionKey.unarchive.rawValue]),
+    .delete: Set([RevealOptionKey.delete.rawValue])
+]
+
+private let exteraLeftSideActions: Set<ExteraSwipeAction> = [.pin, .markAsRead]
+
+// A chat row's configurable actions are the ones its own builders expose;
+// options outside the configurable groups (a forum thread's hide or close)
+// stay where their side puts them.
+private func exteraConfiguredRevealOptions(_ options: (left: [ItemListRevealOption], right: [ItemListRevealOption]), settings: ExteraSwipeSettings) -> (left: [ItemListRevealOption], right: [ItemListRevealOption]) {
+    guard settings.areSwipeActionsEnabled else {
+        return ([], [])
+    }
+    var arranged: (left: [ItemListRevealOption], right: [ItemListRevealOption]) = ([], [])
+    let available = options.left + options.right
+    var coveredKeys = Set<Int32>()
+    for actionId in settings.swipeActionIds {
+        guard let action = ExteraSwipeAction(rawValue: actionId), let keys = exteraRevealKeysByAction[action] else {
+            continue
+        }
+        coveredKeys.formUnion(keys)
+        let selected = available.filter { keys.contains($0.key) }
+        if selected.isEmpty {
+            continue
+        }
+        if exteraLeftSideActions.contains(action) {
+            arranged.left.append(contentsOf: selected)
+        } else {
+            arranged.right.append(contentsOf: selected)
+        }
+    }
+    arranged.left.append(contentsOf: options.left.filter { !coveredKeys.contains($0.key) })
+    arranged.right.append(contentsOf: options.right.filter { !coveredKeys.contains($0.key) })
+    if settings.reverseSwipeScrolling {
+        return (arranged.right, arranged.left)
+    }
+    return arranged
+}
+
 private final class ChatListItemAccessibilityCustomAction: UIAccessibilityCustomAction {
     let key: Int32
     
@@ -1470,6 +1514,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
     private var nextHasActiveRevealControls: Bool = false
     private var skipFadeout: Bool = false
     private var customAnimationInProgress: Bool = false
+    var gooeyAvatarOnEnter = false
     
     private var onlineIsVoiceChat: Bool = false
     private var currentOnline: Bool?
@@ -5454,7 +5499,10 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     if item.editing {
                         strongSelf.setRevealOptions((left: [], right: []), enableAnimations: item.context.sharedContext.energyUsageSettings.fullTranslucency)
                     } else {
-                        strongSelf.setRevealOptions((left: peerLeftRevealOptions, right: peerRevealOptions), enableAnimations: item.context.sharedContext.energyUsageSettings.fullTranslucency)
+                        let configured = exteraConfiguredRevealOptions((left: peerLeftRevealOptions, right: peerRevealOptions), settings: item.presentationData.exteraSwipeSettings)
+                        strongSelf.loopRevealActions = item.presentationData.exteraSwipeSettings.loopSwipeActions
+                        strongSelf.gooeyAvatarOnEnter = item.presentationData.exteraSwipeSettings.gooeyAvatars
+                        strongSelf.setRevealOptions(configured, enableAnimations: item.context.sharedContext.energyUsageSettings.fullTranslucency)
                     }
                     if !strongSelf.customAnimationInProgress {
                         strongSelf.setRevealOptionsOpened(item.hasActiveRevealControls, animated: true)
@@ -5557,7 +5605,22 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
     override public func animateInsertion(_ currentTimestamp: Double, duration: Double, options: ListViewItemAnimationOptions) {
         self.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.25)
     }
-    
+
+    override public func didEnterHierarchy() {
+        super.didEnterHierarchy()
+        guard self.gooeyAvatarOnEnter else {
+            return
+        }
+        guard !self.customAnimationInProgress, let item = self.layoutParams?.0, case .peer = item.content else {
+            return
+        }
+        self.avatarNode.layer.removeAnimation(forKey: "extera_gooey_scale")
+        let bounceCurve = ContainedViewLayoutTransitionCurve.customSpring(mass: 2.5, stiffness: 350.0, damping: 14.0, initialVelocity: -5.5)
+        let bounce = self.avatarNode.layer.makeAnimation(from: 0.72 as NSNumber, to: 1.0 as NSNumber, keyPath: "transform.scale", timingFunction: bounceCurve.timingFunction, duration: 1.0)
+        bounce.isRemovedOnCompletion = true
+        self.avatarNode.layer.add(bounce, forKey: "extera_gooey_scale")
+    }
+
     override public func animateRemoved(_ currentTimestamp: Double, duration: Double) {
         self.clipsToBounds = true
         if self.skipFadeout {

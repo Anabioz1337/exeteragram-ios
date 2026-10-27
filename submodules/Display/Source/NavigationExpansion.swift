@@ -143,6 +143,10 @@ public protocol NavigationExpansionRenderer: AnyObject {
 /// Builds the renderer for a source and a destination; nil, or a nil result, gives the slide. The app sets it.
 public var defaultNavigationExpansionRenderer: ((_ source: NavigationExpansionSource, _ destination: NavigationExpansionDestination, _ operation: NavigationExpansionOperation) -> NavigationExpansionRenderer?)?
 
+/// Scales how readily an interactive swipe commits the transition; 1.0 keeps the
+/// system thresholds. Read on the main thread when a swipe releases. The app sets it.
+public var navigationExpansionCommitIntensity: Double = 1.0
+
 /// The style of a push or pop between `top` and `bottom`: an expansion when both screens take part and the app draws
 /// it, in a compact, full-screen, non-split stack with Reduce Motion off; otherwise the slide. Read once, when the
 /// transition starts.
@@ -157,10 +161,12 @@ public func navigationTransitionStyle(top: ViewController, bottom: ViewControlle
 }
 
 /// Whether a released swipe closes the expansion: past 0.3 of the width, or flung — projected past half of it (UIKit's
-/// normal deceleration, 0.998 per millisecond) at over 300 pt/s.
-public func navigationExpansionCommits(dx: CGFloat, velocity: CGFloat, width: CGFloat) -> Bool {
+/// normal deceleration, 0.998 per millisecond) at over 300 pt/s. `intensity` above 1 shrinks both distances so a
+/// shorter or slower swipe commits.
+public func navigationExpansionCommits(dx: CGFloat, velocity: CGFloat, width: CGFloat, intensity: Double = 1.0) -> Bool {
+    let intensity = max(0.5, min(2.0, intensity))
     let projected = dx + velocity * 0.998 / (1.0 - 0.998) / 1000.0
-    return dx > width * 0.3 || (projected > width * 0.5 && velocity > 300.0)
+    return dx > width * (0.3 / intensity) || (projected > width * (0.5 / intensity) && velocity > 300.0)
 }
 
 public extension NavigationSpringRest {
