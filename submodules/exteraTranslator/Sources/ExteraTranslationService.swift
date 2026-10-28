@@ -254,7 +254,7 @@ public final class ExteraHTTPInternalTranslationService: ExperimentalInternalTra
                     |> map { result -> (AnyHashable, String?) in
                         return (key, result)
                     }
-                    |> (catch { _ -> Signal<(AnyHashable, String?), NoError> in
+                    |> (`catch` { _ -> Signal<(AnyHashable, String?), NoError> in
                         return .single((key, nil))
                     })
                 })

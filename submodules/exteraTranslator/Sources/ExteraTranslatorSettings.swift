@@ -67,7 +67,7 @@ public final class ExteraTranslatorSettings {
     }
 
     public var preferencesSignal: Signal<ExteraTranslationPreferences, NoError> {
-        return self.promise.signal()
+        return self.promise.get()
     }
 }
 
