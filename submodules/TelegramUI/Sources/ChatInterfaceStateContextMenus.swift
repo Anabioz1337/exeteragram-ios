@@ -947,7 +947,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             loggingSettings = LoggingSettings.defaultSettings
         }
 
-        let exteraSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings()
+        let exteraSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
         
         var messageActions = messageActions
         if isEmbeddedMode {

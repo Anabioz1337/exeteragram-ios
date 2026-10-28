@@ -50,6 +50,56 @@ public struct ExteraSettings: Codable, Equatable {
     public var feedCategories: [ExteraFeedCategory]
     public var feedIncludeArchived: Bool
     public var feedWidePosts: Bool
+    public var hidePhoneNumber: Bool = false
+    public var archiveOnPull: Bool = false
+    public var disableUnarchiveSwipe: Bool = true
+    public var hideActionBarStatus: Bool = false
+    public var centerTitle: Bool = false
+    public var tabCounter: Bool = true
+    public var hideAllChats: Bool = false
+    public var forceBlur: Bool = false
+    public var forceSnow: Bool = false
+    public var useSystemFonts: Bool = true
+    public var newSwitchStyle: Bool = true
+    public var disableDividers: Bool = false
+    public var hideStickerTime: Bool = false
+    public var unlimitedRecentStickers: Bool = false
+    public var hideCategories: Bool = true
+    public var hideKeyboardOnScroll: Bool = true
+    public var permissionsShortcut: Bool = false
+    public var administratorsShortcut: Bool = false
+    public var membersShortcut: Bool = false
+    public var recentActionsShortcut: Bool = true
+    public var disableJumpToNextChannel: Bool = false
+    public var showActionTimestamps: Bool = true
+    public var hideShareButton: Bool = true
+    public var showCopyPhotoButton: Bool = true
+    public var showClearButton: Bool = true
+    public var showSaveMessageButton: Bool = false
+    public var showDetailsButton: Bool = false
+    public var showReportButton: Bool = true
+    public var showHistoryButton: Bool = false
+    public var addCommaAfterMention: Bool = true
+    public var hidePhotoCounter: Bool = false
+    public var hideCameraTile: Bool = false
+    public var staticZoom: Bool = false
+    public var rememberLastUsedCamera: Bool = false
+    public var pauseOnMinimize: Bool = true
+    public var disablePlayback: Bool = true
+    public var filterZalgo: Bool = false
+    public var downloadSpeedBoost: Bool = false
+    public var showIdAndDc: Bool = false
+    public var avatarCorners: Bool = false
+    public var titleText: Bool = false
+    public var tabIcons: Bool = false
+    public var stickerSize: Bool = false
+    public var stickerShape: Bool = false
+    public var doubleTapAction: Bool = false
+    public var doubleTapActionOutOwner: Bool = false
+    public var doubleTapSeekDuration: Bool = false
+    public var bottomButton: Bool = false
+    public var sendPhotosQuality: Bool = false
+    public var videoMessagesCamera: Bool = false
 
     public static var defaultSettings: ExteraSettings {
         return ExteraSettings(downloadSpeedBoostLevel: 0, uploadSpeedBoost: false, disableNumberRounding: false, formatTimeWithSeconds: false, checkUpdatesOnLaunch: false, lastUpdateCheckTime: 0, customSaveFolderName: "", useGoogleAnalytics: false, useGoogleCrashlytics: false, adBlockEnabled: false, adBlockBlockedRequests: 0, feedEnabled: false, feedCategories: [], feedIncludeArchived: false, feedWidePosts: false)
@@ -127,6 +177,57 @@ public struct ExteraSettings: Codable, Equatable {
         self.feedCategories = (try container.decodeIfPresent([ExteraFeedCategory].self, forKey: "feedCategories")) ?? []
         self.feedIncludeArchived = (try container.decodeIfPresent(Int32.self, forKey: "feedIncludeArchived")).flatMap({ $0 != 0 }) ?? false
         self.feedWidePosts = (try container.decodeIfPresent(Int32.self, forKey: "feedWidePosts")).flatMap({ $0 != 0 }) ?? false
+
+        self.hidePhoneNumber = ((try? container.decode(Int32.self, forKey: "hidePhoneNumber")) ?? 0) != 0
+        self.archiveOnPull = ((try? container.decode(Int32.self, forKey: "archiveOnPull")) ?? 0) != 0
+        self.disableUnarchiveSwipe = ((try? container.decode(Int32.self, forKey: "disableUnarchiveSwipe")) ?? 1) != 0
+        self.hideActionBarStatus = ((try? container.decode(Int32.self, forKey: "hideActionBarStatus")) ?? 0) != 0
+        self.centerTitle = ((try? container.decode(Int32.self, forKey: "centerTitle")) ?? 0) != 0
+        self.tabCounter = ((try? container.decode(Int32.self, forKey: "tabCounter")) ?? 1) != 0
+        self.hideAllChats = ((try? container.decode(Int32.self, forKey: "hideAllChats")) ?? 0) != 0
+        self.forceBlur = ((try? container.decode(Int32.self, forKey: "forceBlur")) ?? 0) != 0
+        self.forceSnow = ((try? container.decode(Int32.self, forKey: "forceSnow")) ?? 0) != 0
+        self.useSystemFonts = ((try? container.decode(Int32.self, forKey: "useSystemFonts")) ?? 1) != 0
+        self.newSwitchStyle = ((try? container.decode(Int32.self, forKey: "newSwitchStyle")) ?? 1) != 0
+        self.disableDividers = ((try? container.decode(Int32.self, forKey: "disableDividers")) ?? 0) != 0
+        self.hideStickerTime = ((try? container.decode(Int32.self, forKey: "hideStickerTime")) ?? 0) != 0
+        self.unlimitedRecentStickers = ((try? container.decode(Int32.self, forKey: "unlimitedRecentStickers")) ?? 0) != 0
+        self.hideCategories = ((try? container.decode(Int32.self, forKey: "hideCategories")) ?? 1) != 0
+        self.hideKeyboardOnScroll = ((try? container.decode(Int32.self, forKey: "hideKeyboardOnScroll")) ?? 1) != 0
+        self.permissionsShortcut = ((try? container.decode(Int32.self, forKey: "permissionsShortcut")) ?? 0) != 0
+        self.administratorsShortcut = ((try? container.decode(Int32.self, forKey: "administratorsShortcut")) ?? 0) != 0
+        self.membersShortcut = ((try? container.decode(Int32.self, forKey: "membersShortcut")) ?? 0) != 0
+        self.recentActionsShortcut = ((try? container.decode(Int32.self, forKey: "recentActionsShortcut")) ?? 1) != 0
+        self.disableJumpToNextChannel = ((try? container.decode(Int32.self, forKey: "disableJumpToNextChannel")) ?? 0) != 0
+        self.showActionTimestamps = ((try? container.decode(Int32.self, forKey: "showActionTimestamps")) ?? 1) != 0
+        self.hideShareButton = ((try? container.decode(Int32.self, forKey: "hideShareButton")) ?? 1) != 0
+        self.showCopyPhotoButton = ((try? container.decode(Int32.self, forKey: "showCopyPhotoButton")) ?? 1) != 0
+        self.showClearButton = ((try? container.decode(Int32.self, forKey: "showClearButton")) ?? 1) != 0
+        self.showSaveMessageButton = ((try? container.decode(Int32.self, forKey: "showSaveMessageButton")) ?? 0) != 0
+        self.showDetailsButton = ((try? container.decode(Int32.self, forKey: "showDetailsButton")) ?? 0) != 0
+        self.showReportButton = ((try? container.decode(Int32.self, forKey: "showReportButton")) ?? 1) != 0
+        self.showHistoryButton = ((try? container.decode(Int32.self, forKey: "showHistoryButton")) ?? 0) != 0
+        self.addCommaAfterMention = ((try? container.decode(Int32.self, forKey: "addCommaAfterMention")) ?? 1) != 0
+        self.hidePhotoCounter = ((try? container.decode(Int32.self, forKey: "hidePhotoCounter")) ?? 0) != 0
+        self.hideCameraTile = ((try? container.decode(Int32.self, forKey: "hideCameraTile")) ?? 0) != 0
+        self.staticZoom = ((try? container.decode(Int32.self, forKey: "staticZoom")) ?? 0) != 0
+        self.rememberLastUsedCamera = ((try? container.decode(Int32.self, forKey: "rememberLastUsedCamera")) ?? 0) != 0
+        self.pauseOnMinimize = ((try? container.decode(Int32.self, forKey: "pauseOnMinimize")) ?? 1) != 0
+        self.disablePlayback = ((try? container.decode(Int32.self, forKey: "disablePlayback")) ?? 1) != 0
+        self.filterZalgo = ((try? container.decode(Int32.self, forKey: "filterZalgo")) ?? 0) != 0
+        self.downloadSpeedBoost = ((try? container.decode(Int32.self, forKey: "downloadSpeedBoost")) ?? 0) != 0
+        self.showIdAndDc = ((try? container.decode(Int32.self, forKey: "showIdAndDc")) ?? 0) != 0
+        self.avatarCorners = ((try? container.decode(Int32.self, forKey: "avatarCorners")) ?? 0) != 0
+        self.titleText = ((try? container.decode(Int32.self, forKey: "titleText")) ?? 0) != 0
+        self.tabIcons = ((try? container.decode(Int32.self, forKey: "tabIcons")) ?? 0) != 0
+        self.stickerSize = ((try? container.decode(Int32.self, forKey: "stickerSize")) ?? 0) != 0
+        self.stickerShape = ((try? container.decode(Int32.self, forKey: "stickerShape")) ?? 0) != 0
+        self.doubleTapAction = ((try? container.decode(Int32.self, forKey: "doubleTapAction")) ?? 0) != 0
+        self.doubleTapActionOutOwner = ((try? container.decode(Int32.self, forKey: "doubleTapActionOutOwner")) ?? 0) != 0
+        self.doubleTapSeekDuration = ((try? container.decode(Int32.self, forKey: "doubleTapSeekDuration")) ?? 0) != 0
+        self.bottomButton = ((try? container.decode(Int32.self, forKey: "bottomButton")) ?? 0) != 0
+        self.sendPhotosQuality = ((try? container.decode(Int32.self, forKey: "sendPhotosQuality")) ?? 0) != 0
+        self.videoMessagesCamera = ((try? container.decode(Int32.self, forKey: "videoMessagesCamera")) ?? 0) != 0
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -147,9 +248,60 @@ public struct ExteraSettings: Codable, Equatable {
         try container.encode(self.feedCategories, forKey: "feedCategories")
         try container.encode((self.feedIncludeArchived ? 1 : 0) as Int32, forKey: "feedIncludeArchived")
         try container.encode((self.feedWidePosts ? 1 : 0) as Int32, forKey: "feedWidePosts")
+
+        try container.encode((self.hidePhoneNumber ? 1 : 0) as Int32, forKey: "hidePhoneNumber")
+        try container.encode((self.archiveOnPull ? 1 : 0) as Int32, forKey: "archiveOnPull")
+        try container.encode((self.disableUnarchiveSwipe ? 1 : 0) as Int32, forKey: "disableUnarchiveSwipe")
+        try container.encode((self.hideActionBarStatus ? 1 : 0) as Int32, forKey: "hideActionBarStatus")
+        try container.encode((self.centerTitle ? 1 : 0) as Int32, forKey: "centerTitle")
+        try container.encode((self.tabCounter ? 1 : 0) as Int32, forKey: "tabCounter")
+        try container.encode((self.hideAllChats ? 1 : 0) as Int32, forKey: "hideAllChats")
+        try container.encode((self.forceBlur ? 1 : 0) as Int32, forKey: "forceBlur")
+        try container.encode((self.forceSnow ? 1 : 0) as Int32, forKey: "forceSnow")
+        try container.encode((self.useSystemFonts ? 1 : 0) as Int32, forKey: "useSystemFonts")
+        try container.encode((self.newSwitchStyle ? 1 : 0) as Int32, forKey: "newSwitchStyle")
+        try container.encode((self.disableDividers ? 1 : 0) as Int32, forKey: "disableDividers")
+        try container.encode((self.hideStickerTime ? 1 : 0) as Int32, forKey: "hideStickerTime")
+        try container.encode((self.unlimitedRecentStickers ? 1 : 0) as Int32, forKey: "unlimitedRecentStickers")
+        try container.encode((self.hideCategories ? 1 : 0) as Int32, forKey: "hideCategories")
+        try container.encode((self.hideKeyboardOnScroll ? 1 : 0) as Int32, forKey: "hideKeyboardOnScroll")
+        try container.encode((self.permissionsShortcut ? 1 : 0) as Int32, forKey: "permissionsShortcut")
+        try container.encode((self.administratorsShortcut ? 1 : 0) as Int32, forKey: "administratorsShortcut")
+        try container.encode((self.membersShortcut ? 1 : 0) as Int32, forKey: "membersShortcut")
+        try container.encode((self.recentActionsShortcut ? 1 : 0) as Int32, forKey: "recentActionsShortcut")
+        try container.encode((self.disableJumpToNextChannel ? 1 : 0) as Int32, forKey: "disableJumpToNextChannel")
+        try container.encode((self.showActionTimestamps ? 1 : 0) as Int32, forKey: "showActionTimestamps")
+        try container.encode((self.hideShareButton ? 1 : 0) as Int32, forKey: "hideShareButton")
+        try container.encode((self.showCopyPhotoButton ? 1 : 0) as Int32, forKey: "showCopyPhotoButton")
+        try container.encode((self.showClearButton ? 1 : 0) as Int32, forKey: "showClearButton")
+        try container.encode((self.showSaveMessageButton ? 1 : 0) as Int32, forKey: "showSaveMessageButton")
+        try container.encode((self.showDetailsButton ? 1 : 0) as Int32, forKey: "showDetailsButton")
+        try container.encode((self.showReportButton ? 1 : 0) as Int32, forKey: "showReportButton")
+        try container.encode((self.showHistoryButton ? 1 : 0) as Int32, forKey: "showHistoryButton")
+        try container.encode((self.addCommaAfterMention ? 1 : 0) as Int32, forKey: "addCommaAfterMention")
+        try container.encode((self.hidePhotoCounter ? 1 : 0) as Int32, forKey: "hidePhotoCounter")
+        try container.encode((self.hideCameraTile ? 1 : 0) as Int32, forKey: "hideCameraTile")
+        try container.encode((self.staticZoom ? 1 : 0) as Int32, forKey: "staticZoom")
+        try container.encode((self.rememberLastUsedCamera ? 1 : 0) as Int32, forKey: "rememberLastUsedCamera")
+        try container.encode((self.pauseOnMinimize ? 1 : 0) as Int32, forKey: "pauseOnMinimize")
+        try container.encode((self.disablePlayback ? 1 : 0) as Int32, forKey: "disablePlayback")
+        try container.encode((self.filterZalgo ? 1 : 0) as Int32, forKey: "filterZalgo")
+        try container.encode((self.downloadSpeedBoost ? 1 : 0) as Int32, forKey: "downloadSpeedBoost")
+        try container.encode((self.showIdAndDc ? 1 : 0) as Int32, forKey: "showIdAndDc")
+        try container.encode((self.avatarCorners ? 1 : 0) as Int32, forKey: "avatarCorners")
+        try container.encode((self.titleText ? 1 : 0) as Int32, forKey: "titleText")
+        try container.encode((self.tabIcons ? 1 : 0) as Int32, forKey: "tabIcons")
+        try container.encode((self.stickerSize ? 1 : 0) as Int32, forKey: "stickerSize")
+        try container.encode((self.stickerShape ? 1 : 0) as Int32, forKey: "stickerShape")
+        try container.encode((self.doubleTapAction ? 1 : 0) as Int32, forKey: "doubleTapAction")
+        try container.encode((self.doubleTapActionOutOwner ? 1 : 0) as Int32, forKey: "doubleTapActionOutOwner")
+        try container.encode((self.doubleTapSeekDuration ? 1 : 0) as Int32, forKey: "doubleTapSeekDuration")
+        try container.encode((self.bottomButton ? 1 : 0) as Int32, forKey: "bottomButton")
+        try container.encode((self.sendPhotosQuality ? 1 : 0) as Int32, forKey: "sendPhotosQuality")
+        try container.encode((self.videoMessagesCamera ? 1 : 0) as Int32, forKey: "videoMessagesCamera")
     }
 
-    public static func ==(lhs: ExteraSettings, rhs: ExteraSettings) -> Bool {
+        public static func ==(lhs: ExteraSettings, rhs: ExteraSettings) -> Bool {
         return lhs.downloadSpeedBoostLevel == rhs.downloadSpeedBoostLevel &&
             lhs.uploadSpeedBoost == rhs.uploadSpeedBoost &&
             lhs.disableNumberRounding == rhs.disableNumberRounding &&
@@ -164,7 +316,57 @@ public struct ExteraSettings: Codable, Equatable {
             lhs.feedEnabled == rhs.feedEnabled &&
             lhs.feedCategories == rhs.feedCategories &&
             lhs.feedIncludeArchived == rhs.feedIncludeArchived &&
-            lhs.feedWidePosts == rhs.feedWidePosts
+            lhs.feedWidePosts == rhs.feedWidePosts &&
+            lhs.hidePhoneNumber == rhs.hidePhoneNumber &&
+            lhs.archiveOnPull == rhs.archiveOnPull &&
+            lhs.disableUnarchiveSwipe == rhs.disableUnarchiveSwipe &&
+            lhs.hideActionBarStatus == rhs.hideActionBarStatus &&
+            lhs.centerTitle == rhs.centerTitle &&
+            lhs.tabCounter == rhs.tabCounter &&
+            lhs.hideAllChats == rhs.hideAllChats &&
+            lhs.forceBlur == rhs.forceBlur &&
+            lhs.forceSnow == rhs.forceSnow &&
+            lhs.useSystemFonts == rhs.useSystemFonts &&
+            lhs.newSwitchStyle == rhs.newSwitchStyle &&
+            lhs.disableDividers == rhs.disableDividers &&
+            lhs.hideStickerTime == rhs.hideStickerTime &&
+            lhs.unlimitedRecentStickers == rhs.unlimitedRecentStickers &&
+            lhs.hideCategories == rhs.hideCategories &&
+            lhs.hideKeyboardOnScroll == rhs.hideKeyboardOnScroll &&
+            lhs.permissionsShortcut == rhs.permissionsShortcut &&
+            lhs.administratorsShortcut == rhs.administratorsShortcut &&
+            lhs.membersShortcut == rhs.membersShortcut &&
+            lhs.recentActionsShortcut == rhs.recentActionsShortcut &&
+            lhs.disableJumpToNextChannel == rhs.disableJumpToNextChannel &&
+            lhs.showActionTimestamps == rhs.showActionTimestamps &&
+            lhs.hideShareButton == rhs.hideShareButton &&
+            lhs.showCopyPhotoButton == rhs.showCopyPhotoButton &&
+            lhs.showClearButton == rhs.showClearButton &&
+            lhs.showSaveMessageButton == rhs.showSaveMessageButton &&
+            lhs.showDetailsButton == rhs.showDetailsButton &&
+            lhs.showReportButton == rhs.showReportButton &&
+            lhs.showHistoryButton == rhs.showHistoryButton &&
+            lhs.addCommaAfterMention == rhs.addCommaAfterMention &&
+            lhs.hidePhotoCounter == rhs.hidePhotoCounter &&
+            lhs.hideCameraTile == rhs.hideCameraTile &&
+            lhs.staticZoom == rhs.staticZoom &&
+            lhs.rememberLastUsedCamera == rhs.rememberLastUsedCamera &&
+            lhs.pauseOnMinimize == rhs.pauseOnMinimize &&
+            lhs.disablePlayback == rhs.disablePlayback &&
+            lhs.filterZalgo == rhs.filterZalgo &&
+            lhs.downloadSpeedBoost == rhs.downloadSpeedBoost &&
+            lhs.showIdAndDc == rhs.showIdAndDc &&
+            lhs.avatarCorners == rhs.avatarCorners &&
+            lhs.titleText == rhs.titleText &&
+            lhs.tabIcons == rhs.tabIcons &&
+            lhs.stickerSize == rhs.stickerSize &&
+            lhs.stickerShape == rhs.stickerShape &&
+            lhs.doubleTapAction == rhs.doubleTapAction &&
+            lhs.doubleTapActionOutOwner == rhs.doubleTapActionOutOwner &&
+            lhs.doubleTapSeekDuration == rhs.doubleTapSeekDuration &&
+            lhs.bottomButton == rhs.bottomButton &&
+            lhs.sendPhotosQuality == rhs.sendPhotosQuality &&
+            lhs.videoMessagesCamera == rhs.videoMessagesCamera
     }
 }
 

@@ -50,7 +50,7 @@ func exteraBackupController(context: AccountContext) -> ViewController {
 private func exteraCurrentSettings(context: AccountContext) -> Signal<ExteraSettings, NoError> {
     return context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
     |> map { sharedData in
-        sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings()
+        sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
     }
 }
 

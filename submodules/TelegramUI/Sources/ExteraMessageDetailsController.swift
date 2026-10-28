@@ -249,7 +249,7 @@ public func exteraMessageDetailsController(context: AccountContext, message: Mes
 
     let settingsSignal = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
     |> map { sharedData -> ExteraSettings in
-        return sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings()
+        return sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
     }
     |> distinctUntilChanged
 

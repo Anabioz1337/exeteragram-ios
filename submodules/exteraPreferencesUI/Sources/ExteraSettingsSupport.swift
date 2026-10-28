@@ -33,7 +33,7 @@ final class ExteraSettingsEditor {
     }
 
     func reset() {
-        self.update { _ in ExteraSettings() }
+        self.update { _ in ExteraSettings.defaultSettings }
     }
 }
 
@@ -212,7 +212,7 @@ func exteraSettingsScreen(
         context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
     )
     |> map { presentationData, sharedData -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings()
+        let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
 
         let itemListPresentationData = ItemListPresentationData(presentationData)
         let controllerState = ItemListControllerState(presentationData: itemListPresentationData, title: .text(title(presentationData)), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))

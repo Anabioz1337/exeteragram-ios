@@ -114,7 +114,7 @@ public final class ChatMessageItemAssociatedData: Equatable {
         accountCountry: String? = nil,
         isParticipant: Bool = false,
         invitedOn: Int32? = nil,
-        exteraSettings: ExteraSettings = ExteraSettings()
+        exteraSettings: ExteraSettings = ExteraSettings.defaultSettings
     ) {
         self.automaticDownloadPeerType = automaticDownloadPeerType
         self.automaticDownloadPeerId = automaticDownloadPeerId
