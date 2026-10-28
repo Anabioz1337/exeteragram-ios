@@ -4594,6 +4594,8 @@ private final class SystemCameraPickerDelegate: NSObject, UIImagePickerControlle
     }
 
     private func performChange(_ change: @escaping () -> PHAssetChangeRequest?) {
-        PHPhotoLibrary.shared().performChanges(change)
+        PHPhotoLibrary.shared().performChanges({
+            let _ = change()
+        }, completionHandler: nil)
     }
 }
