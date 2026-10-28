@@ -200,8 +200,8 @@ private final class ExteraAIChatController: ViewController, UITableViewDataSourc
                         user: text,
                         temperature: settings.temperature
                     ) { delta in
-                        let current = self?.appendStreamingDelta(delta) ?? delta
                         DispatchQueue.main.async {
+                            let _ = self?.appendStreamingDelta(delta)
                             self?.refreshLastCell()
                         }
                     }
@@ -348,7 +348,7 @@ private final class ExteraAIChatMessageCell: UITableViewCell {
         let size = (self.messageLabel.text ?? "").boundingRect(
             with: CGSize(width: maxWidth, height: .greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin],
-            attributes: [.font: self.messageLabel.font],
+            attributes: [.font: self.messageLabel.font as Any],
             context: nil
         )
         let width = ceil(size.width) + 16.0

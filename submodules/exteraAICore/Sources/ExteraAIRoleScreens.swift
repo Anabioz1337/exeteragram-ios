@@ -336,7 +336,7 @@ public func exteraAIRoleEditController(context: AccountContext, role: ExteraAIRo
     }
     dismissImpl = { [weak controller] in
         if let navigationController = controller?.navigationController as? NavigationController {
-            navigationController.popViewController(animated: true)
+            let _ = navigationController.popViewController(animated: true)
         }
     }
     return controller

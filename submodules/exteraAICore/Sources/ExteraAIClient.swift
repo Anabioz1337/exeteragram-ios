@@ -86,14 +86,14 @@ struct ExteraAIChatResponse: Decodable {
     let choices: [Choice]
 }
 
-final class ExteraAIChatClient {
+public final class ExteraAIChatClient {
     private let session: URLSession
 
     init(session: URLSession = .shared) {
         self.session = session
     }
 
-    static func endpoint(for service: ExteraAIServiceConfig) -> URL? {
+    public static func endpoint(for service: ExteraAIServiceConfig) -> URL? {
         let trimmed = service.url.trimmingCharacters(in: .whitespacesAndNewlines)
         guard var components = URLComponents(string: trimmed), components.host != nil else {
             return nil
@@ -132,7 +132,7 @@ final class ExteraAIChatClient {
     }
 
     /// Full OpenAI-compatible chat turn: a system message plus alternating history.
-    func chatStream(service: ExteraAIServiceConfig, messages: [ExteraAIChatMessage], settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
+    public func chatStream(service: ExteraAIServiceConfig, messages: [ExteraAIChatMessage], settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
         let session = self.session
         return AsyncThrowingStream { continuation in
             let task = Task {
@@ -155,7 +155,7 @@ final class ExteraAIChatClient {
         }
     }
 
-    func stream(service: ExteraAIServiceConfig, system: String, user: String, settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
+    public func stream(service: ExteraAIServiceConfig, system: String, user: String, settings: ExteraAIGenerationSettings) -> AsyncThrowingStream<ExteraAIStreamEvent, Error> {
         var messages: [ExteraAIChatMessage] = []
         if !system.isEmpty {
             messages.append(.system(system))
@@ -234,6 +234,7 @@ final class ExteraAIChatClient {
                     producedContent = true
                     continuation.yield(.content(content))
                 }
+            }
         }
 
         if !producedContent {

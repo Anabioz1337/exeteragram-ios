@@ -412,7 +412,7 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
             let duplicate = ExteraAIStore.shared.services.first(where: { $0.identity == config.identity && $0.id != config.id })
             if let duplicate {
                 ExteraAIStore.shared.selectedServiceId = duplicate.id
-                refreshState(ExteraAIServiceEditState(name: current.name, url: current.url, model: current.model, apiKey: current.apiKey, testState: .idle))
+                refreshEntries(ExteraAIServiceEditState(name: current.name, url: current.url, model: current.model, apiKey: current.apiKey, testState: .idle))
                 presentControllerImpl?(textAlertController(context: context, title: presentationData.exteraAIString("Extera.AI.ServiceDuplicateTitle"), text: presentationData.exteraAIString("Extera.AI.ServiceDuplicateInfo"), actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {
                     dismissImpl?()
                 })]), nil)
@@ -490,7 +490,7 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
     dismissImpl = { [weak controller] in
         testTask?.cancel()
         if let navigationController = controller?.navigationController as? NavigationController {
-            navigationController.popViewController(animated: true)
+            let _ = navigationController.popViewController(animated: true)
         }
     }
     return controller
