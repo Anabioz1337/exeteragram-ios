@@ -42,7 +42,7 @@ public func exteraVoiceMessageTranscriptionSignal(
             deviceLanguageCode: deviceLanguageCode
         )
         return transcribeAudioFileOffline(path: convertedPath, localeIdentifier: localeIdentifier)
-        |> map { transcription -> Signal<ExteraVoiceMessageTranscriptionOutcome, NoError> in
+        |> mapToSignal { transcription -> Signal<ExteraVoiceMessageTranscriptionOutcome, NoError> in
             guard let transcription = transcription else {
                 return .single(.failure)
             }
@@ -64,6 +64,5 @@ public func exteraVoiceMessageTranscriptionSignal(
                 return .single(.transcript(trimmedText))
             }
         }
-        |> mapToSignal { $0 }
     }
 }

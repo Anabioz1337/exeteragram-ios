@@ -1,12 +1,13 @@
 import Foundation
 import UIKit
 import Display
+import AsyncDisplayKit
 import SwiftSignalKit
 import TelegramPresentationData
 
 /// Transcript surfaced over the chat: a floating card above the message it belongs to,
 /// with the recognized text selectable and a one-tap copy action.
-final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
+public final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
     private let transcript: String
 
     private let backdropView: UIView
@@ -19,7 +20,7 @@ final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
     private var onCopy: () -> Void = {}
     private var requestDismiss: () -> Void = {}
 
-    init(presentationData: PresentationData, transcript: String, titleText: String, copyText: String, onCopy: @escaping () -> Void, requestDismiss: @escaping () -> Void) {
+    public init(presentationData: PresentationData, transcript: String, titleText: String, copyText: String, onCopy: @escaping () -> Void, requestDismiss: @escaping () -> Void) {
         self.transcript = transcript
 
         let theme = presentationData.theme.actionSheet
@@ -55,7 +56,6 @@ final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
         self.copyButton.setTitle(copyText.uppercased(), for: [])
         self.copyButton.setTitleColor(theme.controlAccentColor, for: [])
         self.copyButton.contentHorizontalAlignment = .right
-        self.copyButton.contentEdgeInsets = UIEdgeInsets(top: 4.0, left: 8.0, bottom: 4.0, right: 4.0)
         self.copyButton.addTarget(self, action: #selector(self.copyPressed), for: .touchUpInside)
 
         super.init(viewClass: UIView.self)
@@ -87,7 +87,7 @@ final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
         }
     }
 
-    func containerLayoutUpdated(layout: ContainerViewLayout, transition: ContainedViewLayoutTransition) {
+    public func containerLayoutUpdated(layout: ContainerViewLayout, transition: ContainedViewLayoutTransition) {
         self.backdropView.frame = CGRect(origin: CGPoint(), size: layout.size)
 
         let contentInsets = UIEdgeInsets(top: 14.0, left: 16.0, bottom: 10.0, right: 16.0)
@@ -99,7 +99,7 @@ final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
         let textHeight = max(44.0, min(measuredTextHeight + 2.0, max(80.0, maxTextHeight)))
 
         let cardSize = CGSize(width: min(440.0, max(280.0, layout.size.width - 32.0)), height: contentInsets.top + titleHeight + rowSpacing + textHeight + rowSpacing + buttonHeight + contentInsets.bottom)
-        let safeBottomInset = layout.safeInsets?.bottom ?? 0.0
+        let safeBottomInset = layout.safeInsets.bottom
         let cardFrame = CGRect(
             origin: CGPoint(x: floor((layout.size.width - cardSize.width) / 2.0), y: floor(max(contentInsets.top, layout.size.height - safeBottomInset - 12.0 - cardSize.height))),
             size: cardSize
@@ -115,19 +115,23 @@ final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
             strongSelf.titleLabel.frame = CGRect(origin: CGPoint(x: contentInsets.left, y: contentInsets.top), size: CGSize(width: cardSize.width - contentInsets.left - contentInsets.right, height: titleHeight))
             strongSelf.transcriptView.frame = CGRect(origin: CGPoint(x: contentInsets.left, y: contentInsets.top + titleHeight + rowSpacing), size: CGSize(width: cardSize.width - contentInsets.left - contentInsets.right, height: textHeight))
             strongSelf.copyButton.sizeToFit()
-            strongSelf.copyButton.frame.origin = CGPoint(x: cardSize.width - contentInsets.right - strongSelf.copyButton.bounds.width - 4.0, y: strongSelf.transcriptView.frame.maxY + rowSpacing)
+            let buttonSize = strongSelf.copyButton.bounds.size
+            strongSelf.copyButton.frame = CGRect(
+                origin: CGPoint(x: cardSize.width - contentInsets.right - buttonSize.width - 8.0, y: strongSelf.transcriptView.frame.maxY + rowSpacing),
+                size: CGSize(width: buttonSize.width + 16.0, height: buttonHeight)
+            )
             strongSelf.backdropView.alpha = 1.0
         }
     }
 
-    func animateIn(asReplacement: Bool) {
+    public func animateIn(asReplacement: Bool) {
         let duration: Double = asReplacement ? 0.15 : 0.28
         self.cardContainerView.layer.animatePosition(from: CGPoint(x: 0.0, y: 48.0), to: CGPoint(), duration: duration, timingFunction: kCAMediaTimingFunctionSpring, removeOnCompletion: false, additive: true)
         self.cardContainerView.layer.animateAlpha(from: 0.0, to: 1.0, duration: duration, removeOnCompletion: false)
         self.backdropView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.25, removeOnCompletion: false)
     }
 
-    func animateOut(completion: (() -> Void)? = nil) {
+    public func animateOut(completion: (() -> Void)? = nil) {
         self.cardContainerView.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.22, timingFunction: CAMediaTimingFunctionName.easeInEaseOut.rawValue, removeOnCompletion: false, completion: { _ in
             completion?()
         })
