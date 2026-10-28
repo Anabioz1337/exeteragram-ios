@@ -3,6 +3,7 @@ import UIKit
 import SwiftSignalKit
 import Display
 import TelegramPresentationData
+import PresentationDataUtils
 import AccountContext
 
 /// One exchange as it is shown in the conversation: either the user's own message
@@ -58,15 +59,15 @@ private final class ExteraAIChatController: ViewController, UITableViewDataSourc
     private let sendButton = UIButton(type: .system)
 
     private var isGenerating = false
-    private var generationTask: Task<Void>?
+    private var generationTask: Task<Void, Never>?
 
     init(context: AccountContext) {
         self.context = context
         self.presentationTheme = context.sharedContext.currentPresentationData.with { $0 }.theme
-        super.init(nibName: nil, bundle: nil)
+        super.init(navigationBarPresentationData: NavigationBarPresentationData(presentationTheme: self.presentationTheme, presentationStrings: context.sharedContext.currentPresentationData.with { $0 }.strings))
     }
 
-    required init?(coder: NSCoder) {
+    required public init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -344,7 +345,7 @@ private final class ExteraAIChatMessageCell: UITableViewCell {
 
         let inset: CGFloat = 12.0
         let maxWidth = self.contentView.bounds.width * 0.78
-        let size = (self.messageLabel.text ?? "" as NSString).boundingRect(
+        let size = (self.messageLabel.text ?? "").boundingRect(
             with: CGSize(width: maxWidth, height: .greatestFiniteMagnitude),
             options: [.usesLineFragmentOrigin],
             attributes: [.font: self.messageLabel.font],

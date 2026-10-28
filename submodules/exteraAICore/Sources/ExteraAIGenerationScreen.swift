@@ -157,7 +157,6 @@ private enum ExteraAIGenerationEntry: ItemListNodeEntry {
 }
 
 private func exteraAIGenerationEntries(settings: ExteraAIGenerationSettings, presentationData: PresentationData) -> [ExteraAIGenerationEntry] {
-    let strings = presentationData.strings
     var entries: [ExteraAIGenerationEntry] = []
     entries.append(.showResponseOnly(presentationData.theme, exteraAIString("Extera.AI.ShowResponseOnly"), settings.responseDisplay == .showResponseOnly))
     entries.append(.insertAsQuote(presentationData.theme, exteraAIString("Extera.AI.InsertAsQuote"), settings.responseDisplay == .insertAsQuote))

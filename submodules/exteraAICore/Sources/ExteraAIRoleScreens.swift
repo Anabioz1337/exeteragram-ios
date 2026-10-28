@@ -6,6 +6,7 @@ import AccountContext
 import TelegramPresentationData
 import PresentationDataUtils
 import ItemListUI
+import ItemListPeerActionItem
 
 private final class ExteraAIRoleListArguments {
     let openRole: (ExteraAIRoleConfig) -> Void
@@ -244,12 +245,11 @@ private enum ExteraAIRoleEditEntry: ItemListNodeEntry {
 }
 
 private struct ExteraAIRoleEditState: Equatable {
-    let name: String
-    let prompt: String
+    var name: String
+    var prompt: String
 }
 
 private func exteraAIRoleEditEntries(state: ExteraAIRoleEditState, presentationData: PresentationData) -> [ExteraAIRoleEditEntry] {
-    let strings = presentationData.strings
     var entries: [ExteraAIRoleEditEntry] = []
     entries.append(.name(presentationData.theme, NSAttributedString(string: exteraAIString("Extera.AI.RoleName"), attributes: [
         .font: Font.regular(presentationData.listsFontSize.itemListBaseFontSize),
@@ -263,7 +263,7 @@ private func exteraAIRoleEditEntries(state: ExteraAIRoleEditState, presentationD
 }
 
 public func exteraAIRoleEditController(context: AccountContext, role: ExteraAIRoleConfig, refreshed: @escaping () -> Void) -> ItemListController {
-    let statePromise = Promise<ExteraAIRoleEditState>(ExteraAIRoleEditState(name: role.name, prompt: role.prompt))
+    var currentState = ExteraAIRoleEditState(name: role.name, prompt: role.prompt)
 
     func persist(_ state: ExteraAIRoleEditState) {
         var roles = ExteraAIStore.shared.roles
@@ -277,14 +277,20 @@ public func exteraAIRoleEditController(context: AccountContext, role: ExteraAIRo
     }
 
     func updateState(_ transform: (inout ExteraAIRoleEditState) -> Void) {
-        var state = statePromise.get().get() ?? ExteraAIRoleEditState(name: "", prompt: "")
-        transform(&state)
-        statePromise.set(.single(state))
-        persist(state)
+        transform(&currentState)
+        refreshEntries(currentState)
+        persist(currentState)
     }
 
     var presentControllerImpl: ((ViewController, Any?) -> Void)?
     var dismissImpl: (() -> Void)?
+
+    let statePromise = Promise<ExteraAIRoleEditState>(currentState)
+
+    func refreshEntries(_ state: ExteraAIRoleEditState) {
+        currentState = state
+        statePromise.set(.single(state))
+    }
 
     let arguments = ExteraAIRoleEditArguments(
         updateName: { value in
@@ -294,8 +300,8 @@ public func exteraAIRoleEditController(context: AccountContext, role: ExteraAIRo
             updateState { $0.prompt = value }
         },
         useRole: {
-            if let current = statePromise.get().get(), !ExteraAIStore.shared.roles.contains(where: { $0.id == role.id }) {
-                persist(current)
+            if !ExteraAIStore.shared.roles.contains(where: { $0.id == role.id }) {
+                persist(currentState)
             }
             ExteraAIStore.shared.selectedRoleId = role.id
             refreshed()

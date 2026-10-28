@@ -6,6 +6,7 @@ import AccountContext
 import TelegramPresentationData
 import PresentationDataUtils
 import ItemListUI
+import ItemListPeerActionItem
 
 private final class ExteraAIServiceListArguments {
     let openService: (ExteraAIServiceConfig) -> Void
@@ -133,11 +134,11 @@ private enum ExteraAIServiceTestState: Equatable {
 }
 
 private final class ExteraAIServiceEditState: Equatable {
-    let name: String
-    let url: String
-    let model: String
-    let apiKey: String
-    let testState: ExteraAIServiceTestState
+    var name: String
+    var url: String
+    var model: String
+    var apiKey: String
+    var testState: ExteraAIServiceTestState
 
     init(name: String, url: String, model: String, apiKey: String, testState: ExteraAIServiceTestState) {
         self.name = name
@@ -332,7 +333,6 @@ private func exteraAIServiceEditTitle(_ text: String, presentationData: Presenta
 }
 
 private func exteraAIServiceEditEntries(state: ExteraAIServiceEditState, presentationData: PresentationData) -> [ExteraAIServiceEditEntry] {
-    let strings = presentationData.strings
     var entries: [ExteraAIServiceEditEntry] = []
     entries.append(.name(presentationData.theme, exteraAIServiceEditTitle(exteraAIString("Extera.AI.ServiceName"), presentationData: presentationData), state.name, exteraAIString("Extera.AI.ServiceName")))
     entries.append(.url(presentationData.theme, exteraAIServiceEditTitle(exteraAIString("Extera.AI.ServiceURL"), presentationData: presentationData), state.url, "https://api.example.com/v1"))
@@ -357,20 +357,20 @@ private func exteraAIServiceEditEntries(state: ExteraAIServiceEditState, present
 
 public func exteraAIServiceEditController(context: AccountContext, service: ExteraAIServiceConfig, refreshed: @escaping () -> Void) -> ItemListController {
     let isNew = !ExteraAIStore.shared.services.contains(where: { $0.id == service.id })
-    let statePromise = Promise<ExteraAIServiceEditState>(ExteraAIServiceEditState(name: service.name, url: service.url, model: service.model, apiKey: service.apiKey, testState: .idle))
-    var testTask: Task<Void>?
+    var currentState = ExteraAIServiceEditState(name: service.name, url: service.url, model: service.model, apiKey: service.apiKey, testState: .idle)
+    let statePromise = Promise<ExteraAIServiceEditState>(currentState)
+    var testTask: Task<Void, Never>?
     var dismissImpl: (() -> Void)?
+    var presentControllerImpl: ((ViewController, Any?) -> Void)?
 
-    let refreshState: (ExteraAIServiceEditState) -> Void = { state in
+    func refreshEntries(_ state: ExteraAIServiceEditState) {
+        currentState = state
         statePromise.set(.single(state))
     }
 
-    var presentControllerImpl: ((ViewController, Any?) -> Void)?
-
     func updateState(_ transform: (inout ExteraAIServiceEditState) -> Void) {
-        var state = statePromise.get().get() ?? ExteraAIServiceEditState(name: "", url: "", model: "", apiKey: "", testState: .idle)
-        transform(&state)
-        refreshState(state)
+        transform(&currentState)
+        refreshEntries(currentState)
     }
 
     func persist(_ state: ExteraAIServiceEditState) -> ExteraAIServiceConfig {
@@ -400,9 +400,7 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
         },
         testAndSave: {
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-            guard let current = statePromise.get().get() else {
-                return
-            }
+            let current = currentState
             let config = ExteraAIServiceConfig(id: service.id, name: current.name, url: current.url, model: current.model, apiKey: current.apiKey)
             guard ExteraAIChatClient.endpoint(for: config) != nil, !config.model.isEmpty else {
                 updateState {
@@ -455,8 +453,8 @@ public func exteraAIServiceEditController(context: AccountContext, service: Exte
             }
         },
         useService: {
-            if let current = statePromise.get().get(), !ExteraAIStore.shared.services.contains(where: { $0.id == service.id }) {
-                let _ = persist(current)
+            if !ExteraAIStore.shared.services.contains(where: { $0.id == service.id }) {
+                let _ = persist(currentState)
             }
             ExteraAIStore.shared.selectedServiceId = service.id
             refreshed()

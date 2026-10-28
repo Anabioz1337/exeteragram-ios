@@ -224,14 +224,16 @@ final class ExteraAIChatClient {
                       let choice = decoded.choices.first else {
                     continue
                 }
-                if let reasoning = choice.delta.reasoning, !reasoning.isEmpty {
+                guard let delta = choice.delta else {
+                    continue
+                }
+                if let reasoning = delta.reasoning, !reasoning.isEmpty {
                     continuation.yield(.reasoning(reasoning))
                 }
-                if let content = choice.delta.content, !content.isEmpty {
+                if let content = delta.content, !content.isEmpty {
                     producedContent = true
                     continuation.yield(.content(content))
                 }
-            }
         }
 
         if !producedContent {

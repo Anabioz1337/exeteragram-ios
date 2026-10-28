@@ -189,7 +189,6 @@ private struct ExteraAISettingsState: Equatable {
 }
 
 private func exteraAISettingsEntries(state: ExteraAISettingsState, presentationData: PresentationData) -> [ExteraAISettingsEntry] {
-    let strings = presentationData.strings
     var entries: [ExteraAISettingsEntry] = []
 
     let activeServiceName: String

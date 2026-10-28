@@ -2,8 +2,8 @@ import Foundation
 
 public let exteraAIOnDeviceServiceId = "exteraAI.on-device"
 
-final class ExteraAIStore {
-    static let shared = ExteraAIStore()
+public final class ExteraAIStore {
+    public static let shared = ExteraAIStore()
 
     private let defaults: UserDefaults
     private enum Key: String, CaseIterable {
@@ -20,12 +20,12 @@ final class ExteraAIStore {
     }
 
     var services: [ExteraAIServiceConfig] {
-        get { return self.decoded(Key.services) }
+        get { return self.decoded([ExteraAIServiceConfig].self, key: Key.services) ?? [] }
         set { self.encode(newValue, key: Key.services) }
     }
 
     var roles: [ExteraAIRoleConfig] {
-        get { return self.decoded(Key.roles) }
+        get { return self.decoded([ExteraAIRoleConfig].self, key: Key.roles) ?? [] }
         set { self.encode(newValue, key: Key.roles) }
     }
 
@@ -66,10 +66,6 @@ final class ExteraAIStore {
 
     var selectedRole: ExteraAIRoleConfig? {
         return self.roles.first(where: { $0.id == self.selectedRoleId })
-    }
-
-    private func decoded<T: Decodable>(_ key: Key) -> T? {
-        return self.decoded(T.self, key: key)
     }
 
     private func decoded<T: Decodable>(_ type: T.Type, key: Key) -> T? {

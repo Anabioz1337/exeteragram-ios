@@ -10,7 +10,7 @@ public enum ExteraAIResolution {
     case nothingConfigured
 }
 
-public func exteraAIResolveBackend(store: ExteraAIStore = .shared) -> ExteraAIResolution {
+public func exteraAIResolveBackend(store: ExteraAIStore = ExteraAIStore.shared) -> ExteraAIResolution {
     let selectedId = store.selectedServiceId
     if selectedId == exteraAIOnDeviceServiceId || store.services.isEmpty {
         if exteraAIOnDeviceStatus() == .ready {

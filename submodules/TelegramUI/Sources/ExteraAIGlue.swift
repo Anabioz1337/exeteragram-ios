@@ -32,7 +32,7 @@ private func exteraAIPresentResult(
 
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
     let resultController = ExteraAIResultController(theme: presentationData.theme, title: title)
-    var generationTask: Task<Void>?
+    var generationTask: Task<Void, Never>?
 
     resultController.onInsert = { result in
         insertResult(result, settings.responseDisplay)
