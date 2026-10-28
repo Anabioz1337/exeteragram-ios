@@ -58,8 +58,8 @@ public final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
         self.copyButton.contentHorizontalAlignment = .right
         self.copyButton.addTarget(self, action: #selector(self.copyPressed), for: .touchUpInside)
 
-        super.init(viewClass: UIView.self)
-        self.view.addSubview(self.backdropView)
+        super.init()
+
         self.backdropView.addSubview(self.cardContainerView)
         self.cardContainerView.addSubview(self.titleLabel)
         self.cardContainerView.addSubview(self.transcriptView)
@@ -71,6 +71,7 @@ public final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
 
     override public func didLoad() {
         super.didLoad()
+        self.view.addSubview(self.backdropView)
         let backdropTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.backdropTapped(_:)))
         self.backdropView.addGestureRecognizer(backdropTapRecognizer)
     }
