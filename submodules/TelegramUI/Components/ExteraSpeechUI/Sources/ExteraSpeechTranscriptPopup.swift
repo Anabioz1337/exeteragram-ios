@@ -56,9 +56,10 @@ public final class ExteraSpeechTranscriptPopupNode: ASDisplayNode {
         self.copyButton.setTitle(copyText.uppercased(), for: [])
         self.copyButton.setTitleColor(theme.controlAccentColor, for: [])
         self.copyButton.contentHorizontalAlignment = .right
-        self.copyButton.addTarget(self, action: #selector(self.copyPressed), for: .touchUpInside)
 
         super.init()
+
+        self.copyButton.addTarget(self, action: #selector(self.copyPressed), for: .touchUpInside)
 
         self.backdropView.addSubview(self.cardContainerView)
         self.cardContainerView.addSubview(self.titleLabel)

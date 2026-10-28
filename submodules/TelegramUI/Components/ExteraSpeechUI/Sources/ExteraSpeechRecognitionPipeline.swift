@@ -36,31 +36,32 @@ public func exteraVoiceMessageTranscriptionSignal(
             guard let convertedPath = convertedPath else {
                 return .single(.failure)
             }
-        let localeIdentifier = resolveSpeechLocaleIdentifier(
-            languageIdentifier: settings.languageIdentifier,
-            deviceLanguageCode: deviceLanguageCode
-        )
-        return transcribeAudioFileOffline(path: convertedPath, localeIdentifier: localeIdentifier)
-        |> mapToSignal { transcription -> Signal<ExteraVoiceMessageTranscriptionOutcome, NoError> in
-            guard let transcription = transcription else {
-                return .single(.failure)
-            }
-            let trimmedText = transcription.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !trimmedText.isEmpty else {
-                return .single(.failure)
-            }
-            if settings.useTextCorrection, let correctionService = registeredTranscriptCorrectionService() {
-                let primaryLanguageCode = String(localeIdentifier.prefix(while: { $0 != "-" }))
-                return correctionService.correctedTranscript(text: trimmedText, sourceLanguageCode: primaryLanguageCode)
-                |> map { correctedText -> ExteraVoiceMessageTranscriptionOutcome in
-                    if let correctedText = correctedText, !correctedText.isEmpty {
-                        return .transcript(correctedText)
-                    } else {
-                        return .transcript(trimmedText)
-                    }
+            let localeIdentifier = resolveSpeechLocaleIdentifier(
+                languageIdentifier: settings.languageIdentifier,
+                deviceLanguageCode: deviceLanguageCode
+            )
+            return transcribeAudioFileOffline(path: convertedPath, localeIdentifier: localeIdentifier)
+            |> mapToSignal { transcription -> Signal<ExteraVoiceMessageTranscriptionOutcome, NoError> in
+                guard let transcription = transcription else {
+                    return .single(.failure)
                 }
-            } else {
-                return .single(.transcript(trimmedText))
+                let trimmedText = transcription.text.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !trimmedText.isEmpty else {
+                    return .single(.failure)
+                }
+                if settings.useTextCorrection, let correctionService = registeredTranscriptCorrectionService() {
+                    let primaryLanguageCode = String(localeIdentifier.prefix(while: { $0 != "-" }))
+                    return correctionService.correctedTranscript(text: trimmedText, sourceLanguageCode: primaryLanguageCode)
+                    |> map { correctedText -> ExteraVoiceMessageTranscriptionOutcome in
+                        if let correctedText = correctedText, !correctedText.isEmpty {
+                            return .transcript(correctedText)
+                        } else {
+                            return .transcript(trimmedText)
+                        }
+                    }
+                } else {
+                    return .single(.transcript(trimmedText))
+                }
             }
         }
     }
