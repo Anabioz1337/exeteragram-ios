@@ -1,4 +1,5 @@
 import Foundation
+import TelegramUIPreferences
 
 public struct ExteraUnitConversionResult {
     public let value: Double
