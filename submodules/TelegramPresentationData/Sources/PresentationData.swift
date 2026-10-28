@@ -250,7 +250,6 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
         var contactSynchronizationSettings: PreferencesEntry?
         var stickerSettings: PreferencesEntry?
         var chatSettings: PreferencesEntry?
-        var exteraSettings: PreferencesEntry?
 
         var exteraSwipeSettings: PreferencesEntry?
         init(
@@ -266,7 +265,6 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             contactSynchronizationSettings: PreferencesEntry?,
             stickerSettings: PreferencesEntry?,
             chatSettings: PreferencesEntry?,
-            exteraSettings: PreferencesEntry?,
             exteraSwipeSettings: PreferencesEntry?
         ) {
             self.localizationSettings = localizationSettings
@@ -282,7 +280,6 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             self.stickerSettings = stickerSettings
             self.chatSettings = chatSettings
             self.exteraSwipeSettings = exteraSwipeSettings
-            self.exteraSettings = exteraSettings
         }
     }
 
@@ -299,8 +296,6 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
         let contactSynchronizationSettings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.contactSynchronizationSettings)
         let stickerSettings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.stickerSettings)
         let chatSettings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.chatSettings)
-        let exteraSettings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.exteraSettings)
-
         let exteraSwipeSettings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.exteraSwipeSettings)
         return InternalData(
             localizationSettings: localizationSettings,
@@ -315,7 +310,6 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             contactSynchronizationSettings: contactSynchronizationSettings,
             stickerSettings: stickerSettings,
             chatSettings: chatSettings,
-            exteraSettings: exteraSettings,
             exteraSwipeSettings: exteraSwipeSettings
         )
     }
@@ -390,8 +384,6 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
         } else {
             chatSettings = ChatSettings.defaultSettings
         }
-
-        let exteraSettings: TelegramUIPreferences.ExteraSettings = internalData.exteraSettings?.get(TelegramUIPreferences.ExteraSettings.self) ?? TelegramUIPreferences.ExteraSettings.defaultSettings
 
         let exteraSwipeSettings: ExteraSwipeSettings = internalData.exteraSwipeSettings?.get(ExteraSwipeSettings.self) ?? .defaultSettings
 
@@ -739,7 +731,7 @@ public func chatServiceBackgroundColor(wallpaper: TelegramWallpaper, mediaBox: M
 }
 
 public func updatedPresentationData(accountManager: AccountManager<TelegramAccountManagerTypes>, applicationInForeground: Signal<Bool, NoError>, systemUserInterfaceStyle: Signal<WindowUserInterfaceStyle, NoError>) -> Signal<PresentationData, NoError> {
-    return combineLatest(accountManager.sharedData(keys: [SharedDataKeys.localizationSettings, ApplicationSpecificSharedDataKeys.presentationThemeSettings, ApplicationSpecificSharedDataKeys.contactSynchronizationSettings, ApplicationSpecificSharedDataKeys.exteraSettings, ApplicationSpecificSharedDataKeys.exteraSwipeSettings]), systemUserInterfaceStyle)
+    return combineLatest(accountManager.sharedData(keys: [SharedDataKeys.localizationSettings, ApplicationSpecificSharedDataKeys.presentationThemeSettings, ApplicationSpecificSharedDataKeys.contactSynchronizationSettings, ApplicationSpecificSharedDataKeys.exteraSwipeSettings]), systemUserInterfaceStyle)
     |> mapToSignal { sharedData, systemUserInterfaceStyle -> Signal<PresentationData, NoError> in
         let themeSettings: PresentationThemeSettings
         if let current = sharedData.entries[ApplicationSpecificSharedDataKeys.presentationThemeSettings]?.get(PresentationThemeSettings.self) {
@@ -850,8 +842,6 @@ public func updatedPresentationData(accountManager: AccountManager<TelegramAccou
                         
                         let chatBubbleCorners = PresentationChatBubbleCorners(mainRadius: CGFloat(themeSettings.chatBubbleSettings.mainRadius), auxiliaryRadius: CGFloat(themeSettings.chatBubbleSettings.auxiliaryRadius), mergeBubbleCorners: themeSettings.chatBubbleSettings.mergeBubbleCorners)
                         
-                        let exteraSettings: TelegramUIPreferences.ExteraSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(TelegramUIPreferences.ExteraSettings.self) ?? TelegramUIPreferences.ExteraSettings.defaultSettings
-
                         let exteraSwipeSettings: ExteraSwipeSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSwipeSettings]?.get(ExteraSwipeSettings.self) ?? .defaultSettings
 
                         return PresentationData(strings: stringsValue, theme: themeValue, autoNightModeTriggered: autoNightModeTriggered, chatWallpaper: effectiveChatWallpaper, chatFontSize: chatFontSize, chatBubbleCorners: chatBubbleCorners, listsFontSize: listsFontSize, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, nameSortOrder: nameSortOrder, reduceMotion: themeSettings.reduceMotion, largeEmoji: themeSettings.largeEmoji, exteraSwipeSettings: exteraSwipeSettings)
