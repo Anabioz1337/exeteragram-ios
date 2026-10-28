@@ -110,20 +110,18 @@ private func exteraSaveFolderName(context: AccountContext) -> Signal<String, NoE
     }
 }
 
-private func exteraAlbumForSaveFolder(folderName: String) -> PHAssetCollection? {
+private func exteraAttachAssetToSaveFolder(_ assetRequest: PHAssetChangeRequest, folderName: String) {
+    guard let placeholder = assetRequest.placeholderForCreatedAsset else {
+        return
+    }
     let options = PHFetchOptions()
     options.predicate = NSPredicate(format: "title == %@", folderName)
     let fetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: options)
     if let existing = fetchResult.firstObject {
-        return existing
-    }
-    let creationRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: folderName)
-    return creationRequest.placeholderForCreatedAssetCollection
-}
-
-private func exteraAttachAssetToSaveFolder(_ assetRequest: PHAssetChangeRequest, folderName: String) {
-    if let album = exteraAlbumForSaveFolder(folderName: folderName), let placeholder = assetRequest.placeholderForCreatedAsset {
-        PHAssetCollectionChangeRequest(for: album)?.addAssets([placeholder])
+        PHAssetCollectionChangeRequest(for: existing)?.addAssets([placeholder] as NSArray)
+    } else {
+        let creationRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: folderName)
+        creationRequest.addAssets([placeholder] as NSArray)
     }
 }
 
@@ -218,7 +216,7 @@ private func exteraSaveToCameraRoll(context: AccountContext, userLocation: Media
                                 }
                             }, completionHandler: { _, error in
                                 let _ = try? FileManager.default.removeItem(atPath: tempVideoPath)
-                                if let error, !saveFolderName.isEmpty {
+                                if error != nil, !saveFolderName.isEmpty {
                                     exteraSaveFallbackToDocuments(folderName: saveFolderName, isImage: true, dataPath: videoData.path)
                                 }
                                 subscriber.putNext(1.0)
