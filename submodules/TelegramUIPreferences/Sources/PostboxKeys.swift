@@ -69,6 +69,7 @@ private enum ApplicationSpecificSharedDataKeyValues: Int32 {
     case exteraPluginsSettings = 26
     case exteraPillStackSettings = 27
     case exteraInlineResultsSettings = 28
+    case exteraSwipeSettings = 29
 }
 
 public struct ApplicationSpecificSharedDataKeys {
@@ -101,6 +102,7 @@ public struct ApplicationSpecificSharedDataKeys {
     public static let exteraPluginsSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraPluginsSettings.rawValue)
     public static let exteraPillStackSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraPillStackSettings.rawValue)
     public static let exteraInlineResultsSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraInlineResultsSettings.rawValue)
+    public static let exteraSwipeSettings: EngineDataBuffer = applicationSpecificPreferencesKey(ApplicationSpecificSharedDataKeyValues.exteraSwipeSettings.rawValue)
 }
 
 private enum ApplicationSpecificItemCacheCollectionIdValues: Int8 {
