@@ -12,7 +12,7 @@ public func updateExteraSettingsInteractively(accountManager: AccountManager<Tel
             if let entry = entry?.get(ExteraSettings.self) {
                 currentSettings = entry
             } else {
-                currentSettings = ExteraSettings()
+                currentSettings = ExteraSettings.defaultSettings
             }
             return EnginePreferencesEntry(f(currentSettings))
         })
