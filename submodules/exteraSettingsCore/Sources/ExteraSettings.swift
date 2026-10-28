@@ -1,6 +1,7 @@
 import Foundation
 import TelegramCore
 import SwiftSignalKit
+import TelegramUIPreferences
 
 public struct ExteraSettings: Codable, Equatable {
     public var disableNumberRounding: Bool = false
