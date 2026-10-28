@@ -129,11 +129,11 @@ public enum ExteraCurrencyConverter {
         guard let conversion = convertedAmount(amount: amount, from: sourceKind, to: resolvedTarget, rates: rates) else {
             return nil
         }
-        let rendered = ExteraResultFormatter.format(conversion.value, groupDigits: false)
-        return ("\(rendered) \(resolvedTarget.title)", conversion.value)
+        let rendered = ExteraResultFormatter.format(conversion, groupDigits: false)
+        return ("\(rendered) \(resolvedTarget.title)", conversion)
     }
 
-    private static func convertedAmount(amount: Double, from: ExteraAmountKind, to: ExteraAmountKind, rates: ExteraRatesSnapshot) -> (value: Double)? {
+    private static func convertedAmount(amount: Double, from: ExteraAmountKind, to: ExteraAmountKind, rates: ExteraRatesSnapshot) -> Double? {
         switch (from.kind, to.kind) {
         case let (.fiat(sourceCode), .fiat(targetCode)):
             guard let rate = rates.fiatRate(currency: targetCode, against: sourceCode) else {
@@ -175,6 +175,8 @@ public enum ExteraCurrencyConverter {
                 return nil
             }
             return amount * coinUsd / starConversionBase()
+        case (.stars, .stars):
+            return amount
         }
     }
 

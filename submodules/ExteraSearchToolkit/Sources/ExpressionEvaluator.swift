@@ -126,7 +126,7 @@ private func tokenize(_ input: String) throws -> [Token] {
             }
             let normalized = normalizeWord(letters)
             if normalized == "m" || normalized == "mm" {
-                guard let previousNumberIndex = tokens.indices.last, case .number(let baseValue)? = tokens[previousNumberIndex].kind else {
+                guard let previousNumberIndex = tokens.indices.last, case .number(let baseValue) = tokens[previousNumberIndex].kind else {
                     tokens.append(Token(kind: .word(normalized)))
                     continue
                 }
