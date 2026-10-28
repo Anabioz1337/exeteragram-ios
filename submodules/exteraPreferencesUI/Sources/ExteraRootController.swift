@@ -117,7 +117,7 @@ func exteraAdvancedController(context: AccountContext) -> ViewController {
             let archiveSection: Int32 = 1
             let privacySection: Int32 = 2
             return [
-                .option(id: 0, sectionId: speedSection, keyPath: \.downloadSpeedBoost, title: strings.value("extera_DownloadSpeedBoost"), value: settings.downloadSpeedBoost, optionValues: [0, 2, 4], optionTitles: [strings.value("extera_OptionOff"), strings.value("extera_Boost2x"), strings.value("extera_Boost4x")]),
+                .option(id: 0, sectionId: speedSection, keyPath: \.downloadSpeedBoostLevel, title: strings.value("extera_DownloadSpeedBoost"), value: settings.downloadSpeedBoostLevel, optionValues: [0, 1, 2], optionTitles: [strings.value("extera_OptionOff"), strings.value("extera_Boost2x"), strings.value("extera_Boost4x")]),
                 .toggle(id: 1, sectionId: speedSection, keyPath: \.uploadSpeedBoost, title: strings.value("extera_UploadSpeedBoost"), value: settings.uploadSpeedBoost),
                 .footer(id: 2, sectionId: speedSection, text: strings.value("extera_SpeedBoostInfo")),
                 .toggle(id: 3, sectionId: archiveSection, keyPath: \.archiveOnPull, title: strings.value("extera_ArchiveOnPull"), value: settings.archiveOnPull),

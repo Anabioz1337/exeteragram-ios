@@ -35,7 +35,7 @@ public struct ExteraFeedCategory: Codable, Equatable {
 }
 
 public struct ExteraSettings: Codable, Equatable {
-    public var downloadSpeedBoostLevel: Int
+    public var downloadSpeedBoostLevel: Int32
     public var uploadSpeedBoost: Bool
     public var disableNumberRounding: Bool
     public var formatTimeWithSeconds: Bool
@@ -87,8 +87,7 @@ public struct ExteraSettings: Codable, Equatable {
     public var pauseOnMinimize: Bool = true
     public var disablePlayback: Bool = true
     public var filterZalgo: Bool = false
-    public var downloadSpeedBoost: Bool = false
-    public var showIdAndDc: Bool = false
+    public var showIdAndDc: Int32 = 0
     public var avatarCorners: Bool = false
     public var titleText: Bool = false
     public var tabIcons: Bool = false
@@ -98,14 +97,14 @@ public struct ExteraSettings: Codable, Equatable {
     public var doubleTapActionOutOwner: Bool = false
     public var doubleTapSeekDuration: Bool = false
     public var bottomButton: Bool = false
-    public var sendPhotosQuality: Bool = false
+    public var sendPhotosQuality: Int32 = 0
     public var videoMessagesCamera: Bool = false
 
     public static var defaultSettings: ExteraSettings {
         return ExteraSettings(downloadSpeedBoostLevel: 0, uploadSpeedBoost: false, disableNumberRounding: false, formatTimeWithSeconds: false, checkUpdatesOnLaunch: false, lastUpdateCheckTime: 0, customSaveFolderName: "", useGoogleAnalytics: false, useGoogleCrashlytics: false, adBlockEnabled: false, adBlockBlockedRequests: 0, feedEnabled: false, feedCategories: [], feedIncludeArchived: false, feedWidePosts: false)
     }
 
-    public init(downloadSpeedBoostLevel: Int, uploadSpeedBoost: Bool, disableNumberRounding: Bool, formatTimeWithSeconds: Bool, checkUpdatesOnLaunch: Bool, lastUpdateCheckTime: Int64, customSaveFolderName: String, useGoogleAnalytics: Bool, useGoogleCrashlytics: Bool, adBlockEnabled: Bool, adBlockBlockedRequests: Int32, feedEnabled: Bool, feedCategories: [ExteraFeedCategory], feedIncludeArchived: Bool, feedWidePosts: Bool) {
+    public init(downloadSpeedBoostLevel: Int32, uploadSpeedBoost: Bool, disableNumberRounding: Bool, formatTimeWithSeconds: Bool, checkUpdatesOnLaunch: Bool, lastUpdateCheckTime: Int64, customSaveFolderName: String, useGoogleAnalytics: Bool, useGoogleCrashlytics: Bool, adBlockEnabled: Bool, adBlockBlockedRequests: Int32, feedEnabled: Bool, feedCategories: [ExteraFeedCategory], feedIncludeArchived: Bool, feedWidePosts: Bool) {
         self.downloadSpeedBoostLevel = downloadSpeedBoostLevel
         self.uploadSpeedBoost = uploadSpeedBoost
         self.disableNumberRounding = disableNumberRounding
@@ -162,7 +161,7 @@ public struct ExteraSettings: Codable, Equatable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: StringCodingKey.self)
 
-        self.downloadSpeedBoostLevel = (try? container.decode(Int32.self, forKey: "downloadSpeedBoostLevel")).flatMap({ Int($0) }) ?? 0
+        self.downloadSpeedBoostLevel = (try? container.decode(Int32.self, forKey: "downloadSpeedBoostLevel")) ?? 0
         self.uploadSpeedBoost = ((try? container.decode(Int32.self, forKey: "uploadSpeedBoost")) ?? 0) != 0
         self.disableNumberRounding = ((try? container.decode(Int32.self, forKey: "disableNumberRounding")) ?? 0) != 0
         self.formatTimeWithSeconds = ((try? container.decode(Int32.self, forKey: "formatTimeWithSeconds")) ?? 0) != 0
@@ -215,8 +214,7 @@ public struct ExteraSettings: Codable, Equatable {
         self.pauseOnMinimize = ((try? container.decode(Int32.self, forKey: "pauseOnMinimize")) ?? 1) != 0
         self.disablePlayback = ((try? container.decode(Int32.self, forKey: "disablePlayback")) ?? 1) != 0
         self.filterZalgo = ((try? container.decode(Int32.self, forKey: "filterZalgo")) ?? 0) != 0
-        self.downloadSpeedBoost = ((try? container.decode(Int32.self, forKey: "downloadSpeedBoost")) ?? 0) != 0
-        self.showIdAndDc = ((try? container.decode(Int32.self, forKey: "showIdAndDc")) ?? 0) != 0
+        self.showIdAndDc = (try? container.decode(Int32.self, forKey: "showIdAndDc")) ?? 0
         self.avatarCorners = ((try? container.decode(Int32.self, forKey: "avatarCorners")) ?? 0) != 0
         self.titleText = ((try? container.decode(Int32.self, forKey: "titleText")) ?? 0) != 0
         self.tabIcons = ((try? container.decode(Int32.self, forKey: "tabIcons")) ?? 0) != 0
@@ -226,14 +224,14 @@ public struct ExteraSettings: Codable, Equatable {
         self.doubleTapActionOutOwner = ((try? container.decode(Int32.self, forKey: "doubleTapActionOutOwner")) ?? 0) != 0
         self.doubleTapSeekDuration = ((try? container.decode(Int32.self, forKey: "doubleTapSeekDuration")) ?? 0) != 0
         self.bottomButton = ((try? container.decode(Int32.self, forKey: "bottomButton")) ?? 0) != 0
-        self.sendPhotosQuality = ((try? container.decode(Int32.self, forKey: "sendPhotosQuality")) ?? 0) != 0
+        self.sendPhotosQuality = (try? container.decode(Int32.self, forKey: "sendPhotosQuality")) ?? 0
         self.videoMessagesCamera = ((try? container.decode(Int32.self, forKey: "videoMessagesCamera")) ?? 0) != 0
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: StringCodingKey.self)
 
-        try container.encode(Int32(self.downloadSpeedBoostLevel), forKey: "downloadSpeedBoostLevel")
+        try container.encode(self.downloadSpeedBoostLevel, forKey: "downloadSpeedBoostLevel")
         try container.encode((self.uploadSpeedBoost ? 1 : 0) as Int32, forKey: "uploadSpeedBoost")
         try container.encode((self.disableNumberRounding ? 1 : 0) as Int32, forKey: "disableNumberRounding")
         try container.encode((self.formatTimeWithSeconds ? 1 : 0) as Int32, forKey: "formatTimeWithSeconds")
@@ -286,8 +284,7 @@ public struct ExteraSettings: Codable, Equatable {
         try container.encode((self.pauseOnMinimize ? 1 : 0) as Int32, forKey: "pauseOnMinimize")
         try container.encode((self.disablePlayback ? 1 : 0) as Int32, forKey: "disablePlayback")
         try container.encode((self.filterZalgo ? 1 : 0) as Int32, forKey: "filterZalgo")
-        try container.encode((self.downloadSpeedBoost ? 1 : 0) as Int32, forKey: "downloadSpeedBoost")
-        try container.encode((self.showIdAndDc ? 1 : 0) as Int32, forKey: "showIdAndDc")
+        try container.encode(self.showIdAndDc, forKey: "showIdAndDc")
         try container.encode((self.avatarCorners ? 1 : 0) as Int32, forKey: "avatarCorners")
         try container.encode((self.titleText ? 1 : 0) as Int32, forKey: "titleText")
         try container.encode((self.tabIcons ? 1 : 0) as Int32, forKey: "tabIcons")
@@ -297,7 +294,7 @@ public struct ExteraSettings: Codable, Equatable {
         try container.encode((self.doubleTapActionOutOwner ? 1 : 0) as Int32, forKey: "doubleTapActionOutOwner")
         try container.encode((self.doubleTapSeekDuration ? 1 : 0) as Int32, forKey: "doubleTapSeekDuration")
         try container.encode((self.bottomButton ? 1 : 0) as Int32, forKey: "bottomButton")
-        try container.encode((self.sendPhotosQuality ? 1 : 0) as Int32, forKey: "sendPhotosQuality")
+        try container.encode(self.sendPhotosQuality, forKey: "sendPhotosQuality")
         try container.encode((self.videoMessagesCamera ? 1 : 0) as Int32, forKey: "videoMessagesCamera")
     }
 
@@ -354,7 +351,6 @@ public struct ExteraSettings: Codable, Equatable {
             lhs.pauseOnMinimize == rhs.pauseOnMinimize &&
             lhs.disablePlayback == rhs.disablePlayback &&
             lhs.filterZalgo == rhs.filterZalgo &&
-            lhs.downloadSpeedBoost == rhs.downloadSpeedBoost &&
             lhs.showIdAndDc == rhs.showIdAndDc &&
             lhs.avatarCorners == rhs.avatarCorners &&
             lhs.titleText == rhs.titleText &&
@@ -367,6 +363,81 @@ public struct ExteraSettings: Codable, Equatable {
             lhs.bottomButton == rhs.bottomButton &&
             lhs.sendPhotosQuality == rhs.sendPhotosQuality &&
             lhs.videoMessagesCamera == rhs.videoMessagesCamera
+    }
+
+    public func with<Value>(_ keyPath: WritableKeyPath<ExteraSettings, Value>, _ value: Value) -> ExteraSettings {
+        var result = self
+        result[keyPath: keyPath] = value
+        return result
+    }
+
+    public func changedKeyCount(comparedTo other: ExteraSettings) -> Int {
+        var count = 0
+        if self.downloadSpeedBoostLevel != other.downloadSpeedBoostLevel { count += 1 }
+        if self.uploadSpeedBoost != other.uploadSpeedBoost { count += 1 }
+        if self.disableNumberRounding != other.disableNumberRounding { count += 1 }
+        if self.formatTimeWithSeconds != other.formatTimeWithSeconds { count += 1 }
+        if self.checkUpdatesOnLaunch != other.checkUpdatesOnLaunch { count += 1 }
+        if self.lastUpdateCheckTime != other.lastUpdateCheckTime { count += 1 }
+        if self.customSaveFolderName != other.customSaveFolderName { count += 1 }
+        if self.useGoogleAnalytics != other.useGoogleAnalytics { count += 1 }
+        if self.useGoogleCrashlytics != other.useGoogleCrashlytics { count += 1 }
+        if self.adBlockEnabled != other.adBlockEnabled { count += 1 }
+        if self.adBlockBlockedRequests != other.adBlockBlockedRequests { count += 1 }
+        if self.feedEnabled != other.feedEnabled { count += 1 }
+        if self.feedCategories != other.feedCategories { count += 1 }
+        if self.feedIncludeArchived != other.feedIncludeArchived { count += 1 }
+        if self.feedWidePosts != other.feedWidePosts { count += 1 }
+        if self.hidePhoneNumber != other.hidePhoneNumber { count += 1 }
+        if self.archiveOnPull != other.archiveOnPull { count += 1 }
+        if self.disableUnarchiveSwipe != other.disableUnarchiveSwipe { count += 1 }
+        if self.hideActionBarStatus != other.hideActionBarStatus { count += 1 }
+        if self.centerTitle != other.centerTitle { count += 1 }
+        if self.tabCounter != other.tabCounter { count += 1 }
+        if self.hideAllChats != other.hideAllChats { count += 1 }
+        if self.forceBlur != other.forceBlur { count += 1 }
+        if self.forceSnow != other.forceSnow { count += 1 }
+        if self.useSystemFonts != other.useSystemFonts { count += 1 }
+        if self.newSwitchStyle != other.newSwitchStyle { count += 1 }
+        if self.disableDividers != other.disableDividers { count += 1 }
+        if self.hideStickerTime != other.hideStickerTime { count += 1 }
+        if self.unlimitedRecentStickers != other.unlimitedRecentStickers { count += 1 }
+        if self.hideCategories != other.hideCategories { count += 1 }
+        if self.hideKeyboardOnScroll != other.hideKeyboardOnScroll { count += 1 }
+        if self.permissionsShortcut != other.permissionsShortcut { count += 1 }
+        if self.administratorsShortcut != other.administratorsShortcut { count += 1 }
+        if self.membersShortcut != other.membersShortcut { count += 1 }
+        if self.recentActionsShortcut != other.recentActionsShortcut { count += 1 }
+        if self.disableJumpToNextChannel != other.disableJumpToNextChannel { count += 1 }
+        if self.showActionTimestamps != other.showActionTimestamps { count += 1 }
+        if self.hideShareButton != other.hideShareButton { count += 1 }
+        if self.showCopyPhotoButton != other.showCopyPhotoButton { count += 1 }
+        if self.showClearButton != other.showClearButton { count += 1 }
+        if self.showSaveMessageButton != other.showSaveMessageButton { count += 1 }
+        if self.showDetailsButton != other.showDetailsButton { count += 1 }
+        if self.showReportButton != other.showReportButton { count += 1 }
+        if self.showHistoryButton != other.showHistoryButton { count += 1 }
+        if self.addCommaAfterMention != other.addCommaAfterMention { count += 1 }
+        if self.hidePhotoCounter != other.hidePhotoCounter { count += 1 }
+        if self.hideCameraTile != other.hideCameraTile { count += 1 }
+        if self.staticZoom != other.staticZoom { count += 1 }
+        if self.rememberLastUsedCamera != other.rememberLastUsedCamera { count += 1 }
+        if self.pauseOnMinimize != other.pauseOnMinimize { count += 1 }
+        if self.disablePlayback != other.disablePlayback { count += 1 }
+        if self.filterZalgo != other.filterZalgo { count += 1 }
+        if self.showIdAndDc != other.showIdAndDc { count += 1 }
+        if self.avatarCorners != other.avatarCorners { count += 1 }
+        if self.titleText != other.titleText { count += 1 }
+        if self.tabIcons != other.tabIcons { count += 1 }
+        if self.stickerSize != other.stickerSize { count += 1 }
+        if self.stickerShape != other.stickerShape { count += 1 }
+        if self.doubleTapAction != other.doubleTapAction { count += 1 }
+        if self.doubleTapActionOutOwner != other.doubleTapActionOutOwner { count += 1 }
+        if self.doubleTapSeekDuration != other.doubleTapSeekDuration { count += 1 }
+        if self.bottomButton != other.bottomButton { count += 1 }
+        if self.sendPhotosQuality != other.sendPhotosQuality { count += 1 }
+        if self.videoMessagesCamera != other.videoMessagesCamera { count += 1 }
+        return count
     }
 }
 

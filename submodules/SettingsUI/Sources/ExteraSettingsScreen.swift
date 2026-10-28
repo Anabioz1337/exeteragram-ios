@@ -356,7 +356,7 @@ private final class ExteraSettingsArguments {
     }
 }
 
-private func exteraBoostLevelTitle(_ level: Int, strings: ExteraStringsTable) -> String {
+private func exteraBoostLevelTitle(_ level: Int32, strings: ExteraStringsTable) -> String {
     switch level {
         case 1: return strings.boostFast
         case 2: return strings.boostUltra
@@ -439,7 +439,7 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
             }
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
             let strings = exteraStrings(presentationData: presentationData)
-            let levels: [(Int, String)] = [
+            let levels: [(Int32, String)] = [
                 (0, strings.boostOff),
                 (1, strings.boostFast),
                 (2, strings.boostUltra)
@@ -576,7 +576,7 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
     return controller
 }
 
-private func exteraApplyDownloadBoostLevel(context: AccountContext, level: Int) {
+private func exteraApplyDownloadBoostLevel(context: AccountContext, level: Int32) {
     let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
         var settings = settings
         settings.downloadSpeedBoostLevel = level
@@ -584,7 +584,7 @@ private func exteraApplyDownloadBoostLevel(context: AccountContext, level: Int) 
     }.start()
     let _ = updateNetworkSettingsInteractively(postbox: context.account.postbox, network: context.account.network) { networkSettings in
         var networkSettings = networkSettings
-        networkSettings.downloadSpeedBoostLevel = level
+        networkSettings.downloadSpeedBoostLevel = Int(level)
         return networkSettings
     }.start()
 }

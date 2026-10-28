@@ -6,7 +6,6 @@ import TelegramPresentationData
 import TelegramUIPreferences
 import ItemListUI
 import AccountContext
-import exteraSettingsCore
 
 final class ExteraSettingsEditor {
     private let accountManager: AccountManager<TelegramAccountManagerTypes>
@@ -94,7 +93,7 @@ enum ExteraSettingsEntry: ItemListNodeEntry {
             return sectionId
         case let .option(_, sectionId, _, _, _, _, _):
             return sectionId
-        case let .slider(_, sectionId, _, _, _, _, _):
+        case let .slider(_, sectionId, _, _, _, _, _, _):
             return sectionId
         case let .disclosure(_, sectionId, _):
             return sectionId
