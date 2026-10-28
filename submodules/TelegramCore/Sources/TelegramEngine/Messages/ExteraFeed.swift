@@ -81,6 +81,7 @@ extension TelegramEngine.Messages {
                 let rhsTitle = (rhs.peer._asPeer() as? TelegramChannel)?.title ?? ""
                 return lhsTitle.localizedCaseInsensitiveCompare(rhsTitle) == .orderedAscending
             }
+            return channels
         }
     }
 }
