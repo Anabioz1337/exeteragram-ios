@@ -1,4 +1,5 @@
 import Foundation
+import ExteraCamera
 import UIKit
 import LegacyComponents
 import SwiftSignalKit
