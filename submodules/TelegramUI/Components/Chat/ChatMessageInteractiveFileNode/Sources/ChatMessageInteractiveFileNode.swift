@@ -536,7 +536,7 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
     }
 
     private func transcribeOnDevice(settings: ExteraSpeechSettings) {
-        guard self.transcribeDisposable == nil, let arguments = self.arguments, let context = self.context, let message = self.message,
+        guard self.transcribeDisposable == nil, let context = self.context, let message = self.message,
               let mediaFile = message.media.first(where: { $0 is TelegramMediaFile }) as? TelegramMediaFile else {
             return
         }
