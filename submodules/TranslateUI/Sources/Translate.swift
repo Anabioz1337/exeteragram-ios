@@ -1,4 +1,5 @@
 import Foundation
+import ExteraTranslator
 import UIKit
 import Display
 import SwiftSignalKit
