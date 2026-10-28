@@ -160,13 +160,16 @@ final class ExteraValueSliderItemNode: ListViewItemNode, ItemListItemNode {
             let textWidth = params.width - params.leftInset - params.rightInset - 32.0
 
             let titleLayout = TextNode.asyncLayout(self?.titleNode)
-            let (titleSize, titleApply) = titleLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: item.title, font: Font.regular(baseFontSize), textColor: theme.list.itemPrimaryTextColor), maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: textWidth, height: 100.0), verticalAlignment: .middle))
+            let (titleLayout2, titleApply) = titleLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: item.title, font: Font.regular(baseFontSize), textColor: theme.list.itemPrimaryTextColor), maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: textWidth, height: 100.0), verticalAlignment: .middle))
+            let titleSize = titleLayout2.size
 
             let leftTextLayout = TextNode.asyncLayout(self?.leftTextNode)
-            let (leftTextSize, leftTextApply) = leftTextLayout(TextNodeLayoutArguments(attributedString: item.leftText.flatMap { NSAttributedString(string: $0, font: Font.regular(floor(baseFontSize * 0.8)), textColor: theme.list.itemSecondaryTextColor) }, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: textWidth / 2.0, height: 100.0), verticalAlignment: .middle))
+            let (leftTextLayout2, leftTextApply) = leftTextLayout(TextNodeLayoutArguments(attributedString: item.leftText.flatMap { NSAttributedString(string: $0, font: Font.regular(floor(baseFontSize * 0.8)), textColor: theme.list.itemSecondaryTextColor) }, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: textWidth / 2.0, height: 100.0), verticalAlignment: .middle))
+            let leftTextSize = leftTextLayout2.size
 
             let rightTextLayout = TextNode.asyncLayout(self?.rightTextNode)
-            let (rightTextSize, rightTextApply) = rightTextLayout(TextNodeLayoutArguments(attributedString: item.rightText.flatMap { NSAttributedString(string: $0, font: Font.regular(floor(baseFontSize * 0.8)), textColor: theme.list.itemSecondaryTextColor) }, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: textWidth / 2.0, height: 100.0), verticalAlignment: .middle))
+            let (rightTextLayout2, rightTextApply) = rightTextLayout(TextNodeLayoutArguments(attributedString: item.rightText.flatMap { NSAttributedString(string: $0, font: Font.regular(floor(baseFontSize * 0.8)), textColor: theme.list.itemSecondaryTextColor) }, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: textWidth / 2.0, height: 100.0), verticalAlignment: .middle))
+            let rightTextSize = rightTextLayout2.size
 
             let contentSize = CGSize(width: params.width, height: 80.0)
             let insets = itemListNeighborsGroupedInsets(neighbors, params)

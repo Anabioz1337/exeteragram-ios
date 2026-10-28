@@ -74,7 +74,7 @@ enum ExteraSettingsEntry: ItemListNodeEntry {
             return id
         case let .option(id, _, _, _, _, _, _):
             return id
-        case let .slider(id, _, _, _, _, _, _):
+        case let .slider(id, _, _, _, _, _, _, _):
             return id
         case let .disclosure(id, _, _):
             return id
