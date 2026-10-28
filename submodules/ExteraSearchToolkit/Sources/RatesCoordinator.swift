@@ -52,10 +52,10 @@ public final class ExteraSearchRatesCoordinator {
             }
         }
 
-        ExteraRatesService.latestFiatRatesPerUsd({ rates in
+        ExteraRatesService.latestFiatRatesPerUsd(completion: { rates in
             applyChange(rates, nil)
         })
-        ExteraRatesService.cryptoPricesInUsd({ prices in
+        ExteraRatesService.cryptoPricesInUsd(completion: { prices in
             applyChange(nil, prices)
         })
     }
