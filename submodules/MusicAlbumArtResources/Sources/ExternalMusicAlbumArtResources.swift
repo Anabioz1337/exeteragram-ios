@@ -83,7 +83,7 @@ private func fetchItunesAlbumArtResource(engine: TelegramEngine, resource: Exter
         }
         guard !term.isEmpty, let escapedTerm = term.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             subscriber.putError(.generic)
-            return
+            return EmptyDisposable
         }
 
         let fetchDisposable = MetaDisposable()
