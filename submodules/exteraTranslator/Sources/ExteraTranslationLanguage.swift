@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ExteraTranslationLanguage: Equatable {
+public struct ExteraTranslationLanguage: Equatable, Codable {
     public let name: String
     public let code: String
 
@@ -34,8 +34,8 @@ public func exteraTranslationLanguages() -> [ExteraTranslationLanguage] {
         guard let openIndex = rawValue.firstIndex(of: "("), let closeIndex = rawValue.firstIndex(of: ")") else {
             return nil
         }
-        let name = rawValue[..<openIndex].trimmingCharacters(in: .whitespaces)
-        let code = rawValue[rawValue.index(after: openIndex) ..< closeIndex]
+        let name = String(rawValue[..<openIndex]).trimmingCharacters(in: .whitespaces)
+        let code = String(rawValue[rawValue.index(after: openIndex) ..< closeIndex])
         return ExteraTranslationLanguage(name: name, code: code)
     }
 }

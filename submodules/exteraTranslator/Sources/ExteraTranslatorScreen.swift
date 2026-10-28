@@ -11,6 +11,7 @@ public final class ExteraTranslatorScreen: UITableViewController {
     }
 
     private let languages = exteraTranslationLanguages()
+    private var preferencesDisposable: Disposable?
 
     private var preferences: ExteraTranslationPreferences
 
@@ -33,7 +34,7 @@ public final class ExteraTranslatorScreen: UITableViewController {
 
     public override func viewDidLoad() {
         super.viewDidLoad()
-        (ExteraTranslatorSettings.shared.preferencesSignal |> runOn(Queue.mainQueue()))
+        self.preferencesDisposable = (ExteraTranslatorSettings.shared.preferencesSignal |> runOn(Queue.mainQueue()))
             .start(next: { [weak self] preferences in
                 guard let self else {
                     return
