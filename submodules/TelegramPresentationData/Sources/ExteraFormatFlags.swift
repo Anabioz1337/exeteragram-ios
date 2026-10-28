@@ -1,8 +1,8 @@
 import Foundation
 import SwiftSignalKit
 
-private let numericRoundingDisabledValue = Atomic(false)
-private let timeWithSecondsValue = Atomic(false)
+private let numericRoundingDisabledValue = Atomic(value: false)
+private let timeWithSecondsValue = Atomic(value: false)
 
 public func numericCountRoundingDisabled() -> Bool {
     return numericRoundingDisabledValue.with { $0 }

@@ -6,7 +6,6 @@ import TelegramCore
 import Contacts
 import Display
 import TelegramUIPreferences
-import exteraSettingsCore
 import AppBundle
 import Sunrise
 import PresentationStrings
@@ -398,7 +397,7 @@ public func currentPresentationDataAndSettings(accountManager: AccountManager<Te
             chatSettings = ChatSettings.defaultSettings
         }
 
-        let exteraSettings: ExteraSettings = internalData.exteraSettings?.get(ExteraSettings.self) ?? ExteraSettings()
+        let exteraSettings: TelegramUIPreferences.ExteraSettings = internalData.exteraSettings?.get(TelegramUIPreferences.ExteraSettings.self) ?? TelegramUIPreferences.ExteraSettings()
 
         let exteraSwipeSettings: ExteraSwipeSettings = internalData.exteraSwipeSettings?.get(ExteraSwipeSettings.self) ?? .defaultSettings
 
@@ -857,7 +856,7 @@ public func updatedPresentationData(accountManager: AccountManager<TelegramAccou
                         
                         let chatBubbleCorners = PresentationChatBubbleCorners(mainRadius: CGFloat(themeSettings.chatBubbleSettings.mainRadius), auxiliaryRadius: CGFloat(themeSettings.chatBubbleSettings.auxiliaryRadius), mergeBubbleCorners: themeSettings.chatBubbleSettings.mergeBubbleCorners)
                         
-                        let exteraSettings: ExteraSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings()
+                        let exteraSettings: TelegramUIPreferences.ExteraSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(TelegramUIPreferences.ExteraSettings.self) ?? TelegramUIPreferences.ExteraSettings()
 
                         let exteraSwipeSettings: ExteraSwipeSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSwipeSettings]?.get(ExteraSwipeSettings.self) ?? .defaultSettings
 
