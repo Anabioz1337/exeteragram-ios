@@ -2,7 +2,7 @@ import Foundation
 import TelegramCore
 import SwiftSignalKit
 
-public struct InstalledExteraPlugin: Equatable {
+public struct InstalledExteraPlugin: Codable, Equatable {
     public let id: String
     public let name: String
     public let version: String

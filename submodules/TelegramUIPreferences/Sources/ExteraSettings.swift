@@ -1,4 +1,6 @@
 import Foundation
+import TelegramCore
+import SwiftSignalKit
 
 public struct ExteraFeedCategory: Codable, Equatable {
     public let id: Int64
