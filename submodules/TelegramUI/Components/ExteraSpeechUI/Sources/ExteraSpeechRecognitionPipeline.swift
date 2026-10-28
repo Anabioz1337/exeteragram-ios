@@ -32,11 +32,10 @@ public func exteraVoiceMessageTranscriptionSignal(
         return convertOpusToAAC(sourcePath: data.path, allocateTempFile: {
             return EngineTempBox.shared.tempFile(fileName: "audio.m4a").path
         })
-    }
-    |> mapToSignal { convertedPath -> Signal<ExteraVoiceMessageTranscriptionOutcome, NoError> in
-        guard let convertedPath = convertedPath else {
-            return .single(.failure)
-        }
+        |> mapToSignal { convertedPath -> Signal<ExteraVoiceMessageTranscriptionOutcome, NoError> in
+            guard let convertedPath = convertedPath else {
+                return .single(.failure)
+            }
         let localeIdentifier = resolveSpeechLocaleIdentifier(
             languageIdentifier: settings.languageIdentifier,
             deviceLanguageCode: deviceLanguageCode
