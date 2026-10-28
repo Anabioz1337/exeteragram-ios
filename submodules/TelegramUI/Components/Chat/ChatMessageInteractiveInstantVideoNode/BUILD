@@ -18,6 +18,7 @@ swift_library(
         "//submodules/MediaPlayer:UniversalMediaPlayer",
         "//submodules/TelegramPresentationData",
         "//submodules/AccountContext",
+        "//submodules/TelegramUI/Components/ExteraSpeechUI",
         "//submodules/RadialStatusNode",
         "//submodules/SemanticStatusNode",
         "//submodules/PhotoResources",
