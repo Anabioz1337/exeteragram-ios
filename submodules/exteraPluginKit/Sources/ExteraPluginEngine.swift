@@ -2,8 +2,15 @@ import Foundation
 import JavaScriptCore
 
 private func exteraPluginRuntimeDescribed(_ value: JSValue) -> String {
-    let text = value.toString()
+    let text = value.toString() ?? ""
     return text.count > 240 ? String(text.prefix(240)) + "…" : text
+}
+
+private func exteraPluginExceptionIsReal(_ value: JSValue?) -> Bool {
+    guard let value else {
+        return false
+    }
+    return !value.isNull && !value.isUndefined
 }
 
 final class ExteraPluginScriptBridge: NSObject {
@@ -16,9 +23,6 @@ final class ExteraPluginScriptBridge: NSObject {
     }
 
     @objc func registerOnMessage(_ handler: JSValue) {
-        guard handler.isFunction else {
-            return
-        }
         self.onMessageHandler = handler
     }
 
@@ -38,7 +42,6 @@ final class ExteraPluginScriptBridge: NSObject {
 /// load/call exceptions back to the caller.
 public final class ExteraPluginEngine {
     private let bridge: ExteraPluginScriptBridge
-    private let context: JSContext
 
     /// Non-nil when `evaluateScript` itself threw (syntax/runtime error at import time).
     public let loadError: String?
@@ -51,7 +54,7 @@ public final class ExteraPluginEngine {
         let context = JSContext()!
         context.name = "extera-plugin:\(pluginId)"
         context.exceptionHandler = { [weak bridge] _, exception in
-            if !exception.isNull && !exception.isUndefined {
+            if exteraPluginExceptionIsReal(exception) {
                 bridge?.lastException = exception
             }
         }
@@ -61,12 +64,12 @@ public final class ExteraPluginEngine {
         var onMessage = function(handler) { __extera.registerOnMessage(handler); };
         """)
         context.evaluateScript(sourceCode)
-        if let exception = bridge.lastException, !exception.isNull && !exception.isUndefined {
-            self.loadError = "Ошибка выполнения скрипта: \(exteraPluginRuntimeDescribed(exception))"
+        if exteraPluginExceptionIsReal(bridge.lastException) {
+            self.loadError = "Ошибка выполнения скрипта: \(exteraPluginRuntimeDescribed(bridge.lastException!))"
         } else {
             self.loadError = nil
+            bridge.lastException = nil
         }
-        self.context = context
     }
 
     /// True when the evaluated script registered an onMessage handler.
@@ -74,7 +77,7 @@ public final class ExteraPluginEngine {
         return self.bridge.onMessageHandler != nil
     }
 
-    /// Invoke the handler with a message-shaped dictionary; reply must be a string to count.
+    /// Invoke the handler with a message-shaped dictionary; a string reply counts.
     public func deliverIncoming(text: String, senderName: String, chatId: Int64) -> String? {
         guard let handler = self.bridge.onMessageHandler else {
             return nil
@@ -87,15 +90,14 @@ public final class ExteraPluginEngine {
             "chatId": chatId,
         ]
         let reply = handler.call(withArguments: [NSDictionary(dictionary: payload)])
-        if let exception = self.bridge.lastException, !exception.isNull && !exception.isUndefined {
-            self.callError = exteraPluginRuntimeDescribed(exception)
+        if exteraPluginExceptionIsReal(self.bridge.lastException) {
+            self.callError = exteraPluginRuntimeDescribed(self.bridge.lastException!)
             return nil
         }
-        if let reply, reply.isString {
-            let replyText = reply.toString()
-            return replyText.isEmpty ? nil : replyText
+        guard let reply, reply.isString, let replyText = reply.toString() else {
+            return nil
         }
-        return nil
+        return replyText.isEmpty ? nil : replyText
     }
 
     /// One-shot dry run used by the plugin editor's Test action; never touches live state.
