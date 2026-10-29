@@ -259,7 +259,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
             HapticFeedback().tap()
         }
         self.exteraInlineResultPanelNode.settingsTapped = { [weak self] in
-            guard let strongSelf, let interaction = strongSelf.interaction else {
+            guard let strongSelf = self, let interaction = strongSelf.interaction else {
                 return
             }
             interaction.present(exteraInlineResultsSettingsController(context: strongSelf.context), nil)

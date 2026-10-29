@@ -240,8 +240,6 @@ final class ExteraPillRowItemNode: ListViewItemNode {
 
                     transition.updateFrame(node: strongSelf.titleNode, frame: CGRect(origin: CGPoint(x: leftInset, y: verticalInset), size: titleLayout.size))
                     transition.updateAlpha(node: strongSelf.titleNode, alpha: item.hidden ? 0.5 : 1.0)
-
-                    strongSelf.updateLayout(size: layout.contentSize, leftInset: params.leftInset, rightInset: params.rightInset)
                 }
             })
         }

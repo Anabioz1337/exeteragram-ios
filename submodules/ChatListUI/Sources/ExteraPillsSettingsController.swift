@@ -288,7 +288,7 @@ public func exteraPillsSettingsController(context: AccountContext) -> ViewContro
     pushControllerImpl = { [weak controller] value in
         controller?.push(value)
     }
-    controller.setReorderEntry({ fromIndex, toIndex, entries -> Signal<Bool, NoError> in
+    controller.setReorderEntry({ (fromIndex: Int, toIndex: Int, entries: [ExteraPillsSettingsEntry]) -> Signal<Bool, NoError> in
         guard case let .pill(fromKind, _, _, _) = entries[fromIndex] else {
             return .single(false)
         }
@@ -346,7 +346,7 @@ public func exteraPillsSettingsController(context: AccountContext) -> ViewContro
 
         return .single(true)
     })
-    controller.setReorderCompleted({ _ in
+    controller.setReorderCompleted({ (_: [ExteraPillsSettingsEntry]) in
     })
 
     return controller

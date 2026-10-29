@@ -69,7 +69,7 @@ private enum ExteraWeatherLocationEntry: ItemListNodeEntry {
             return ItemListCheckboxItem(presentationData: presentationData, title: exteraPillString("extera_CurrentLocation"), style: .right, checked: checked, zeroSeparatorInsets: false, sectionId: self.section, action: {
                 arguments.selectCurrent()
             })
-        case let .manual(cityName, active):
+        case let .manual(cityName, _):
             return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .legacy, title: NSAttributedString(string: exteraPillString("extera_SelectCity"), font: Font.regular(13.0), textColor: presentationData.theme.list.itemSecondaryTextColor), text: cityName, placeholder: exteraPillString("extera_SelectLocation"), type: .regular(capitalization: true, autocorrection: false), returnKeyType: .search, alignment: .default, clearType: .always, sectionId: self.section, textUpdated: { value in
                 arguments.updateDraft(value)
             }, action: {
@@ -105,7 +105,6 @@ private func exteraWeatherLocationEntries(presentationData: PresentationData, se
 }
 
 public func exteraPillWeatherSettingsController(context: AccountContext) -> ViewController {
-    var pushControllerImpl: ((ViewController) -> Void)?
     var dismissImpl: (() -> Void)?
     var presentControllerImpl: ((ViewController, Any?) -> Void)?
 
@@ -154,9 +153,6 @@ public func exteraPillWeatherSettingsController(context: AccountContext) -> View
     }
 
     let controller = ItemListController(context: context, state: signal)
-    pushControllerImpl = { [weak controller] value in
-        controller?.push(value)
-    }
     dismissImpl = { [weak controller] in
         controller?.dismiss()
     }
@@ -213,7 +209,7 @@ private enum ExteraCryptoCurrencyEntry: ItemListNodeEntry {
 
     private var code: String {
         switch self {
-        case let .currency(code, _): return code
+        case let .currency(code, _, _): return code
         }
     }
 }
