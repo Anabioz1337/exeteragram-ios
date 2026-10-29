@@ -79,7 +79,7 @@ public extension ExteraProfilePeerInfo {
         guard userId.namespace == Namespaces.Peer.CloudUser else {
             return nil
         }
-        let rawId = userId.id.rawValue
+        let rawId = userId.id._internalGetInt64Value()
         for bracket in registrationYearBrackets where rawId < bracket.upTo {
             return bracket.year
         }

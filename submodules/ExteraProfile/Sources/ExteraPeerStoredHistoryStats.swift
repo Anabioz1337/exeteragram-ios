@@ -8,9 +8,9 @@ import TelegramCore
 /// messages are forwards.
 public struct ExteraPeerStoredHistoryStats: Equatable {
     public var earliestTimestamp: Int32?
-    public var forwardsCount: Int32?
+    public var forwardsCount: Int32 = 0
 
-    public init(earliestTimestamp: Int32?, forwardsCount: Int32?) {
+    public init(earliestTimestamp: Int32?, forwardsCount: Int32 = 0) {
         self.earliestTimestamp = earliestTimestamp
         self.forwardsCount = forwardsCount
     }

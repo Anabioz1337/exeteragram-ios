@@ -135,7 +135,7 @@ public final class ExteraProfileSettings {
     }
 
     public var preferencesSignal: Signal<ExteraProfilePreferences, NoError> {
-        return self.promise.signal()
+        return self.promise.get()
     }
 }
 
