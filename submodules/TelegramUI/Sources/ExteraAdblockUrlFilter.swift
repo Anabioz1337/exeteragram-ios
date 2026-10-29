@@ -66,7 +66,7 @@ public final class ExteraAdblockUrlFilter {
     private init() {
         self.defaults = exteraAdBlockUserDefaults ?? UserDefaults.standard
         if let storedHosts = self.defaults.stringArray(forKey: "filterBlockedHosts") {
-            let _ = self.state.with { state -> ExteraAdblockFilterState in
+            self.state.modify { state -> ExteraAdblockFilterState in
                 var state = state
                 state.blockedHosts = Set(storedHosts)
                 state.lastRefresh = self.defaults.object(forKey: "filterListUpdatedAt") as? Date
@@ -102,7 +102,7 @@ public final class ExteraAdblockUrlFilter {
 
     public func proceed(_ url: String) {
         let host = exteraAdblockHostForUrl(url)
-        let _ = self.state.with { state -> ExteraAdblockFilterState in
+        self.state.modify { state -> ExteraAdblockFilterState in
             var state = state
             state.sessionAllowedHosts.insert(host)
             return state
@@ -142,14 +142,14 @@ public final class ExteraAdblockUrlFilter {
                 let hosts = parseFilterListDomains(source)
                 self.defaults.set(Array(hosts), forKey: "filterBlockedHosts")
                 self.defaults.set(Date(), forKey: "filterListUpdatedAt")
-                let _ = self.state.with { state -> ExteraAdblockFilterState in
+                self.state.modify { state -> ExteraAdblockFilterState in
                     var state = state
                     state.blockedHosts = hosts
                     state.lastRefresh = Date()
                     return state
                 }
             }
-            self.refreshInFlight.store(false)
+            let _ = self.refreshInFlight.swap(false)
         })
         task.resume()
     }

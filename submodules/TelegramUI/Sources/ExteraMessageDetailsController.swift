@@ -8,6 +8,7 @@ import ItemListUI
 import AccountContext
 import TelegramStringFormatting
 import exteraSettingsCore
+import Postbox
 
 public enum ExteraMessageDetailsDateFormat: Int32, CaseIterable {
     case none = 0

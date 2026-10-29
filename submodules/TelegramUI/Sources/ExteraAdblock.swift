@@ -88,15 +88,17 @@ public final class ExteraAdblockAdMessagesContext: AdMessagesHistoryContext {
                 guard let adAttribute = message.adAttribute else {
                     return true
                 }
-                let counted = self.countedIds.with { ids -> Bool in
-                    if ids.contains(adAttribute.opaqueId) {
-                        return true
+                var insertedNew = false
+                self.countedIds.modify { ids -> Set<Data> in
+                    guard !ids.contains(adAttribute.opaqueId) else {
+                        return ids
                     }
                     var ids = ids
                     ids.insert(adAttribute.opaqueId)
-                    return false
+                    insertedNew = true
+                    return ids
                 }
-                if !counted {
+                if insertedNew {
                     interceptedCount += 1
                 }
                 return false
