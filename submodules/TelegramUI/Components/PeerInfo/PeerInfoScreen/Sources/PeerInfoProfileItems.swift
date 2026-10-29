@@ -921,7 +921,7 @@ func infoItems(
                 }))
             }
         }
-        if exteraPreferences.showIdAndDc, let groupPeer = data.peer._asPeer() as? TelegramGroup {
+        if exteraPreferences.showIdAndDc, let dataPeer = data.peer, case let .legacyGroup(groupPeer) = dataPeer {
             items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraIdAndDcLegacyGroup, label: exteraProfileString("Extera.Profile.IdLabel"), text: ExteraProfilePeerInfo.idAndDcLine(peer: groupPeer), multiLine: true))
         }
     }
