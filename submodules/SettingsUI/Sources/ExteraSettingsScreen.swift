@@ -840,8 +840,8 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
                 return settings
             }.start()
         },
-        openReleasePage: { [weak context] url in
-            guard let context = context, let url = URL(string: url) else {
+        openReleasePage: { url in
+            guard let url = URL(string: url) else {
                 return
             }
             UIApplication.shared.open(url)
