@@ -77,7 +77,7 @@ public final class ExteraPillsService: NSObject, CLLocationManagerDelegate {
             }
             self.fetchWeather(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, completion: completion)
         }
-        self.locationManager.desiredAccuracy = kCLLocationKilometer
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         self.locationManager.requestLocation()
     }
 

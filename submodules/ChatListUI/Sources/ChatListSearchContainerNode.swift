@@ -262,7 +262,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
             guard let strongSelf, let interaction = strongSelf.interaction else {
                 return
             }
-            interaction.present(ExteraInlineResultsSettingsController(context: strongSelf.context), nil)
+            interaction.present(exteraInlineResultsSettingsController(context: strongSelf.context), nil)
         }
 
         let exteraRatesChanged: () -> Void = { [weak self] in
@@ -287,7 +287,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
             strongSelf.exteraPillStackSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraPillStackSettings]?.get(ExteraPillStackSettings.self) ?? .defaultSettings
             if let selectedKind = strongSelf.exteraSelectedPillKind, !strongSelf.exteraPillStackSettings.visiblePills.contains(selectedKind) {
                 strongSelf.exteraSelectedPillKind = nil
-                strongSelf.updateExteraSelectedPane()
+                strongSelf.exteraPillStackNode.update(pills: strongSelf.exteraPills(), selectedKind: nil, transition: .immediate)
             }
             if strongSelf.exteraPillStackSettings.weatherLocation != previousWeatherLocation {
                 strongSelf.refreshExteraWeatherPill()

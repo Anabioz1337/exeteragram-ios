@@ -70,7 +70,7 @@ private enum ExteraWeatherLocationEntry: ItemListNodeEntry {
                 arguments.selectCurrent()
             })
         case let .manual(cityName, active):
-            return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .legacy, title: NSAttributedString(string: exteraPillString("extera_SelectCity"), font: Font.regular(13.0), textColor: presentationData.theme.list.itemSecondaryTextColor), text: cityName, placeholder: exteraPillString("extera_SelectLocation"), type: .regular(capitalization: true, autocorrection: false), returnKeyType: .search, alignment: .default, clearType: .whileEditing, sectionId: self.section, textUpdated: { value in
+            return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .legacy, title: NSAttributedString(string: exteraPillString("extera_SelectCity"), font: Font.regular(13.0), textColor: presentationData.theme.list.itemSecondaryTextColor), text: cityName, placeholder: exteraPillString("extera_SelectLocation"), type: .regular(capitalization: true, autocorrection: false), returnKeyType: .search, alignment: .default, clearType: .always, sectionId: self.section, textUpdated: { value in
                 arguments.updateDraft(value)
             }, action: {
                 arguments.commitCity()
@@ -130,8 +130,8 @@ public func exteraPillWeatherSettingsController(context: AccountContext) -> View
                 }
                 return
             }
-            let _ = updateExteraPillStackSettingsInteractively(accountManager: context.sharedContext.accountManager, { _ in
-                ExteraWeatherLocation(source: .manual, latitude: location.latitude, longitude: location.longitude, title: location.name)
+            let _ = updateExteraPillStackSettingsInteractively(accountManager: context.sharedContext.accountManager, { settings in
+                settings.withUpdatedWeatherLocation(ExteraWeatherLocation(source: .manual, latitude: location.latitude, longitude: location.longitude, title: location.name))
             }).start()
             DispatchQueue.main.async(execute: {
                 dismissImpl?()
@@ -146,7 +146,7 @@ public func exteraPillWeatherSettingsController(context: AccountContext) -> View
     |> distinctUntilChanged
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsSignal, draftPromise.get())
-    |> map { presentationData, settings, draft -> (ItemListControllerState, (ItemListNodeState<ExteraWeatherLocationEntry>, Any)) in
+    |> map { presentationData, settings, draft -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraPillString("extera_WeatherLocation")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraWeatherLocationEntries(presentationData: presentationData, settings: settings, draft: draft), style: .blocks)
 
@@ -172,7 +172,7 @@ private enum ExteraCryptoCurrencySection: Int32 {
 }
 
 private enum ExteraCryptoCurrencyEntry: ItemListNodeEntry {
-    case currency(code: String, checked: Bool)
+    case currency(code: String, currency: ExteraCryptoPillTargetCurrency, checked: Bool)
 
     var section: ItemListSectionId {
         return ExteraCryptoCurrencySection.currencies.rawValue
@@ -191,7 +191,7 @@ private enum ExteraCryptoCurrencyEntry: ItemListNodeEntry {
     }
 
     static func ==(lhs: ExteraCryptoCurrencyEntry, rhs: ExteraCryptoCurrencyEntry) -> Bool {
-        if case let .currency(code, checked) = lhs, case let .currency(rhsCode, rhsChecked) = rhs, code == rhsCode, checked == rhsChecked {
+        if case let .currency(lhsCode, lhsCurrency, lhsChecked) = lhs, case let .currency(rhsCode, rhsCurrency, rhsChecked) = rhs, lhsCode == rhsCode, lhsCurrency == rhsCurrency, lhsChecked == rhsChecked {
             return true
         }
         return false
@@ -202,12 +202,12 @@ private enum ExteraCryptoCurrencyEntry: ItemListNodeEntry {
     }
 
     func item(presentationData: ItemListPresentationData, arguments: Any) -> ListViewItem {
-        guard case let .currency(code, checked) = self else {
+        guard case let .currency(code, currency, checked) = self else {
             return ItemListTextItem(presentationData: presentationData, text: .plain(""), sectionId: self.section)
         }
         let arguments = arguments as! ExteraCryptoCurrencyArguments
         return ItemListCheckboxItem(presentationData: presentationData, title: code, style: .right, checked: checked, zeroSeparatorInsets: false, sectionId: self.section, action: {
-            arguments.select(code)
+            arguments.select(currency)
         })
     }
 
@@ -228,7 +228,7 @@ private final class ExteraCryptoCurrencyArguments {
 
 private func exteraCryptoCurrencyEntries(settings: ExteraPillStackSettings) -> [ExteraCryptoCurrencyEntry] {
     return [("BTC", ExteraCryptoPillTargetCurrency.btc), ("ETH", ExteraCryptoPillTargetCurrency.eth), ("USDT", ExteraCryptoPillTargetCurrency.usd)].map({ code, currency in
-        return .currency(code: code, checked: settings.cryptoTargetCurrency == currency)
+        return .currency(code: code, currency: currency, checked: settings.cryptoTargetCurrency == currency)
     })
 }
 
@@ -244,7 +244,7 @@ public func exteraPillCryptoCurrencyController(context: AccountContext) -> ViewC
     |> distinctUntilChanged
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsSignal)
-    |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState<ExteraCryptoCurrencyEntry>, Any)) in
+    |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraPillString("extera_CryptoPillTargetCurrency")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraCryptoCurrencyEntries(settings: settings), style: .blocks)
 

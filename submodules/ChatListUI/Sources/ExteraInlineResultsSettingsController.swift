@@ -163,7 +163,7 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
 
     func item(presentationData: ItemListPresentationData, arguments: Any) -> ListViewItem {
         let arguments = arguments as! ExteraInlineResultsSettingsArguments
-        let strings = presentationData.strings
+
         switch self {
         case let .showResults(value):
             return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineShowResults"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
@@ -216,7 +216,6 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
 }
 
 private func exteraInlineResultsSettingsEntries(presentationData: PresentationData, settings: ExteraInlineResultsSettings) -> [ExteraInlineResultsSettingsEntry] {
-    let strings = presentationData.strings
     var entries: [ExteraInlineResultsSettingsEntry] = []
     
     entries.append(.showResults(settings.showResults))
@@ -280,7 +279,7 @@ public func exteraInlineResultsSettingsController(context: AccountContext) -> Vi
     |> distinctUntilChanged
     
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsSignal)
-    |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState<ExteraInlineResultsSettingsEntry>, Any)) in
+    |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraPillString("extera_InlineMathResult")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraInlineResultsSettingsEntries(presentationData: presentationData, settings: settings), style: .blocks)
         
@@ -390,7 +389,7 @@ public func exteraInlineDefaultCurrencyController(context: AccountContext) -> Vi
     |> distinctUntilChanged
     
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsSignal)
-    |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState<ExteraInlineDefaultCurrencyEntry>, Any)) in
+    |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraPillString("extera_InlineDefaultCurrency")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraInlineDefaultCurrencyEntries(settings: settings), style: .blocks)
         

@@ -77,7 +77,7 @@ public final class ExteraInlineResultPanelNode: ASDisplayNode, UIGestureRecogniz
         let attributed = NSAttributedString(
             string: "= \(text)",
             font: Font.regular(16.0),
-            textColor: self.currentTheme.rootController.navigationBar.inputPlaceholderTextColor
+            textColor: self.currentTheme.rootController.navigationSearchBar.inputPlaceholderTextColor
         )
         let (layout, apply) = TextNode.asyncLayout(self.textNode)(TextNodeLayoutArguments(
             attributedString: attributed,
@@ -85,7 +85,7 @@ public final class ExteraInlineResultPanelNode: ASDisplayNode, UIGestureRecogniz
             minimumNumberOfLines: 0,
             maximumNumberOfLines: 1,
             truncationType: .end,
-            constrainedSize: CGSize(width: maximumWidth - 2.0 * horizontalPadding - gearSide, height: .greatestFiniteMagnitude)
+            constrainedSize: CGSize(width: maximumWidth - 2.0 * ExteraInlineResultPanelNode.horizontalPadding - gearSide, height: .greatestFiniteMagnitude)
         ))
         let layoutNode = apply()
         if layoutNode !== self.textNode {
@@ -93,20 +93,20 @@ public final class ExteraInlineResultPanelNode: ASDisplayNode, UIGestureRecogniz
             self.addSubnode(layoutNode)
         }
         self.lastTextLayoutSize = layout.size
-        self.requestLayout()
+        self.setNeedsLayout()
     }
 
     public func updateLayout(size: CGSize, transition: ContainedViewLayoutTransition) {
-        let contentWidth = size.width - 2.0 * horizontalPadding - gearSide
+        let contentWidth = size.width - 2.0 * ExteraInlineResultPanelNode.horizontalPadding - gearSide
         transition.updateFrame(node: self.gearNode, frame: CGRect(
-            x: size.width - horizontalPadding - gearSide + 4.0,
+            x: size.width - ExteraInlineResultPanelNode.horizontalPadding - gearSide + 4.0,
             y: (size.height - gearSide) / 2.0 + 1.0,
             width: gearSide,
             height: gearSide
         ))
         if let textNode = self.textNode, let layoutSize = self.lastTextLayoutSize {
             transition.updateFrame(node: textNode, frame: CGRect(
-                x: horizontalPadding,
+                x: ExteraInlineResultPanelNode.horizontalPadding,
                 y: (size.height - layoutSize.height) / 2.0,
                 width: min(layoutSize.width, contentWidth),
                 height: layoutSize.height
@@ -123,7 +123,7 @@ public final class ExteraInlineResultPanelNode: ASDisplayNode, UIGestureRecogniz
             return
         }
         let location = recognizer.location(in: self.view)
-        if location.x >= self.view.bounds.width - horizontalPadding - gearSide {
+        if location.x >= self.view.bounds.width - ExteraInlineResultPanelNode.horizontalPadding - gearSide {
             return
         }
         if let result = self.currentText {

@@ -95,7 +95,7 @@ final class ExteraPillRowItemNode: ListViewItemNode {
     private let maskNode: ASImageNode
 
     private let titleNode: TextNode
-    private let reorderControlNode: ItemListEditableReorderControlNode?
+    private var reorderControlNode: ItemListEditableReorderControlNode?
 
     private var item: ExteraPillRowItem?
 

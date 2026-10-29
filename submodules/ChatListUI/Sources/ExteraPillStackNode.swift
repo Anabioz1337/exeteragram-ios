@@ -88,14 +88,15 @@ public final class ExteraPillStackNode: ASDisplayNode, UIGestureRecognizerDelega
             self.pillViewsByRun.append([:])
         }
         let validKinds = Set(pills.map({ $0.kind }))
-        for runViews in self.pillViewsByRun {
-            for (kind, view) in runViews where !validKinds.contains(kind) {
+        for runIndex in self.pillViewsByRun.indices {
+            for (kind, view) in self.pillViewsByRun[runIndex] where !validKinds.contains(kind) {
                 view.removeFromSuperview()
                 self.kindByView.removeValue(forKey: view)
-                runViews.removeValue(forKey: kind)
+                self.pillViewsByRun[runIndex].removeValue(forKey: kind)
             }
         }
-        for runViews in self.pillViewsByRun {
+        for runIndex in self.pillViewsByRun.indices {
+            let runViews = self.pillViewsByRun[runIndex]
             for pill in pills {
                 if let view = runViews[pill.kind] {
                     if let label = view.subviews.compactMap({ $0 as? UILabel }).first, label.text != pill.title {
@@ -103,7 +104,7 @@ public final class ExteraPillStackNode: ASDisplayNode, UIGestureRecognizerDelega
                     }
                 } else {
                     let view = self.makePillView(pill)
-                    runViews[pill.kind] = view
+                    self.pillViewsByRun[runIndex][pill.kind] = view
                     self.kindByView[view] = pill.kind
                     self.scrollView.addSubview(view)
                 }
@@ -139,7 +140,7 @@ public final class ExteraPillStackNode: ASDisplayNode, UIGestureRecognizerDelega
     }
 
     private func applyAppearance(to view: UIView, selected: Bool) {
-        view.backgroundColor = selected ? self.theme.rootController.navigationBar.controlBackgroundColor : self.theme.rootController.navigationSearchBar.inputFillColor
+        view.backgroundColor = selected ? self.theme.rootController.navigationBar.controlColor : self.theme.rootController.navigationSearchBar.inputFillColor
         view.layer.cornerRadius = pillHeight / 2.0
         view.layer.masksToBounds = true
         if let label = view.subviews.compactMap({ $0 as? UILabel }).first {

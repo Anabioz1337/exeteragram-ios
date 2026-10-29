@@ -156,7 +156,7 @@ private enum ExteraPillsSettingsEntry: ItemListNodeEntry {
         switch self {
         case .pillsHeader: return 0
         case .activeHeader: return 1
-        case let .pill(_, _, _, _): return 10
+        case .pill: return 10
         case .hiddenHeader: return 1000000
         case .infiniteScrolling: return 2000000
         case .pillsInfo: return 2000001
@@ -267,14 +267,14 @@ public func exteraPillsSettingsController(context: AccountContext) -> ViewContro
     |> distinctUntilChanged
 
     let signal = combineLatest(queue: .mainQueue(), context.sharedContext.presentationData, settingsSignal, statePromise.get())
-    |> map { presentationData, settings, state -> (ItemListControllerState, (ItemListNodeState<ExteraPillsSettingsEntry>, Any)) in
+    |> map { presentationData, settings, state -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let editButton: ItemListNavigationButton
         if state.editing {
-            editButton = ItemListNavigationButton(title: presentationData.strings.Common_Done, style: .bold, action: {
+            editButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Done), style: .bold, enabled: true, action: {
                 updateState { $0.withUpdatedEditing(false) }
             })
         } else {
-            editButton = ItemListNavigationButton(title: presentationData.strings.Common_Edit, action: {
+            editButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Edit), style: .regular, enabled: true, action: {
                 updateState { $0.withUpdatedEditing(true) }
             })
         }
