@@ -119,6 +119,7 @@ swift_library(
         "//submodules/TelegramPresentationData",
         "//submodules/TelegramStringFormatting",
         "//submodules/TelegramUIPreferences",
+        "//submodules/ExteraProfile:ExteraProfile",
         "//submodules/TelegramUniversalVideoContent",
         "//submodules/TelegramVoip",
         "//submodules/TemporaryCachedPeerDataManager",

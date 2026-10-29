@@ -50,6 +50,7 @@ swift_library(
         "//submodules/TelegramCore:TelegramCore",
         "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",
+        "//submodules/ExteraProfile:ExteraProfile",
         "//submodules/ExteraSearchToolkit:ExteraSearchToolkit",
         "//submodules/AccountContext:AccountContext",
         "//submodules/TelegramBaseController:TelegramBaseController",
