@@ -35,7 +35,7 @@ struct PeerInfoExteraValues: Equatable {
 /// Creation date: exact for channels and supergroups, otherwise the timestamp of the oldest
 /// locally stored message, marked as approximate.
 private func exteraCreationDateString(peer: EnginePeer?, presentationData: PresentationData, values: PeerInfoExteraValues) -> String? {
-    if case let .channel(channel) = peer?._asPeer(), let creationDate = ExteraProfilePeerInfo.exactCreationDate(channel: channel) {
+    if case let .channel(channel) = peer, let creationDate = ExteraProfilePeerInfo.exactCreationDate(channel: channel) {
         return stringForMediumDate(timestamp: creationDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, withTime: false)
     }
     guard let timestamp = values.storedHistoryStats?.earliestTimestamp else {
@@ -291,6 +291,9 @@ func infoItems(
                 items[currentPeerInfoSection]!.append(exteraLabeledValue(id: ItemExteraForwardsCount, label: exteraProfileString("Extera.Profile.ForwardsLabel"), text: "\(forwardsCount)"))
             }
         }
+
+        if let cachedData = data.cachedData as? CachedUserData {
+            if let birthday = cachedData.birthday {
                 let isBirthdayToday = hasBirthdayToday(birthday: birthday)
                 
                 var birthdayAction: ((ASDisplayNode, Promise<Bool>?) -> Void)?
