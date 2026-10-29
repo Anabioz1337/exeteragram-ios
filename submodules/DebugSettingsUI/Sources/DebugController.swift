@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import Display
+import AsyncDisplayKit
 import SwiftSignalKit
 import TelegramCore
 import MtProtoKit
@@ -1164,7 +1165,11 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             })
         case .exteraPluginsUI:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Plugins", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
-                arguments.pushController(ExteraPluginsScreen())
+                arguments.pushController(ExteraKitStackHostController(rootViewController: ExteraPluginsScreen()))
+            })
+        case .exteraTranslator:
+            return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "Translation Provider", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+                arguments.pushController(ExteraKitStackHostController(rootViewController: ExteraTranslatorScreen()))
             })
         case .exteraPillStack:
             return ItemListActionItem(presentationData: presentationData, systemStyle: .glass, title: "extera Pill Stack", kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
@@ -2066,9 +2071,49 @@ private func debugControllerEntries(context: AccountContext?, sharedContext: Sha
     return entries
 }
 
+// Display's NavigationController hard-casts every pushed controller to its own ViewController
+// (NavigationController.swift setViewControllers), so plain UIKit screens ride the stack only
+// inside this host, which owns a real UINavigationController for their internal pushes.
+final class ExteraKitStackHostController: ViewController {
+    private let stackController = UINavigationController()
+    private var stackEmbedded = false
+
+    init(rootViewController: UIViewController) {
+        super.init(navigationBarPresentationData: nil)
+        self.stackController.setViewControllers([rootViewController], animated: false)
+        self.title = rootViewController.title
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override open func loadDisplayNode() {
+        self.displayNode = ASDisplayNode()
+    }
+
+    override open func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.addChild(self.stackController)
+        self.stackController.view.frame = self.view.bounds
+        self.stackController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.view.addSubview(self.stackController.view)
+        self.stackController.didMove(toParent: self)
+        self.stackEmbedded = true
+    }
+
+    override open func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if self.stackEmbedded {
+            self.stackController.view.frame = self.view.bounds
+        }
+    }
+}
+
 public func debugController(sharedContext: SharedAccountContext, context: AccountContext?, modal: Bool = false) -> ViewController {
-    var presentControllerImpl: ((ViewController, ViewControllerPresentationArguments?) -> Void)?
-    var pushControllerImpl: ((ViewController) -> Void)?
+    var presentControllerImpl: ((ViewController, ViewControllerPresentationArguments?) -> Void)?    var pushControllerImpl: ((ViewController) -> Void)?
     var dismissImpl: (() -> Void)?
     var getRootControllerImpl: (() -> UIViewController?)?
     var getNavigationControllerImpl: (() -> NavigationController?)?
