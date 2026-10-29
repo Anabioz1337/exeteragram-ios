@@ -1977,7 +1977,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             })))
         }
 
-        if data.messageActions.options.contains(.forward) {
+        if data.messageActions.options.contains(.forward), !exteraSettings.hideShareButton {
             if !isCopyProtected {
                 actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.Conversation_ContextMenuForward, icon: { theme in
                     return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Forward"), color: theme.actionSheet.primaryTextColor)
@@ -2015,7 +2015,9 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             })))
         }
 
-        if data.messageActions.options.contains(.report) {
+        // showReportButton выдаёт Report там, где сервер его запретил; у replies-ветки (Block) приоритет прежний
+        let isReplyAuthor = message.id.peerId.isReplies
+        if data.messageActions.options.contains(.report) || (!isReplyAuthor && exteraSettings.showReportButton) {
             actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.Conversation_ContextMenuReport, icon: { theme in
                 return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Report"), color: theme.actionSheet.primaryTextColor)
             }, action: { controller, f in

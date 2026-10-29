@@ -64,7 +64,7 @@ public struct ExteraSettings: Codable, Equatable {
     public var disableDividers: Bool = false
     public var hideStickerTime: Bool = false
     public var unlimitedRecentStickers: Bool = false
-    public var hideCategories: Bool = true
+    public var hideCategories: Bool = false
     public var hideKeyboardOnScroll: Bool = true
     public var permissionsShortcut: Bool = false
     public var administratorsShortcut: Bool = false
@@ -72,7 +72,7 @@ public struct ExteraSettings: Codable, Equatable {
     public var recentActionsShortcut: Bool = true
     public var disableJumpToNextChannel: Bool = false
     public var showActionTimestamps: Bool = true
-    public var hideShareButton: Bool = true
+    public var hideShareButton: Bool = false
     public var showCopyPhotoButton: Bool = true
     public var showClearButton: Bool = true
     public var showSaveMessageButton: Bool = false
@@ -85,7 +85,7 @@ public struct ExteraSettings: Codable, Equatable {
     public var staticZoom: Bool = false
     public var rememberLastUsedCamera: Bool = false
     public var pauseOnMinimize: Bool = true
-    public var disablePlayback: Bool = true
+    public var disablePlayback: Bool = false
     public var filterZalgo: Bool = false
     public var showIdAndDc: Int32 = 0
     public var avatarCorners: Bool = false
@@ -191,7 +191,7 @@ public struct ExteraSettings: Codable, Equatable {
         self.disableDividers = ((try? container.decode(Int32.self, forKey: "disableDividers")) ?? 0) != 0
         self.hideStickerTime = ((try? container.decode(Int32.self, forKey: "hideStickerTime")) ?? 0) != 0
         self.unlimitedRecentStickers = ((try? container.decode(Int32.self, forKey: "unlimitedRecentStickers")) ?? 0) != 0
-        self.hideCategories = ((try? container.decode(Int32.self, forKey: "hideCategories")) ?? 1) != 0
+        self.hideCategories = ((try? container.decode(Int32.self, forKey: "hideCategories")) ?? 0) != 0
         self.hideKeyboardOnScroll = ((try? container.decode(Int32.self, forKey: "hideKeyboardOnScroll")) ?? 1) != 0
         self.permissionsShortcut = ((try? container.decode(Int32.self, forKey: "permissionsShortcut")) ?? 0) != 0
         self.administratorsShortcut = ((try? container.decode(Int32.self, forKey: "administratorsShortcut")) ?? 0) != 0
@@ -199,7 +199,7 @@ public struct ExteraSettings: Codable, Equatable {
         self.recentActionsShortcut = ((try? container.decode(Int32.self, forKey: "recentActionsShortcut")) ?? 1) != 0
         self.disableJumpToNextChannel = ((try? container.decode(Int32.self, forKey: "disableJumpToNextChannel")) ?? 0) != 0
         self.showActionTimestamps = ((try? container.decode(Int32.self, forKey: "showActionTimestamps")) ?? 1) != 0
-        self.hideShareButton = ((try? container.decode(Int32.self, forKey: "hideShareButton")) ?? 1) != 0
+        self.hideShareButton = ((try? container.decode(Int32.self, forKey: "hideShareButton")) ?? 0) != 0
         self.showCopyPhotoButton = ((try? container.decode(Int32.self, forKey: "showCopyPhotoButton")) ?? 1) != 0
         self.showClearButton = ((try? container.decode(Int32.self, forKey: "showClearButton")) ?? 1) != 0
         self.showSaveMessageButton = ((try? container.decode(Int32.self, forKey: "showSaveMessageButton")) ?? 0) != 0
@@ -212,7 +212,7 @@ public struct ExteraSettings: Codable, Equatable {
         self.staticZoom = ((try? container.decode(Int32.self, forKey: "staticZoom")) ?? 0) != 0
         self.rememberLastUsedCamera = ((try? container.decode(Int32.self, forKey: "rememberLastUsedCamera")) ?? 0) != 0
         self.pauseOnMinimize = ((try? container.decode(Int32.self, forKey: "pauseOnMinimize")) ?? 1) != 0
-        self.disablePlayback = ((try? container.decode(Int32.self, forKey: "disablePlayback")) ?? 1) != 0
+        self.disablePlayback = ((try? container.decode(Int32.self, forKey: "disablePlayback")) ?? 0) != 0
         self.filterZalgo = ((try? container.decode(Int32.self, forKey: "filterZalgo")) ?? 0) != 0
         self.showIdAndDc = (try? container.decode(Int32.self, forKey: "showIdAndDc")) ?? 0
         self.avatarCorners = ((try? container.decode(Int32.self, forKey: "avatarCorners")) ?? 0) != 0
