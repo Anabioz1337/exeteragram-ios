@@ -4,6 +4,7 @@ import Display
 import AsyncDisplayKit
 import TelegramCore
 import SwiftSignalKit
+import TelegramUIPreferences
 import TelegramPresentationData
 import AccountContext
 import ContactListUI
@@ -85,6 +86,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
     
     private var permissionsDisposable: Disposable?
     private var presentationDataDisposable: Disposable?
+    private var exteraTabIconsDisposable: Disposable?
     private var presentationData: PresentationData
     
     private var detailsPlaceholderNode: DetailsChatPlaceholderNode?
@@ -147,6 +149,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
     deinit {
         self.permissionsDisposable?.dispose()
         self.presentationDataDisposable?.dispose()
+        self.exteraTabIconsDisposable?.dispose()
         self.applicationInFocusDisposable?.dispose()
         self.storyUploadEventsDisposable?.dispose()
     }
@@ -259,6 +262,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         self.chatListController = chatListController
         self.accountSettingsController = accountSettingsController
         self.rootTabController = tabBarController
+        self.exteraTabIconsDisposable = (self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+            |> map { $0.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.tabIcons ?? false }
+            |> distinctUntilChanged
+            |> deliverOnMainQueue).startStrict(next: { [weak self] alternate in
+            if let strongSelf = self, let exteraFeedScreen = strongSelf.exteraFeedScreen {
+                strongSelf.configureExteraFeedTabItem(exteraFeedScreen, alternateIcons: alternate)
+            }
+        }).strict()
         self.pushViewController(tabBarController, animated: false)
     }
         
@@ -288,10 +299,11 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
         rootTabController.setControllers(controllers, selectedIndex: selectedIndex)
     }
     
-    private func configureExteraFeedTabItem(_ controller: ViewController) {
+    private func configureExteraFeedTabItem(_ controller: ViewController, alternateIcons: Bool = false) {
         controller.tabBarItem.title = self.presentationData.strings.Extera_Feed_Title
-        controller.tabBarItem.image = UIImage(bundleImageName: "Chat List/Tabs/IconNews")?.withRenderingMode(.alwaysTemplate)
-        controller.tabBarItem.selectedImage = UIImage(bundleImageName: "Chat List/Tabs/IconNews")?.withRenderingMode(.alwaysTemplate)
+        let icon = alternateIcons ? exteraAlternateTabIcon("newspaper") : (UIImage(bundleImageName: "Chat List/Tabs/IconNews")?.withRenderingMode(.alwaysTemplate))
+        controller.tabBarItem.image = icon
+        controller.tabBarItem.selectedImage = icon
     }
 
     public func openChatsController(activateSearch: Bool, filter: ChatListSearchFilter = .chats, query: String? = nil) {

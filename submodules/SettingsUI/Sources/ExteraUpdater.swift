@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
+import Display
 import AccountContext
 import AlertUI
 import PresentationDataUtils
@@ -112,7 +113,10 @@ public enum ExteraUpdater {
         let presentationData = sharedContext.currentPresentationData.with { $0 }
         let strings = exteraStrings(presentationData: presentationData)
         let alert = textAlertController(
-            sharedContext: sharedContext,
+            alertContext: AlertControllerContext(
+                theme: AlertControllerTheme(presentationData: presentationData),
+                themeSignal: sharedContext.presentationData |> map { presentationData in AlertControllerTheme(presentationData: presentationData) }
+            ),
             title: strings.updateAvailable,
             text: strings.updateAvailableText(release.version) + "\n\n" + release.changelog,
             actions: [

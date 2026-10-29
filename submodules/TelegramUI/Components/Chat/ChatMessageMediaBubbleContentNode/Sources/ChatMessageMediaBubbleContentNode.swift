@@ -283,6 +283,10 @@ public class ChatMessageMediaBubbleContentNode: ChatMessageBubbleContentNode {
                 }
             }
             
+            if item.associatedData.exteraSettings.disablePlayback {
+                automaticPlayback = false
+            }
+
             var hasReplyMarkup: Bool = false
             for attribute in item.message.attributes {
                 if let attribute = attribute as? ReplyMarkupMessageAttribute, attribute.flags.contains(.inline), !attribute.rows.isEmpty {

@@ -23,15 +23,17 @@ private final class ExteraFeedArguments {
     let setAdblockEnabled: (Bool) -> Void
     let setIncludeArchived: (Bool) -> Void
     let setFeedTabEnabled: (Bool) -> Void
+    let setWidePosts: (Bool) -> Void
     let markAllAsRead: () -> Void
     let openPost: (EnginePeer.Id, EngineMessage.Id) -> Void
     let requestHideChannel: (EnginePeer.Id, String) -> Void
 
-    init(selectCategory: @escaping (Int64) -> Void, setAdblockEnabled: @escaping (Bool) -> Void, setIncludeArchived: @escaping (Bool) -> Void, setFeedTabEnabled: @escaping (Bool) -> Void, markAllAsRead: @escaping () -> Void, openPost: @escaping (EnginePeer.Id, EngineMessage.Id) -> Void, requestHideChannel: @escaping (EnginePeer.Id, String) -> Void) {
+    init(selectCategory: @escaping (Int64) -> Void, setAdblockEnabled: @escaping (Bool) -> Void, setIncludeArchived: @escaping (Bool) -> Void, setFeedTabEnabled: @escaping (Bool) -> Void, setWidePosts: @escaping (Bool) -> Void, markAllAsRead: @escaping () -> Void, openPost: @escaping (EnginePeer.Id, EngineMessage.Id) -> Void, requestHideChannel: @escaping (EnginePeer.Id, String) -> Void) {
         self.selectCategory = selectCategory
         self.setAdblockEnabled = setAdblockEnabled
         self.setIncludeArchived = setIncludeArchived
         self.setFeedTabEnabled = setFeedTabEnabled
+        self.setWidePosts = setWidePosts
         self.markAllAsRead = markAllAsRead
         self.openPost = openPost
         self.requestHideChannel = requestHideChannel
@@ -64,6 +66,7 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
     case markAllAsRead(String)
     case includeArchived(title: String, value: Bool)
     case feedTabSwitch(title: String, value: Bool)
+    case widePostsSwitch(title: String, value: Bool)
     case emptyPosts(String)
     case post(index: Int32, post: ExteraFeedPostEntry)
 
@@ -73,7 +76,7 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
             return ExteraFeedSection.adblock.rawValue
         case .categoriesHeader, .category:
             return ExteraFeedSection.categories.rawValue
-        case .markAllAsRead, .includeArchived, .feedTabSwitch:
+        case .markAllAsRead, .includeArchived, .feedTabSwitch, .widePostsSwitch:
             return ExteraFeedSection.actions.rawValue
         case .emptyPosts, .post:
             return ExteraFeedSection.posts.rawValue
@@ -96,6 +99,8 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
             return 31
         case .feedTabSwitch:
             return 32
+        case .widePostsSwitch:
+            return 33
         case .emptyPosts:
             return 40
         case let .post(index, _):
@@ -133,6 +138,10 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
         case let .feedTabSwitch(title, value):
             return ItemListSwitchItem(presentationData: presentationData, title: title, value: value, sectionId: self.section, style: .blocks, updated: { updated in
                 arguments.setFeedTabEnabled(updated)
+            })
+        case let .widePostsSwitch(title, value):
+            return ItemListSwitchItem(presentationData: presentationData, title: title, value: value, sectionId: self.section, style: .blocks, updated: { updated in
+                arguments.setWidePosts(updated)
             })
         case let .emptyPosts(text):
             return ItemListMultilineTextItem(presentationData: presentationData, text: text, enabledEntityTypes: [], sectionId: self.section, style: .blocks, action: nil, longTapAction: nil)
@@ -213,6 +222,7 @@ private func exteraFeedEntries(model: ExteraFeedModel) -> [ExteraFeedEntry] {
     entries.append(.markAllAsRead(strings.Extera_Feed_MarkAllAsRead))
     entries.append(.includeArchived(title: strings.Extera_Feed_IncludeArchived, value: model.settings.feedIncludeArchived))
     entries.append(.feedTabSwitch(title: strings.Extera_Feed_ShowInTabs, value: model.settings.feedEnabled))
+    entries.append(.widePostsSwitch(title: strings.Extera_Feed_WidePosts, value: model.settings.feedWidePosts))
     if model.posts.isEmpty {
         entries.append(.emptyPosts(strings.Extera_Feed_Empty))
     } else {
@@ -223,7 +233,7 @@ private func exteraFeedEntries(model: ExteraFeedModel) -> [ExteraFeedEntry] {
     return entries
 }
 
-private func exteraFeedPosts(grouped: [(peerId: EnginePeer.Id, messages: [EngineMessage])], titles: [EnginePeer.Id: String], unreadCounts: [EnginePeer.Id: Int]) -> [ExteraFeedPostEntry] {
+private func exteraFeedPosts(grouped: [(peerId: EnginePeer.Id, messages: [EngineMessage])], titles: [EnginePeer.Id: String], unreadCounts: [EnginePeer.Id: Int], widePosts: Bool) -> [ExteraFeedPostEntry] {
     var merged: [(peerId: EnginePeer.Id, message: EngineMessage)] = []
     for group in grouped {
         for message in group.messages.prefix(30) {
@@ -234,13 +244,14 @@ private func exteraFeedPosts(grouped: [(peerId: EnginePeer.Id, messages: [Engine
     if merged.count > 300 {
         merged.removeLast(merged.count - 300)
     }
+    let previewLimit = widePosts ? 280 : 80
     return merged.map { pair -> ExteraFeedPostEntry in
         let previewText = pair.message.text.replacingOccurrences(of: "\n", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
         return ExteraFeedPostEntry(
             messageId: pair.message.id,
             peerId: pair.peerId,
             peerTitle: titles[pair.peerId] ?? "",
-            previewText: String(previewText.prefix(140)),
+            previewText: String(previewText.prefix(previewLimit)),
             timestamp: pair.message.timestamp,
             unreadCount: unreadCounts[pair.peerId] ?? 0
         )
@@ -284,6 +295,9 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
         setFeedTabEnabled: { value in
             updateSettings { $0.withUpdatedFeedEnabled(value) }
         },
+        setWidePosts: { value in
+            updateSettings { $0.withUpdatedFeedWidePosts(value) }
+        },
         markAllAsRead: {
             let peers = activePeerIds.with({ $0 })
             guard !peers.isEmpty else {
@@ -314,7 +328,7 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
                 TextAlertAction(type: .genericAction, title: strings?.Common_Cancel ?? "", action: {}),
                 TextAlertAction(type: .defaultAction, title: strings?.Extera_Feed_Hide ?? "", action: {
                     exteraFeedSetChannelHidden(peerId, hidden: true, defaults: defaults)
-                    refreshCounter.with { current -> Int in
+                    let _ = refreshCounter.with { current -> Int in
                         let updated = current + 1
                         refreshPromise.set(updated)
                         return updated
@@ -355,7 +369,7 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
                     presentationData: presentationData,
                     settings: settings,
                     categoryId: categoryId,
-                    posts: exteraFeedPosts(grouped: grouped, titles: titles, unreadCounts: unreadByPeer),
+                    posts: exteraFeedPosts(grouped: grouped, titles: titles, unreadCounts: unreadByPeer, widePosts: settings.feedWidePosts),
                     activePeerIds: peerIds
                 )
             }

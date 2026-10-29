@@ -998,6 +998,9 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
     private let exteraSettingsDisposable = MetaDisposable()
     private let lifecycleDisposable = MetaDisposable()
     private var doubleTapSeekSeconds: Int32 = 10
+    private var automaticPlaybackDisabled = true
+    private var useConfiguredSeekDuration = false
+    private var hidePhotoCounter = false
     private var pauseOnMinimize = false
     private var pausePlaybackOnVolumePress = false
     private var pausedByAutoPause = false
@@ -1228,15 +1231,20 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
     }
 
     private func startExteraSettingsTracking(_ context: AccountContext) {
-        self.exteraSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraMediaSettings])
+        self.exteraSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings, ApplicationSpecificSharedDataKeys.exteraMediaSettings])
         |> deliverOnMainQueue).startStrict(next: { [weak self] sharedData in
             guard let strongSelf = self else {
                 return
             }
-            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
-            strongSelf.doubleTapSeekSeconds = settings.doubleTapSeekSeconds
-            strongSelf.pauseOnMinimize = settings.pauseOnMinimize
-            strongSelf.pausePlaybackOnVolumePress = settings.disableVolumeAutoplay
+            let mediaSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
+            strongSelf.doubleTapSeekSeconds = mediaSettings.doubleTapSeekSeconds
+            strongSelf.pauseOnMinimize = mediaSettings.pauseOnMinimize
+            strongSelf.pausePlaybackOnVolumePress = mediaSettings.disableVolumeAutoplay
+
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
+            strongSelf.automaticPlaybackDisabled = settings.disablePlayback
+            strongSelf.useConfiguredSeekDuration = settings.doubleTapSeekDuration
+            strongSelf.hidePhotoCounter = settings.hidePhotoCounter
         }))
     }
 
@@ -1303,7 +1311,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         }
         
         if case let .playback(_, seekable) = self.footerContentNode.content, seekable {
-            let seekDelta = Double(self.doubleTapSeekSeconds)
+            let seekDelta = self.useConfiguredSeekDuration ? Double(self.doubleTapSeekSeconds) : 15.0
             if location.x >= self.bounds.width * 0.3 {
                 self.footerContentNode.seekForward?(seekDelta)
             } else {
@@ -2169,7 +2177,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         }
         
         var title: String?
-        if let indexData = item.indexData {
+        if let indexData = item.indexData, !self.hidePhotoCounter {
             title = self.presentationData.strings.Items_NOfM("\(indexData.position + 1)", "\(indexData.totalCount)").string
         } else if case let .message(message, _) = item.contentInfo, let _ = message.adAttribute {
             title = self.presentationData.strings.Gallery_Ad
@@ -2232,6 +2240,9 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
     }
     
     private func shouldAutoplayOnCentrality() -> Bool {
+        if self.automaticPlaybackDisabled {
+            return false
+        }
         if let item = self.item, let content = item.content as? NativeVideoContent {
             var isLocal = false
             if let fetchStatus = self.fetchStatus, case .Local = fetchStatus {
@@ -2335,7 +2346,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
                     self.statusButtonNode.isHidden = self.hideStatusNodeUntilCentrality || self.statusNodeShouldBeHidden
 
                     if videoNode.ownsContentNode {
-                        if isAnimated {
+                        if isAnimated && !self.automaticPlaybackDisabled {
                             videoNode.seek(0.0)
                             videoNode.play()
                         } else if self.shouldAutoplayOnCentrality()  {
@@ -2348,7 +2359,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
                             videoNode.setBaseRate(self.playbackRate ?? 1.0)
                         }
                     } else {
-                        if isAnimated {
+                        if isAnimated && !self.automaticPlaybackDisabled {
                             self.playOnContentOwnership = true
                         } else if self.shouldAutoplayOnCentrality()  {
                             self.playOnContentOwnership = true
@@ -2464,6 +2475,12 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
             }
 
             videoNode.setBaseRate(self.playbackRate ?? 1.0)
+
+            if self.automaticPlaybackDisabled {
+                self.hideStatusNodeUntilCentrality = false
+                self.statusButtonNode.isHidden = self.hideStatusNodeUntilCentrality || self.statusNodeShouldBeHidden
+                return
+            }
 
             if isAnimated {
                 videoNode.seek(0.0)

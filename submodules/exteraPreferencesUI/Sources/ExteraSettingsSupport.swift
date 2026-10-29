@@ -191,7 +191,7 @@ enum ExteraSettingsEntry: ItemListNodeEntry {
     }
 }
 
-func exteraLocalizedStrings(_ presentationData: PresentationData) -> ExteraStrings {
+public func exteraLocalizedStrings(_ presentationData: PresentationData) -> ExteraStrings {
     return ExteraStrings(languageCode: presentationData.strings.primaryComponent.languageCode)
 }
 

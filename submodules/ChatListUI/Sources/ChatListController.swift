@@ -166,6 +166,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
     
     private var badgeDisposable: Disposable?
     private var badgeIconDisposable: Disposable?
+    private var tabIconsDisposable: Disposable?
     
     private var didAppear = false
     private var dismissSearchOnDisappear = false
@@ -366,16 +367,8 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
             case let .chatList(groupId):
                 if groupId == .root {
                     self.tabBarItem.title = self.presentationData.strings.DialogList_Title
-                    
-                    let icon: UIImage?
-                    if useSpecialTabBarIcons() {
-                        icon = UIImage(bundleImageName: "Chat List/Tabs/Holiday/IconChats")
-                    } else {
-                        icon = UIImage(bundleImageName: "Chat List/Tabs/IconChats")
-                    }
-                    
-                    self.tabBarItem.image = icon
-                    self.tabBarItem.selectedImage = icon
+
+                    self.applyChatsTabIcon(alternate: false)
                     if !self.presentationData.reduceMotion {
                         self.tabBarItem.animationName = "TabChats"
                         self.tabBarItem.animationOffset = CGPoint(x: 0.0, y: UIScreenPixel)
@@ -474,16 +467,29 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
             }
         }
         
-        self.badgeDisposable = (combineLatest(renderedTotalUnreadCount(accountManager: context.sharedContext.accountManager, engine: context.engine), self.presentationDataValue.get()) |> deliverOnMainQueue).startStrict(next: { [weak self] count, presentationData in
+        let exteraTabCounter = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+            |> map { $0.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.tabCounter ?? true }
+        self.badgeDisposable = (combineLatest(renderedTotalUnreadCount(accountManager: context.sharedContext.accountManager, engine: context.engine), self.presentationDataValue.get(), exteraTabCounter) |> deliverOnMainQueue).startStrict(next: { [weak self] count, presentationData, numericBadges in
             if let strongSelf = self {
                 if count.0 == 0 {
                     strongSelf.tabBarItem.badgeValue = ""
-                } else {
+                } else if numericBadges {
                     strongSelf.tabBarItem.badgeValue = compactNumericCountString(Int(count.0), decimalSeparator: presentationData.dateTimeFormat.decimalSeparator)
+                } else {
+                    // точка без числа: единичный глиф в круглой плашке
+                    strongSelf.tabBarItem.badgeValue = "•"
                 }
             }
         }).strict()
-        
+
+        self.tabIconsDisposable = (context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+            |> map { $0.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.tabIcons ?? false }
+            |> deliverOnMainQueue).startStrict(next: { [weak self] alternate in
+            if let strongSelf = self, case .chatList(.root) = strongSelf.location {
+                strongSelf.applyChatsTabIcon(alternate: alternate)
+            }
+        }).strict()
+
         self.presentationDataDisposable = (context.sharedContext.presentationData
         |> deliverOnMainQueue).startStrict(next: { [weak self] presentationData in
             if let strongSelf = self {
@@ -828,6 +834,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
         self.openMessageFromSearchDisposable.dispose()
         self.badgeDisposable?.dispose()
         self.badgeIconDisposable?.dispose()
+        self.tabIconsDisposable?.dispose()
         self.passcodeLockTooltipDisposable.dispose()
         self.suggestLocalizationDisposable.dispose()
         self.suggestAutoarchiveDisposable.dispose()
@@ -950,6 +957,19 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
         }
     }
     
+    private func applyChatsTabIcon(alternate: Bool) {
+        let icon: UIImage?
+        if alternate {
+            icon = exteraAlternateTabIcon("bubble.left.and.bubble.right")
+        } else if useSpecialTabBarIcons() {
+            icon = UIImage(bundleImageName: "Chat List/Tabs/Holiday/IconChats")
+        } else {
+            icon = UIImage(bundleImageName: "Chat List/Tabs/IconChats")
+        }
+        self.tabBarItem.image = icon
+        self.tabBarItem.selectedImage = icon
+    }
+
     private func updateThemeAndStrings() {
         if case .chatList(.root) = self.location {
             self.tabBarItem.title = self.presentationData.strings.DialogList_Title
@@ -4059,22 +4079,29 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
         self.filterDisposable.set((combineLatest(queue: .mainQueue(),
             filterItems,
             self.context.account.postbox.peerView(id: self.context.account.peerId),
-            self.context.engine.data.get(TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false))
+            self.context.engine.data.get(TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false)),
+            self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+                |> map { $0.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.hideAllChats ?? false }
         )
-        |> deliverOnMainQueue).startStrict(next: { [weak self] countAndFilterItems, peerView, limits in
+        |> deliverOnMainQueue).startStrict(next: { [weak self] countAndFilterItems, peerView, limits, hideAllChats in
             guard let strongSelf = self else {
                 return
             }
-            
+
             let isPremium = peerView.peers[peerView.peerId]?.isPremium
             strongSelf.isPremium = isPremium ?? false
-            
+
             let (_, items) = countAndFilterItems
+            // вкладка «Все чаты» остаётся единственной опцией, когда других папок нет — иначе пустая полоса табов
+            let hideAllChatsTab = hideAllChats && items.contains(where: { $0.0 != .allChats })
             var filterItems: [ChatListFilterTabEntry] = []
-            
+
             for (filter, unreadCount, hasUnmutedUnread) in items {
                 switch filter {
                     case .allChats:
+                        if hideAllChatsTab {
+                            continue
+                        }
                         if let isPremium = isPremium, !isPremium && filterItems.count > 0 {
                             filterItems.insert(.all(unreadCount: 0), at: 0)
                         } else {
@@ -4116,10 +4143,10 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                         }
                     }
                     if !found {
-                        selectedEntryId = .all
+                        selectedEntryId = resolvedItems.first?.id ?? .all
                     }
                 } else {
-                    selectedEntryId = .all
+                    selectedEntryId = resolvedItems.first?.id ?? .all
                 }
             }
             let filtersLimit = isPremium == false ? limits.maxFoldersCount : nil
@@ -4130,6 +4157,9 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                 switch item.0 {
                     case .allChats:
                         hasAllChats = true
+                        if hideAllChatsTab {
+                            continue
+                        }
                         if let isPremium = isPremium, !isPremium && availableFilters.count > 0 {
                             availableFilters.insert(.all, at: 0)
                         } else {
@@ -4139,7 +4169,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController 
                         availableFilters.append(.filter(item.0))
                 }
             }
-            if !hasAllChats {
+            if !hasAllChats && !hideAllChatsTab {
                 availableFilters.insert(.all, at: 0)
             }
             strongSelf.chatListDisplayNode.mainContainerNode.updateAvailableFilters(availableFilters, limit: filtersLimit)

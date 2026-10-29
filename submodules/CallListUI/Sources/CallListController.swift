@@ -102,6 +102,7 @@ public final class CallListController: TelegramBaseController {
     
     private var presentationData: PresentationData
     private var presentationDataDisposable: Disposable?
+    private var tabIconsDisposable: Disposable?
     
     private let peerViewDisposable = MetaDisposable()
     
@@ -138,19 +139,20 @@ public final class CallListController: TelegramBaseController {
         
         if case .tab = self.mode {
             self.navigationItem.rightBarButtonItem = self.tabCallBarButtonItem()
-            
-            let icon: UIImage?
-            if useSpecialTabBarIcons() {
-                icon = UIImage(bundleImageName: "Chat List/Tabs/Holiday/IconCalls")
-            } else {
-                icon = UIImage(bundleImageName: "Chat List/Tabs/IconCalls")
-            }
+
+            self.applyCallsTabIcon(alternate: false)
             self.tabBarItem.title = self.presentationData.strings.Calls_TabTitle
-            self.tabBarItem.image = icon
-            self.tabBarItem.selectedImage = icon
             if !self.presentationData.reduceMotion {
                 self.tabBarItem.animationName = "TabCalls"
             }
+
+            self.tabIconsDisposable = (context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+                |> map { $0.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.tabIcons ?? false }
+                |> deliverOnMainQueue).startStrict(next: { [weak self] alternate in
+                if let strongSelf = self, case .tab = strongSelf.mode {
+                    strongSelf.applyCallsTabIcon(alternate: alternate)
+                }
+            }).strict()
         }
         
         self.segmentedTitleView.indexUpdated = { [weak self] index in
@@ -194,8 +196,22 @@ public final class CallListController: TelegramBaseController {
         self.peerViewDisposable.dispose()
         self.clearDisposable.dispose()
         self.createConferenceCallDisposable?.dispose()
+        self.tabIconsDisposable?.dispose()
     }
     
+    private func applyCallsTabIcon(alternate: Bool) {
+        let icon: UIImage?
+        if alternate {
+            icon = exteraAlternateTabIcon("phone")
+        } else if useSpecialTabBarIcons() {
+            icon = UIImage(bundleImageName: "Chat List/Tabs/Holiday/IconCalls")
+        } else {
+            icon = UIImage(bundleImageName: "Chat List/Tabs/IconCalls")
+        }
+        self.tabBarItem.image = icon
+        self.tabBarItem.selectedImage = icon
+    }
+
     private func updateThemeAndStrings() {
         let index = self.segmentedTitleView.index
         self.segmentedTitleView.segments = [self.presentationData.strings.Calls_All, self.presentationData.strings.Calls_Missed]

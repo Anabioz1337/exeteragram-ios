@@ -405,7 +405,11 @@ public final class ChatMessageAttachedContentNode: ASDisplayNode {
                     }
                 }
             }
-            
+
+            if associatedData.exteraSettings.disablePlayback {
+                contentMediaAutomaticPlayback = false
+            }
+
             var maxWidth: CGFloat = .greatestFiniteMagnitude
             
             let contentMediaContinueLayout: ((CGSize, Bool, Bool, ImageCorners) -> (CGFloat, (CGFloat) -> (CGSize, (ListViewItemUpdateAnimation, Bool) -> ChatMessageInteractiveMediaNode)))?

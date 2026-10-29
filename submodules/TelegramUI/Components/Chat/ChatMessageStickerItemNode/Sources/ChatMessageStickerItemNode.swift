@@ -1025,6 +1025,13 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                     strongSelf.updateAttachedDateHeader(hasDate: dateHeaderAtBottom.hasDate, hasPeer: dateHeaderAtBottom.hasTopic)
                     
                     transition.updateFrame(node: strongSelf.imageNode, frame: updatedImageFrame)
+
+                    let roundedSticker = item.associatedData.exteraSettings.stickerShape
+                    strongSelf.imageNode.clipsToBounds = roundedSticker
+                    strongSelf.imageNode.layer.cornerRadius = roundedSticker ? 12.0 : 0.0
+                    strongSelf.placeholderNode.clipsToBounds = roundedSticker
+                    strongSelf.placeholderNode.layer.cornerRadius = roundedSticker ? 12.0 : 0.0
+
                     strongSelf.enableSynchronousImageApply = true
                     imageApply()
                     strongSelf.enableSynchronousImageApply = false

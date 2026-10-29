@@ -281,7 +281,11 @@ public final class ChatMessageWebpageBubbleContentNode: ChatMessageBubbleContent
                         automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(file.resource.id)) != nil
                     }
                 }
-                
+
+                if item.associatedData.exteraSettings.disablePlayback {
+                    automaticPlayback = false
+                }
+
                 switch type {
                 case .instagram, .twitter:
                     if automaticPlayback {

@@ -6,6 +6,7 @@ import SwiftSignalKit
 import TelegramCore
 import TelegramPresentationData
 import AccountContext
+import TelegramUIPreferences
 import PhotoResources
 import GalleryUI
 import Tuples
@@ -74,28 +75,37 @@ class InstantImageGalleryItem: GalleryItem {
         let node = InstantImageGalleryItemNode(context: self.context, presentationData: self.presentationData, openUrl: self.openUrl, openUrlOptions: self.openUrlOptions, getPreloadedResource: self.getPreloadedResource, captureProtected: self.captureProtected)
 
         node.setImage(userLocation: self.userLocation, imageReference: self.imageReference)
-    
-        if let location = self.location {
-            node._title.set(.single(self.presentationData.strings.Items_NOfM("\(location.position + 1)", "\(location.totalCount)").string))
-        }
-        
+
+        node._title.set(self.counterTitleSignal(self.location))
+
         node.setCaption(self.caption, credit: self.credit)
-        
+
         return node
     }
-    
+
     func updateNode(node: GalleryItemNode, synchronous: Bool) {
         if let node = node as? InstantImageGalleryItemNode {
-            if let location = self.location {
-                node._title.set(.single(self.presentationData.strings.Items_NOfM("\(location.position + 1)", "\(location.totalCount)").string))
-            }
-            
+            node._title.set(self.counterTitleSignal(self.location))
+
             node.setCaption(self.caption, credit: self.credit)
         }
     }
     
     func thumbnailItem() -> (Int64, GalleryThumbnailItem)? {
         return (0, InstantImageGalleryThumbnailItem(account: self.context.account, userLocation: self.userLocation, mediaReference: imageReference.abstract))
+    }
+
+    private func counterTitleSignal(_ location: InstantPageGalleryEntryLocation?) -> Signal<String, NoError> {
+        guard let location else {
+            return .never()
+        }
+        return self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> map { [weak self] sharedData -> String in
+            guard let self, sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.hidePhotoCounter != true else {
+                return ""
+            }
+            return self.presentationData.strings.Items_NOfM("\(location.position + 1)", "\(location.totalCount)").string
+        }
     }
 }
 

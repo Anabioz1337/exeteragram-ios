@@ -14,11 +14,11 @@ private enum ExteraProfileSettingsSection: Int32 {
 }
 
 private final class ExteraProfileSettingsArguments {
-    let update: (inout ExteraProfilePreferences) -> Void
+    let toggle: (WritableKeyPath<ExteraProfilePreferences, Bool>, Bool) -> Void
     let openActionBarTitlePicker: () -> Void
 
-    init(update: @escaping (inout ExteraProfilePreferences) -> Void, openActionBarTitlePicker: @escaping () -> Void) {
-        self.update = update
+    init(toggle: @escaping (WritableKeyPath<ExteraProfilePreferences, Bool>, Bool) -> Void, openActionBarTitlePicker: @escaping () -> Void) {
+        self.toggle = toggle
         self.openActionBarTitlePicker = openActionBarTitlePicker
     }
 }
@@ -102,61 +102,43 @@ private enum ExteraProfileSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
         case let .hidePhoneNumber(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.HidePhoneNumber"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.hidePhoneNumber = value
-                }
+                arguments.toggle(\.hidePhoneNumber, value)
             })
         case let .showIdAndDc(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowIdAndDc"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.showIdAndDc = value
-                }
+                arguments.toggle(\.showIdAndDc, value)
             })
         case let .showIdAndDcInfo(text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
         case let .showCreationDate(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowCreationDate"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.showCreationDate = value
-                }
+                arguments.toggle(\.showCreationDate, value)
             })
         case let .showRegistrationDates(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowRegistrationDates"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.showRegistrationDates = value
-                }
+                arguments.toggle(\.showRegistrationDates, value)
             })
         case let .showOnlineIndicator(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowOnlineIndicator"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.showOnlineIndicator = value
-                }
+                arguments.toggle(\.showOnlineIndicator, value)
             })
         case let .showForwardsCount(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowForwardsCount"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.showForwardsCount = value
-                }
+                arguments.toggle(\.showForwardsCount, value)
             })
         case let .chatListHeader(text):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
         case let .hideArchiveFolder(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.HideArchiveFolder"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.hideArchiveFolder = value
-                }
+                arguments.toggle(\.hideArchiveFolder, value)
             })
         case let .archiveOnPull(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ArchiveOnPull"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.archiveOnPull = value
-                }
+                arguments.toggle(\.archiveOnPull, value)
             })
         case let .disableUnarchiveSwipe(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.DisableUnarchiveSwipe"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.disableUnarchiveSwipe = value
-                }
+                arguments.toggle(\.disableUnarchiveSwipe, value)
             })
         case let .disableUnarchiveSwipeInfo(text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
@@ -166,9 +148,7 @@ private enum ExteraProfileSettingsEntry: ItemListNodeEntry {
             })
         case let .senderMiniAvatars(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.SenderMiniAvatars"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { preferences in
-                    preferences.senderMiniAvatars = value
-                }
+                arguments.toggle(\.senderMiniAvatars, value)
             })
         }
     }
@@ -261,9 +241,9 @@ public func exteraProfileSettingsController(context: AccountContext) -> ViewCont
     let pushControllerImpl = Atomic<(ViewController) -> Void>(value: { _ in })
 
     let arguments = ExteraProfileSettingsArguments(
-        update: { transform in
+        toggle: { keyPath, value in
             var preferences = ExteraProfileSettings.shared.current
-            transform(&preferences)
+            preferences[keyPath: keyPath] = value
             ExteraProfileSettings.shared.update(preferences)
         },
         openActionBarTitlePicker: {

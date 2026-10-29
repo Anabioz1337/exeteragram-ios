@@ -470,6 +470,7 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
     public var automaticPlayback: Bool?
     private var preferredStoryHighQuality: Bool = false
     private var showSensitiveContent: Bool = false
+    private var hideStickerTime = false
     
     private let statusDisposable = MetaDisposable()
     private let fetchControls = Atomic<FetchControls?>(value: nil)
@@ -1895,6 +1896,7 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                             strongSelf.automaticDownload = automaticDownload
                             strongSelf.preferredStoryHighQuality = associatedData.preferredStoryHighQuality
                             strongSelf.showSensitiveContent = associatedData.showSensitiveContent
+                            strongSelf.hideStickerTime = associatedData.exteraSettings.hideStickerTime
                             
                             #if DEBUG && false
                             if strongSelf.testDeferHLSMedia && maybeRestoreHLSMedia && strongSelf.deferHLSMediaTimer == nil {
@@ -2996,7 +2998,11 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                 state = .none
             }
         }
-        
+
+        if self.hideStickerTime, let file = self.media?._asMedia() as? TelegramMediaFile, file.isAnimated {
+            badgeContent = nil
+        }
+
         if let statusNode = self.statusNode {
             var removeStatusNode = false
             if statusNode.state != .none && state == .none {

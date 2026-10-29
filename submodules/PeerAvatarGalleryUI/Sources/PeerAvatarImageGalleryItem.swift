@@ -7,6 +7,7 @@ import TelegramCore
 import TelegramPresentationData
 import TelegramStringFormatting
 import AccountContext
+import TelegramUIPreferences
 import RadialStatusNode
 import PhotoResources
 import GalleryUI
@@ -282,9 +283,9 @@ final class PeerAvatarImageGalleryItemNode: ZoomableContentGalleryItemNode {
         transition.updateFrame(node: self.statusNode, frame: CGRect(origin: CGPoint(), size: statusSize))
     }
 
-    private func makeTitleContent(entry: AvatarGalleryEntry) -> GalleryTitleView.Content? {
+    private func makeTitleContent(entry: AvatarGalleryEntry, hideCounter: Bool) -> GalleryTitleView.Content? {
         var counterText: String?
-        if let indexData = entry.indexData {
+        if !hideCounter, let indexData = entry.indexData {
             counterText = self.presentationData.strings.Items_NOfM("\(indexData.position + 1)", "\(indexData.totalCount)").string
         }
 
@@ -330,7 +331,15 @@ final class PeerAvatarImageGalleryItemNode: ZoomableContentGalleryItemNode {
                 barButtonItems.append(rightBarButtonItem)
             }
             self._rightBarButtonItems.set(.single(barButtonItems))
-            self._titleContent.set(.single(self.makeTitleContent(entry: entry)))
+            self._titleContent.set(
+                self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+                |> map { [weak self, entry] sharedData -> GalleryTitleView.Content? in
+                    guard let self else {
+                        return nil
+                    }
+                    let hideCounter = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.hidePhotoCounter ?? false
+                    return self.makeTitleContent(entry: entry, hideCounter: hideCounter)
+                })
                         
             self.footerContentNode.setEntry(entry, content: footerContent)
             

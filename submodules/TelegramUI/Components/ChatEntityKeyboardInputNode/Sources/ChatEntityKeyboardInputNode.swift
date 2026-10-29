@@ -476,6 +476,8 @@ public final class ChatEntityKeyboardInputNode: ChatInputNode {
     private weak var currentUndoOverlayController: UndoOverlayController?
 
     private var choosingStickerDisposable: Disposable?
+    private let exteraSettingsDisposable = MetaDisposable()
+    private var hideCategoryTabs = true
     private var scrollingStickersGridPromise = Promise<Bool>(false)
     private var previewingStickersPromise = ValuePromise<Bool>(false)
     private var choosingSticker: Signal<Bool, NoError> {
@@ -1755,6 +1757,18 @@ public final class ChatEntityKeyboardInputNode: ChatInputNode {
                 self.interaction?.updateChoosingSticker(value)
             }
         })
+
+        self.exteraSettingsDisposable.set((context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> deliverOnMainQueue).startStrict(next: { [weak self] sharedData in
+            guard let strongSelf = self else {
+                return
+            }
+            let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
+            if strongSelf.hideCategoryTabs != settings.hideCategories {
+                strongSelf.hideCategoryTabs = settings.hideCategories
+                strongSelf.performLayout(transition: .immediate)
+            }
+        }))
     }
 
     deinit {
@@ -1763,6 +1777,7 @@ public final class ChatEntityKeyboardInputNode: ChatInputNode {
         self.emojiSearchDisposable.dispose()
         self.stickerSearchDisposable.dispose()
         self.choosingStickerDisposable?.dispose()
+        self.exteraSettingsDisposable.dispose()
     }
 
     private func reloadGifContext() {
@@ -2007,7 +2022,8 @@ public final class ChatEntityKeyboardInputNode: ChatInputNode {
                 displayBottomPanel: true,
                 isExpanded: isExpanded && !self.isEmojiSearchActive,
                 clipContentToTopPanel: self.clipContentToTopPanel,
-                useExternalSearchContainer: self.useExternalSearchContainer
+                useExternalSearchContainer: self.useExternalSearchContainer,
+                hideCategoryTabs: self.hideCategoryTabs
             )),
             environment: {},
             containerSize: CGSize(width: width, height: expandedHeight)

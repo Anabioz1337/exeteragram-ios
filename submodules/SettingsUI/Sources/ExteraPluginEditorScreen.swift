@@ -95,17 +95,17 @@ private enum ExteraPluginEditorEntry: ItemListNodeEntry {
         return lhs.stableId < rhs.stableId
     }
 
-    func item(presentationData: ItemListPresentationData, draft: ExteraPluginDraftState, arguments: Any) -> ListViewItem {
+    func item(presentationData: ItemListPresentationData, arguments: Any) -> ListViewItem {
         let arguments = arguments as! ExteraPluginEditorArguments
         switch self {
         case let .metaHeader(text):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
-        case .name(_):
+        case let .name(text):
             return ItemListSingleLineInputItem(
                 presentationData: presentationData,
                 systemStyle: .glass,
                 title: NSAttributedString(string: presentationData.strings.Extera_Plugins_Editor_Name, textColor: presentationData.theme.list.itemPrimaryTextColor),
-                text: draft.name,
+                text: text,
                 placeholder: "",
                 label: nil,
                 type: .regular(capitalization: false, autocorrection: false),
@@ -113,12 +113,12 @@ private enum ExteraPluginEditorEntry: ItemListNodeEntry {
                 textUpdated: { arguments.updateName($0) },
                 action: {}
             )
-        case .version(_):
+        case let .version(text):
             return ItemListSingleLineInputItem(
                 presentationData: presentationData,
                 systemStyle: .glass,
                 title: NSAttributedString(string: presentationData.strings.Extera_Plugins_Editor_Version, textColor: presentationData.theme.list.itemPrimaryTextColor),
-                text: draft.version,
+                text: text,
                 placeholder: "",
                 label: nil,
                 type: .regular(capitalization: false, autocorrection: false),
@@ -126,12 +126,12 @@ private enum ExteraPluginEditorEntry: ItemListNodeEntry {
                 textUpdated: { arguments.updateVersion($0) },
                 action: {}
             )
-        case .author(_):
+        case let .author(text):
             return ItemListSingleLineInputItem(
                 presentationData: presentationData,
                 systemStyle: .glass,
                 title: NSAttributedString(string: presentationData.strings.Extera_Plugins_Editor_Author, textColor: presentationData.theme.list.itemPrimaryTextColor),
-                text: draft.author,
+                text: text,
                 placeholder: "",
                 label: nil,
                 type: .regular(capitalization: false, autocorrection: false),

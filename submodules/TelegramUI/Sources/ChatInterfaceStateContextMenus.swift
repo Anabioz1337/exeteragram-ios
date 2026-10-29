@@ -41,7 +41,8 @@ import AdsInfoScreen
 import AdsReportScreen
 import WalletContext
 import exteraAICore
- 
+import exteraPreferencesUI
+
 private struct MessageContextMenuData {
     let starStatus: Bool?
     let canReply: Bool
@@ -501,7 +502,7 @@ private func copyPhotoToPasteboard(context: AccountContext, image: TelegramMedia
             UIPasteboard.general.image = copiedImage
 
             Queue.mainQueue().after(0.2, {
-                controllerInteraction.displayUndo(.copy(text: strings.extera_PhotoCopied))
+                controllerInteraction.displayUndo(.copy(text: strings.Conversation_ImageCopied))
             })
         }
     })
@@ -1988,8 +1989,9 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             }
         }
 
-        if exteraSettings.showCopyPhotoButton, resourceAvailable && isImage && !isExpired, let imageMedia = message.effectiveMedia.first(where: { $0 is TelegramMediaImage }) as? TelegramMediaImage, let controllerInteraction {
-            actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.extera_CopyPhoto, icon: { theme in
+        let exteraStrings = exteraLocalizedStrings(chatPresentationInterfaceState.presentationData)
+        if exteraSettings.showCopyPhotoButton, resourceAvailable && isImage && !isExpired && !isCopyProtected && !message.containsSecretMedia, let imageMedia = message.effectiveMedia.first(where: { $0 is TelegramMediaImage }) as? TelegramMediaImage, let controllerInteraction {
+            actions.append(.action(ContextMenuActionItem(text: exteraStrings.value("extera_CopyPhoto"), icon: { theme in
                 return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Copy"), color: theme.actionSheet.primaryTextColor)
             }, action: { _, f in
                 f(.dismissWithoutContent)
@@ -1998,7 +2000,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
         }
 
         if exteraSettings.showSaveMessageButton, data.messageActions.options.contains(.forward), let controllerInteraction {
-            actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.extera_SaveMessage, icon: { theme in
+            actions.append(.action(ContextMenuActionItem(text: exteraStrings.value("extera_SaveMessage"), icon: { theme in
                 return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Forward"), color: theme.actionSheet.primaryTextColor)
             }, action: { _, f in
                 f(.dismissWithoutContent)

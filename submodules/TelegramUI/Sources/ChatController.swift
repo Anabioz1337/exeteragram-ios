@@ -6087,10 +6087,14 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
                 let items: Signal<[ContextMenuItem], NoError>
                 switch chatLocation {
                 case .peer:
-                    items = context.engine.data.get(
-                        TelegramEngine.EngineData.Item.Peer.CanViewStats(id: peer.id)
+                    items = combineLatest(
+                        context.engine.data.get(
+                            TelegramEngine.EngineData.Item.Peer.CanViewStats(id: peer.id)
+                        ),
+                        context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peer.id)),
+                        context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
                     )
-                    |> map { canViewStats -> [ContextMenuItem] in
+                    |> map { canViewStats, enginePeer, sharedData -> [ContextMenuItem] in
                         var items: [ContextMenuItem] = []
                         
                         let openText = strongSelf.presentationData.strings.Conversation_ContextMenuOpenProfile
@@ -6127,6 +6131,100 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
                             self?.interfaceInteraction?.beginMessageSearch(.everything, "")
                         })))
                                                 
+                        if let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self), let enginePeer = enginePeer, settings.permissionsShortcut || settings.administratorsShortcut || settings.membersShortcut || settings.recentActionsShortcut {
+                            var isAdmin = false
+                            var isGroupLike = false
+                            var isBroadcastLike = false
+                            switch enginePeer._asPeer() {
+                            case let channel as TelegramChannel:
+                                if channel.flags.contains(.isCreator) || channel.adminRights != nil {
+                                    isAdmin = true
+                                    let isGigagroup = channel.flags.contains(.isGigagroup)
+                                    switch channel.info {
+                                    case .broadcast:
+                                        isBroadcastLike = true
+                                    case .group:
+                                        if isGigagroup {
+                                            isBroadcastLike = true
+                                        } else {
+                                            isGroupLike = true
+                                        }
+                                    }
+                                }
+                            case let group as TelegramGroup:
+                                switch group.role {
+                                case .creator, .admin:
+                                    isAdmin = true
+                                    isGroupLike = true
+                                default:
+                                    break
+                                }
+                            default:
+                                break
+                            }
+
+                            if isAdmin {
+                                var shortcutItems: [ContextMenuItem] = []
+                                let presentationData = strongSelf.presentationData
+
+                                func shortcutItem(_ text: String, icon: String, action: @escaping () -> Void) -> ContextMenuItem {
+                                    return .action(ContextMenuActionItem(text: text, icon: { theme in
+                                        return generateTintedImage(image: UIImage(bundleImageName: icon), color: theme.actionSheet.primaryTextColor)
+                                    }, action: { _, f in
+                                        f(.dismissWithoutContent)
+                                        action()
+                                    }))
+                                }
+
+                                if settings.permissionsShortcut && isGroupLike {
+                                    shortcutItems.append(shortcutItem(presentationData.strings.GroupInfo_Permissions, icon: "Chat/Context Menu/Privacy", action: { [weak self] in
+                                        guard let strongSelf = self else {
+                                            return
+                                        }
+                                        strongSelf.push(channelPermissionsController(context: context, updatedPresentationData: strongSelf.updatedPresentationData, peerId: peer.id))
+                                    }))
+                                }
+                                if settings.administratorsShortcut {
+                                    shortcutItems.append(shortcutItem(presentationData.strings.GroupInfo_Administrators, icon: "Chat/Context Menu/Promote", action: { [weak self] in
+                                        guard let strongSelf = self else {
+                                            return
+                                        }
+                                        strongSelf.push(channelAdminsController(context: context, updatedPresentationData: strongSelf.updatedPresentationData, peerId: peer.id))
+                                    }))
+                                }
+                                if settings.membersShortcut {
+                                    shortcutItems.append(shortcutItem(presentationData.strings.Group_Info_Members, icon: "Chat/Context Menu/Groups", action: { [weak self] in
+                                        guard let strongSelf = self else {
+                                            return
+                                        }
+                                        strongSelf.push(channelMembersController(context: context, updatedPresentationData: strongSelf.updatedPresentationData, peerId: peer.id))
+                                    }))
+                                }
+                                if settings.permissionsShortcut && isBroadcastLike {
+                                    shortcutItems.append(shortcutItem(presentationData.strings.GroupInfo_Permissions_Removed, icon: "Chat/Context Menu/Ban", action: { [weak self] in
+                                        guard let strongSelf = self else {
+                                            return
+                                        }
+                                        strongSelf.push(channelBlacklistController(context: context, updatedPresentationData: strongSelf.updatedPresentationData, peerId: peer.id))
+                                    }))
+                                }
+                                if settings.recentActionsShortcut {
+                                    shortcutItems.append(shortcutItem(presentationData.strings.Group_Info_AdminLog, icon: "Chat/Context Menu/List", action: { [weak self] in
+                                        guard let strongSelf = self else {
+                                            return
+                                        }
+                                        let recentActionsController = strongSelf.context.sharedContext.makeChatRecentActionsController(context: strongSelf.context, peer: enginePeer, adminPeerId: nil, starsState: nil)
+                                        strongSelf.push(recentActionsController)
+                                    }))
+                                }
+
+                                if !shortcutItems.isEmpty {
+                                    items.append(.separator)
+                                    items.append(contentsOf: shortcutItems)
+                                }
+                            }
+                        }
+
                         return items
                     }
                 case let .replyThread(message):

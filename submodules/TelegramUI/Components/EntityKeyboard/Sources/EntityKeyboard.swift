@@ -126,6 +126,7 @@ public final class EntityKeyboardComponent: Component {
     public let hidePanels: Bool
     public let customTintColor: UIColor?
     public let alwaysShowsTopPanel: Bool
+    public let hideCategoryTabs: Bool
     
     public init(
         theme: PresentationTheme,
@@ -162,7 +163,8 @@ public final class EntityKeyboardComponent: Component {
         useExternalSearchContainer: Bool,
         hidePanels: Bool = false,
         customTintColor: UIColor? = nil,
-        alwaysShowsTopPanel: Bool = false
+        alwaysShowsTopPanel: Bool = false,
+        hideCategoryTabs: Bool = false
     ) {
         self.theme = theme
         self.strings = strings
@@ -199,6 +201,7 @@ public final class EntityKeyboardComponent: Component {
         self.hidePanels = hidePanels
         self.customTintColor = customTintColor
         self.alwaysShowsTopPanel = alwaysShowsTopPanel
+        self.hideCategoryTabs = hideCategoryTabs
     }
     
     public static func ==(lhs: EntityKeyboardComponent, rhs: EntityKeyboardComponent) -> Bool {
@@ -269,6 +272,9 @@ public final class EntityKeyboardComponent: Component {
             return false
         }
         if lhs.customTintColor != rhs.customTintColor {
+            return false
+        }
+        if lhs.hideCategoryTabs != rhs.hideCategoryTabs {
             return false
         }
         return true
@@ -445,7 +451,7 @@ public final class EntityKeyboardComponent: Component {
             if let stickerContent = component.stickerContent {
                 var topStickerItems: [EntityKeyboardTopPanelComponent.Item] = []
                 
-                if let _ = stickerContent.inputInteractionHolder.inputInteraction?.openFeatured {
+                if !component.hideCategoryTabs, let _ = stickerContent.inputInteractionHolder.inputInteraction?.openFeatured {
                     topStickerItems.append(EntityKeyboardTopPanelComponent.Item(
                         id: "featuredTop",
                         isReorderable: false,
@@ -492,7 +498,7 @@ public final class EntityKeyboardComponent: Component {
                                 "recent": component.strings.Stickers_Recent,
                                 "premium": component.strings.EmojiInput_PanelTitlePremium
                             ]
-                            if let icon = iconMapping[id], let title = titleMapping[id] {
+                            if !component.hideCategoryTabs, let icon = iconMapping[id], let title = titleMapping[id] {
                                 topStickerItems.append(EntityKeyboardTopPanelComponent.Item(
                                     id: itemGroup.supergroupId,
                                     isReorderable: false,
@@ -591,7 +597,7 @@ public final class EntityKeyboardComponent: Component {
                                     "liked": "",
                                     "collectible": ""
                                 ]
-                                if let icon = iconMapping[id], let title = titleMapping[id] {
+                                if !component.hideCategoryTabs, let icon = iconMapping[id], let title = titleMapping[id] {
                                     topEmojiItems.append(EntityKeyboardTopPanelComponent.Item(
                                         id: itemGroup.supergroupId,
                                         isReorderable: false,

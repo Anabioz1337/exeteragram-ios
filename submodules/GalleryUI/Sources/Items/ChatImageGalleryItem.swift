@@ -9,6 +9,7 @@ import TelegramPresentationData
 import AccountContext
 import RadialStatusNode
 import PhotoResources
+import TelegramUIPreferences
 import AppBundle
 import StickerPackPreviewUI
 import OverlayStatusController
@@ -467,22 +468,34 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         self.imageNode.captureProtected = message.id.peerId.namespace == Namespaces.Peer.SecretChat || message.isCopyProtected() || peerIsCopyProtected || isSecret || message.paidContent != nil
         self.updateFooter(animated: false)
         
-        var title: String?
-        if let _ = message.adAttribute {
-            title = self.presentationData.strings.Gallery_Ad
-        } else if let location {
-            title = self.presentationData.strings.Items_NOfM("\(location.index + 1)", "\(location.count)").string
+        var navigationAction: (() -> Void)?
+        if message.adAttribute == nil {
+            navigationAction = { [weak self] in
+                guard let self else {
+                    return
+                }
+                guard let controller = self.galleryController() as? GalleryController else {
+                    return
+                }
+                controller.dismissAndNavigateToMessageContext(message: message)
+            }
         }
-        
-        self._titleContent.set(.single(GalleryTitleView.Content(message: EngineMessage(message), title: title, action: message.adAttribute == nil ? { [weak self] in
-            guard let self else {
-                return
-            }
-            guard let controller = self.galleryController() as? GalleryController else {
-                return
-            }
-            controller.dismissAndNavigateToMessageContext(message: message)
-        } : nil)))
+
+        self._titleContent.set(
+            self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+            |> map { [weak self, message, location, navigationAction] sharedData -> GalleryTitleView.Content? in
+                guard let self else {
+                    return nil
+                }
+                let hideCounter = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.hidePhotoCounter ?? false
+                var title: String?
+                if message.adAttribute != nil {
+                    title = self.presentationData.strings.Gallery_Ad
+                } else if !hideCounter, let location {
+                    title = self.presentationData.strings.Items_NOfM("\(location.index + 1)", "\(location.count)").string
+                }
+                return GalleryTitleView.Content(message: EngineMessage(message), title: title, action: navigationAction)
+            })
     }
     
     private func updateFooter(animated: Bool) {

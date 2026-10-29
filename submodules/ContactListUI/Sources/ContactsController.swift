@@ -130,6 +130,7 @@ public class ContactsController: ViewController {
     private var authorizationDisposable: Disposable?
     private var selectionDisposable: Disposable?
     private var actionDisposable = MetaDisposable()
+    private var tabIconsDisposable: Disposable?
     private let sortOrderPromise = Promise<ContactsSortOrder>()
     private let isInVoiceOver = ValuePromise<Bool>(false)
     
@@ -159,18 +160,16 @@ public class ContactsController: ViewController {
         self.title = self.presentationData.strings.Contacts_Title
         self.tabBarItem.title = self.presentationData.strings.Contacts_Title
         
-        let icon: UIImage?
-        if useSpecialTabBarIcons() {
-            icon = UIImage(bundleImageName: "Chat List/Tabs/Holiday/IconContacts")
-        } else {
-            icon = UIImage(bundleImageName: "Chat List/Tabs/IconContacts")
-        }
-        
-        self.tabBarItem.image = icon
-        self.tabBarItem.selectedImage = icon
+        self.applyContactsTabIcon(alternate: false)
         if !self.presentationData.reduceMotion {
             self.tabBarItem.animationName = "TabContacts"
         }
+
+        self.tabIconsDisposable = (context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+            |> map { $0.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.tabIcons ?? false }
+            |> deliverOnMainQueue).startStrict(next: { [weak self] alternate in
+            self?.applyContactsTabIcon(alternate: alternate)
+        }).strict()
         
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: self.presentationData.strings.Common_Back, style: .plain, target: nil, action: nil)
         
@@ -245,8 +244,22 @@ public class ContactsController: ViewController {
         self.authorizationDisposable?.dispose()
         self.actionDisposable.dispose()
         self.selectionDisposable?.dispose()
+        self.tabIconsDisposable?.dispose()
     }
     
+    private func applyContactsTabIcon(alternate: Bool) {
+        let icon: UIImage?
+        if alternate {
+            icon = exteraAlternateTabIcon("person.2")
+        } else if useSpecialTabBarIcons() {
+            icon = UIImage(bundleImageName: "Chat List/Tabs/Holiday/IconContacts")
+        } else {
+            icon = UIImage(bundleImageName: "Chat List/Tabs/IconContacts")
+        }
+        self.tabBarItem.image = icon
+        self.tabBarItem.selectedImage = icon
+    }
+
     private func updateThemeAndStrings() {
         self.sortButton.update(theme: self.presentationData.theme, strings: self.presentationData.strings)
         self.statusBar.statusBarStyle = self.presentationData.theme.rootController.statusBarStyle.style
