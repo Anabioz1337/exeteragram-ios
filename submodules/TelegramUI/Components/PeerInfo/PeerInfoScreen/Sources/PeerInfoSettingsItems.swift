@@ -17,6 +17,7 @@ import PeerNameColorItem
 import WalletContext
 import ExteraProfile
 import exteraPreferencesUI
+import ExteraBranding
 
 enum SettingsSection: Int, CaseIterable {
     case edit

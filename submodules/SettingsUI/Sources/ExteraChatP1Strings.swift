@@ -10,6 +10,6 @@ private let exteraChatP1StringsBundle: Bundle = {
     return bundle
 }()
 
-func exteraChatP1String(_ key: String) -> String {
+public func exteraChatP1String(_ key: String) -> String {
     return exteraChatP1StringsBundle.localizedString(forKey: key, value: key, table: nil)
 }
