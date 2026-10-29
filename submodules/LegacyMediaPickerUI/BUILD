@@ -34,6 +34,7 @@ swift_library(
         "//submodules/TelegramUI/Components/MediaEditor",
         "//submodules/exteraCamera:ExteraCamera",
         "//submodules/AnimatedCountLabelNode",
+        "//submodules/TelegramUIPreferences:TelegramUIPreferences",
     ],
     visibility = [
         "//visibility:public",

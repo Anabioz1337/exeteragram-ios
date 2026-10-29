@@ -852,8 +852,8 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
             }
             let screen = exteraPluginsScreen(context: context)
             (pluginsNavControllerHolder.with { $0 })?.pushViewController(screen)
-        }
-         toggleBlockAds: { [weak context] value in
+        },
+        toggleBlockAds: { [weak context] value in
             guard let context = context else {
                 return
             }

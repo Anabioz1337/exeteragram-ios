@@ -9,6 +9,7 @@ import Display
 import TelegramPresentationData
 import DeviceAccess
 import AccountContext
+import TelegramUIPreferences
 import ImageCompression
 import MimeTypes
 import LocalMediaResources
@@ -368,11 +369,36 @@ public struct LegacyAssetPickerEnqueueMessage {
     public var isFile: Bool
 }
 
+private func sendPhotosQualityMaxDimension(_ quality: Int32) -> CGFloat {
+    switch quality {
+        case 0:
+            return 800.0
+        case 2:
+            return 2560.0
+        default:
+            return 1280.0
+    }
+}
+
 public func legacyAssetPickerEnqueueMessages(
     context: AccountContext,
     account: Account,
     signals: [Any],
     originalMediaReference: AnyMediaReference? = nil
+) -> Signal<[LegacyAssetPickerEnqueueMessage], Void> {
+    return context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> mapToSignal { sharedData -> Signal<[LegacyAssetPickerEnqueueMessage], Void> in
+            let quality = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.sendPhotosQuality ?? 0
+            return enqueueAssetPickerMessages(context: context, account: account, signals: signals, originalMediaReference: originalMediaReference, maxPhotoDimension: sendPhotosQualityMaxDimension(quality))
+        }
+}
+
+private func enqueueAssetPickerMessages(
+    context: AccountContext,
+    account: Account,
+    signals: [Any],
+    originalMediaReference: AnyMediaReference?,
+    maxPhotoDimension: CGFloat
 ) -> Signal<[LegacyAssetPickerEnqueueMessage], Void> {
     return Signal { subscriber in
         let disposable = SSignal.combineSignals(signals).start(next: { anyValues in
@@ -406,7 +432,7 @@ public func legacyAssetPickerEnqueueMessages(
                                     var randomId: Int64 = 0
                                     arc4random_buf(&randomId, 8)
                                     let tempFilePath = NSTemporaryDirectory() + "\(randomId).jpeg"
-                                    let maxSize = item.forceHd ? CGSize(width: 2560.0, height: 2560.0) : CGSize(width: 1280.0, height: 1280.0)
+                                    let maxSize = item.forceHd ? CGSize(width: 2560.0, height: 2560.0) : CGSize(width: maxPhotoDimension, height: maxPhotoDimension)
                                     let scaledSize = image.size.aspectFittedOrSmaller(maxSize)
                                 
                                     if let scaledImage = TGScaleImageToPixelSize(image, scaledSize) {
@@ -620,8 +646,9 @@ public func legacyAssetPickerEnqueueMessages(
                                         var randomId: Int64 = 0
                                         arc4random_buf(&randomId, 8)
                                         let size = CGSize(width: CGFloat(asset.pixelWidth), height: CGFloat(asset.pixelHeight))
-                                        let scaledSize = size.aspectFittedOrSmaller(CGSize(width: 1280.0, height: 1280.0))
-                                        let resource = PhotoLibraryMediaResource(localIdentifier: asset.localIdentifier, uniqueId: Int64.random(in: Int64.min ... Int64.max), forceHd: item.forceHd)
+                                        let maxSize = item.forceHd ? CGSize(width: 2560.0, height: 2560.0) : CGSize(width: maxPhotoDimension, height: maxPhotoDimension)
+                                        let scaledSize = size.aspectFittedOrSmaller(maxSize)
+                                        let resource = PhotoLibraryMediaResource(localIdentifier: asset.localIdentifier, uniqueId: Int64.random(in: Int64.min ... Int64.max), width: Int32(scaledSize.width), height: Int32(scaledSize.height), forceHd: item.forceHd)
                                     
                                         let media: EngineRawMedia
                                         representations.append(TelegramMediaImageRepresentation(dimensions: PixelDimensions(scaledSize), resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))

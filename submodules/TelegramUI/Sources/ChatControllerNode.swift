@@ -484,6 +484,8 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
     private var openStickersBeginWithEmoji: Bool = false
     private var openStickersDisposable: Disposable?
     private var displayVideoUnmuteTipDisposable: Disposable?
+    private var exteraSettingsDisposable: Disposable?
+    private var exteraSettings = ExteraSettings.defaultSettings
     
     private var onLayoutCompletions: [(ContainedViewLayoutTransition) -> Void] = []
 
@@ -1078,6 +1080,7 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
         self.interactiveEmojisDisposable?.dispose()
         self.openStickersDisposable?.dispose()
         self.displayVideoUnmuteTipDisposable?.dispose()
+        self.exteraSettingsDisposable?.dispose()
         self.inputMediaNodeDataDisposable?.dispose()
         self.inlineSearchResultsReadyDisposable?.dispose()
         self.loadMoreSearchResultsDisposable?.dispose()
@@ -1085,6 +1088,16 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
     
     override func didLoad() {
         super.didLoad()
+        
+        self.exteraSettingsDisposable = (self.context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> deliverOnMainQueue).startStrict(next: { [weak self] sharedData in
+            guard let strongSelf = self else {
+                return
+            }
+            if let exteraSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) {
+                strongSelf.exteraSettings = exteraSettings
+            }
+        })
         
         let recognizer = WindowPanRecognizer(target: nil, action: nil)
         recognizer.cancelsTouchesInView = false
@@ -1126,6 +1139,10 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
                 }
             }
             if hasChatThemeScreen {
+                return true
+            }
+            
+            if !strongSelf.exteraSettings.hideKeyboardOnScroll {
                 return true
             }
             

@@ -2017,6 +2017,15 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             })))
         }
 
+        if exteraSettings.showDetailsButton, let controllerInteraction {
+            actions.append(.action(ContextMenuActionItem(text: exteraStrings.value("extera_Details"), icon: { theme in
+                return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Info"), color: theme.actionSheet.primaryTextColor)
+            }, action: { _, f in
+                f(.dismissWithoutContent)
+                controllerInteraction.navigationController()?.pushViewController(exteraMessageDetailsController(context: context, message: message))
+            })))
+        }
+
         // showReportButton выдаёт Report там, где сервер его запретил; у replies-ветки (Block) приоритет прежний
         let isReplyAuthor = message.id.peerId.isReplies
         if data.messageActions.options.contains(.report) || (!isReplyAuthor && exteraSettings.showReportButton) {

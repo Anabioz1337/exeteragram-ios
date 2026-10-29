@@ -426,6 +426,16 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
                     titleLayoutAndApply = makeTitleLayout(TextNodeLayoutArguments(attributedString: titleString, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: constrainedSize.width - 32.0, height: CGFloat.greatestFiniteMagnitude), alignment: .center, cutout: nil, insets: UIEdgeInsets()))
                 }
                 
+                if item.associatedData.exteraSettings.showActionTimestamps, let attributedString = updatedAttributedString, item.message.timestamp >= 10 {
+                    var mutableString = NSMutableAttributedString(attributedString: attributedString)
+                    let timestampString = stringForMediumCompactDate(timestamp: item.message.timestamp, strings: item.presentationData.strings, dateTimeFormat: item.presentationData.dateTimeFormat)
+                    if !mutableString.string.isEmpty {
+                        mutableString.append(NSAttributedString(string: "\n"))
+                    }
+                    mutableString.append(NSAttributedString(string: timestampString, font: Font.regular(12.0), textColor: primaryTextColor.withAlphaComponent(0.7)))
+                    updatedAttributedString = mutableString
+                }
+
                 let (labelLayout, apply) = makeLabelLayout(TextNodeLayoutArguments(attributedString: updatedAttributedString, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: constrainedSize.width - 32.0, height: CGFloat.greatestFiniteMagnitude), alignment: textAlignment, cutout: nil, insets: UIEdgeInsets()))
             
                 var labelRects = labelLayout.linesRects()

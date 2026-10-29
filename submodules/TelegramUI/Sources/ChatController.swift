@@ -275,6 +275,8 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
     let preloadNextChatPeerIdDisposable = MetaDisposable()
     
     var accountPeerDisposable: Disposable?
+    var exteraSettingsDisposable: Disposable?
+    var exteraSettings = ExteraSettings.defaultSettings
     
     let cachedDataReady = Promise<Bool>()
     var didSetCachedDataReady = false
@@ -6573,6 +6575,17 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
             }
         })
         
+        self.exteraSettingsDisposable = (context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> deliverOnMainQueue).startStrict(next: { [weak self] sharedData in
+            guard let strongSelf = self else {
+                return
+            }
+            if let exteraSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) {
+                strongSelf.exteraSettings = exteraSettings
+                strongSelf.updateNextChannelToReadVisibility()
+            }
+        })
+        
         if let chatPeerId = chatLocation.peerId {
             self.nameColorDisposable = (context.engine.data.subscribe(
                 TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
@@ -7270,6 +7283,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
         self.postedScheduledMessagesEventsDisposable?.dispose()
         self.updateChatLocationThreadDisposable?.dispose()
         self.accountPeerDisposable?.dispose()
+        self.exteraSettingsDisposable?.dispose()
         self.contentDataDisposable?.dispose()
         self.newTopicEventsDisposable?.dispose()
         self.updateMessageTodoDisposables?.dispose()
@@ -11298,7 +11312,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
         guard let contentData = self.contentData else {
             return
         }
-        self.chatDisplayNode.historyNode.offerNextChannelToRead = contentData.state.offerNextChannelToRead && self.presentationInterfaceState.interfaceState.selectionState == nil
+        self.chatDisplayNode.historyNode.offerNextChannelToRead = contentData.state.offerNextChannelToRead && self.presentationInterfaceState.interfaceState.selectionState == nil && !self.exteraSettings.disableJumpToNextChannel
     }
     
     func displayGiveawayStatusInfo(messageId: EngineMessage.Id, giveawayInfo: PremiumGiveawayInfo) {

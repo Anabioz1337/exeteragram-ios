@@ -281,6 +281,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
 
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 10, label: .text(presentationData.strings.Extera_Adblock_Title), text: presentationData.strings.Extera_Feed_Title, icon: PresentationResourcesSettings.dataAndStorage, action: {
         interaction.openSettings(.exteraFeed)
+    }))
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 6, label: .text(data.isPowerSavingEnabled == true ? presentationData.strings.Settings_PowerSavingOn : presentationData.strings.Settings_PowerSavingOff), text: presentationData.strings.Settings_PowerSaving, icon: PresentationResourcesSettings.powerSaving, action: {
         interaction.openSettings(.powerSaving)
     }))
@@ -293,6 +294,14 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     let exteraStrings = exteraStrings(languageCode: presentationData.strings.primaryComponent.languageCode)
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 60, text: exteraStrings.settingsTitle, icon: PresentationResourcesSettings.dataAndStorage, action: {
         interaction.openSettings(.extera)
+    }))
+
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 61, text: exteraProfileString("Extera.Profile.Title"), icon: PresentationResourcesSettings.dataAndStorage, action: {
+        interaction.openSettings(.exteraProfile)
+    }))
+
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 62, text: presentationData.strings.Extera_Swipe_Settings_Title, icon: PresentationResourcesSettings.security, action: {
+        interaction.openSettings(.exteraSwipe)
     }))
 
     let premiumConfiguration = PremiumConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
