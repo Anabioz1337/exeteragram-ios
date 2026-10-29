@@ -117,6 +117,7 @@ swift_library(
         "//submodules/ContextUI:ContextUI",
         "//submodules/Markdown:Markdown",
         "//submodules/UndoUI:UndoUI",
+        "//submodules/exteraPluginKit:exteraPluginKit",
         "//submodules/DeleteChatPeerActionSheetItem:DeleteChatPeerActionSheetItem",
         "//submodules/PhoneNumberFormat:PhoneNumberFormat",
         "//submodules/OpenInExternalAppUI:OpenInExternalAppUI",

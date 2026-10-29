@@ -24,10 +24,10 @@ private final class ExteraFeedArguments {
     let setIncludeArchived: (Bool) -> Void
     let setFeedTabEnabled: (Bool) -> Void
     let markAllAsRead: () -> Void
-    let openPost: (PeerId, MessageId) -> Void
-    let requestHideChannel: (PeerId, String) -> Void
+    let openPost: (EnginePeer.Id, EngineMessage.Id) -> Void
+    let requestHideChannel: (EnginePeer.Id, String) -> Void
 
-    init(selectCategory: @escaping (Int64) -> Void, setAdblockEnabled: @escaping (Bool) -> Void, setIncludeArchived: @escaping (Bool) -> Void, setFeedTabEnabled: @escaping (Bool) -> Void, markAllAsRead: @escaping () -> Void, openPost: @escaping (PeerId, MessageId) -> Void, requestHideChannel: @escaping (PeerId, String) -> Void) {
+    init(selectCategory: @escaping (Int64) -> Void, setAdblockEnabled: @escaping (Bool) -> Void, setIncludeArchived: @escaping (Bool) -> Void, setFeedTabEnabled: @escaping (Bool) -> Void, markAllAsRead: @escaping () -> Void, openPost: @escaping (EnginePeer.Id, EngineMessage.Id) -> Void, requestHideChannel: @escaping (EnginePeer.Id, String) -> Void) {
         self.selectCategory = selectCategory
         self.setAdblockEnabled = setAdblockEnabled
         self.setIncludeArchived = setIncludeArchived
@@ -39,8 +39,8 @@ private final class ExteraFeedArguments {
 }
 
 private struct ExteraFeedPostEntry: Equatable {
-    let messageId: MessageId
-    let peerId: PeerId
+    let messageId: EngineMessage.Id
+    let peerId: EnginePeer.Id
     let peerTitle: String
     let previewText: String
     let timestamp: Int32
@@ -119,11 +119,11 @@ private enum ExteraFeedEntry: ItemListNodeEntry {
         case let .categoriesHeader(text):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
         case let .category(_, id, title, selected):
-            return ItemListActionItem(presentationData: presentationData, title: selected ? "✓ \(title)" : title, kind: selected ? .accent : .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+            return ItemListActionItem(presentationData: presentationData, title: selected ? "✓ \(title)" : title, kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
                 arguments.selectCategory(id)
             }, longTapAction: nil)
         case let .markAllAsRead(title):
-            return ItemListActionItem(presentationData: presentationData, title: title, kind: .accent, alignment: .natural, sectionId: self.section, style: .blocks, action: {
+            return ItemListActionItem(presentationData: presentationData, title: title, kind: .generic, alignment: .natural, sectionId: self.section, style: .blocks, action: {
                 arguments.markAllAsRead()
             }, longTapAction: nil)
         case let .includeArchived(title, value):
@@ -175,7 +175,7 @@ func exteraFeedHiddenChannelIds(defaults: UserDefaults?) -> Set<Int64> {
     return Set((defaults?.stringArray(forKey: "feedHiddenChannelIds") ?? []).compactMap { Int64($0) })
 }
 
-public func exteraFeedSetChannelHidden(_ peerId: PeerId, hidden: Bool, defaults: UserDefaults?) {
+public func exteraFeedSetChannelHidden(_ peerId: EnginePeer.Id, hidden: Bool, defaults: UserDefaults?) {
     guard let defaults else {
         return
     }
@@ -188,12 +188,12 @@ public func exteraFeedSetChannelHidden(_ peerId: PeerId, hidden: Bool, defaults:
     defaults.set(Array(ids.map { String($0) }), forKey: "feedHiddenChannelIds")
 }
 
-private func exteraFeedVisiblePeerIds(settings: ExteraSettings, categoryId: Int64, channels: [ExteraFeedChannel], hiddenPeerIds: Set<PeerId>) -> [EnginePeer.Id] {
+private func exteraFeedVisiblePeerIds(settings: ExteraSettings, categoryId: Int64, channels: [ExteraFeedChannel], hiddenPeerIds: Set<EnginePeer.Id>) -> [EnginePeer.Id] {
     var candidates = channels.filter { channel in
         !hiddenPeerIds.contains(channel.peer.id) && (settings.feedIncludeArchived || !channel.isArchived)
     }
     if categoryId != exteraFeedAllCategoryId, let category = settings.feedCategories.first(where: { $0.id == categoryId }) {
-        let wanted = Set(category.channelIds.map { PeerId($0) })
+        let wanted = Set(category.channelIds.map { EnginePeer.Id($0) })
         candidates = candidates.filter { wanted.contains($0.peer.id) }
     }
     return candidates.map { $0.peer.id }
@@ -223,8 +223,8 @@ private func exteraFeedEntries(model: ExteraFeedModel) -> [ExteraFeedEntry] {
     return entries
 }
 
-private func exteraFeedPosts(grouped: [(peerId: PeerId, messages: [EngineMessage])], titles: [EnginePeer.Id: String], unreadCounts: [EnginePeer.Id: Int]) -> [ExteraFeedPostEntry] {
-    var merged: [(peerId: PeerId, message: EngineMessage)] = []
+private func exteraFeedPosts(grouped: [(peerId: EnginePeer.Id, messages: [EngineMessage])], titles: [EnginePeer.Id: String], unreadCounts: [EnginePeer.Id: Int]) -> [ExteraFeedPostEntry] {
+    var merged: [(peerId: EnginePeer.Id, message: EngineMessage)] = []
     for group in grouped {
         for message in group.messages.prefix(30) {
             merged.append((group.peerId, message))
@@ -264,7 +264,7 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
             return sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) ?? ExteraSettings.defaultSettings
         }
 
-    func updateSettings(_ f: (ExteraSettings) -> ExteraSettings) {
+    func updateSettings(_ f: @escaping (ExteraSettings) -> ExteraSettings) {
         let _ = updateExteraSettingsInteractively(accountManager: accountManager, f).startStandalone()
     }
 
@@ -332,7 +332,7 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
         refreshPromise.get()
     )
     |> mapToSignal { presentationData, settings, categoryId, _ -> Signal<ExteraFeedModel, NoError> in
-        let hiddenPeerIds = Set(exteraFeedHiddenChannelIds(defaults: defaults).map { PeerId($0) })
+        let hiddenPeerIds = Set(exteraFeedHiddenChannelIds(defaults: defaults).map { EnginePeer.Id($0) })
 
         return context.engine.messages.exteraFeedChannels()
         |> mapToSignal { channels -> Signal<ExteraFeedModel, NoError> in

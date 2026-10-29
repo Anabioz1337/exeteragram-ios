@@ -4,43 +4,43 @@ import TelegramPresentationData
 // The extera strings live here instead of the generated PresentationStrings pipeline because
 // the server-side language packs cannot know fork-local keys: English and Russian are the only
 // deliverable localizations, resolved by the account's language code.
-private struct ExteraStringsTable {
-    let settingsTitle: String
-    let speedHeader: String
-    let downloadBoost: String
-    let uploadBoost: String
-    let boostOff: String
-    let boostFast: String
-    let boostUltra: String
-    let ultraWarning: String
-    let interfaceHeader: String
-    let disableNumberRounding: String
-    let formatTimeWithSeconds: String
-    let pluginsRow: String
-    let storageHeader: String
-    let customSaveFolder: String
-    let customSaveFolderHint: String
-    let analyticsHeader: String
-    let useGoogleAnalytics: String
-    let useGoogleCrashlytics: String
-    let analyticsInfo: String
-    let updatesHeader: String
-    let checkForUpdates: String
-    let checkingForUpdates: String
-    let upToDate: String
-    let checkFailed: String
-    let checkOnLaunch: String
-    let lastCheck: String
-    let never: String
-    let currentVersion: String
-    let latestVersion: String
-    let updateAvailable: String
-    let updateAvailableText: (String) -> String
-    let laterAction: String
-    let downloadAction: String
-    let downloadOnGitHub: String
-    let restartRequired: String
-    let restartRequiredText: String
+public struct ExteraStringsTable {
+    public let settingsTitle: String
+    public let speedHeader: String
+    public let downloadBoost: String
+    public let uploadBoost: String
+    public let boostOff: String
+    public let boostFast: String
+    public let boostUltra: String
+    public let ultraWarning: String
+    public let interfaceHeader: String
+    public let disableNumberRounding: String
+    public let formatTimeWithSeconds: String
+    public let pluginsRow: String
+    public let storageHeader: String
+    public let customSaveFolder: String
+    public let customSaveFolderHint: String
+    public let analyticsHeader: String
+    public let useGoogleAnalytics: String
+    public let useGoogleCrashlytics: String
+    public let analyticsInfo: String
+    public let updatesHeader: String
+    public let checkForUpdates: String
+    public let checkingForUpdates: String
+    public let upToDate: String
+    public let checkFailed: String
+    public let checkOnLaunch: String
+    public let lastCheck: String
+    public let never: String
+    public let currentVersion: String
+    public let latestVersion: String
+    public let updateAvailable: String
+    public let updateAvailableText: (String) -> String
+    public let laterAction: String
+    public let downloadAction: String
+    public let downloadOnGitHub: String
+    public let restartRequired: String
+    public let restartRequiredText: String
 }
 
 private let exteraStringsEnglish = ExteraStringsTable(

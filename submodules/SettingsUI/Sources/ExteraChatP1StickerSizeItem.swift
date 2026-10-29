@@ -119,8 +119,6 @@ class ExteraChatP1StickerSizeItemNode: ListViewItemNode, ItemListItemNode {
     }
 
     func asyncLayout() -> (_ item: ExteraChatP1StickerSizeItem, _ params: ListViewItemLayoutParams, _ neighbors: ItemListNeighbors) -> (ListViewItemNodeLayout, () -> Void) {
-        let currentItem = self.item
-
         return { [weak self] item, params, neighbors in
             let contentSize = CGSize(width: params.width, height: 60.0)
             let insets = itemListNeighborsGroupedInsets(neighbors, params)

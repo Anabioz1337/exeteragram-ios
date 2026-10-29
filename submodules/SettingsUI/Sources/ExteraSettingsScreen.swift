@@ -430,7 +430,7 @@ private func exteraSettingsEntries(presentationData: PresentationData, settings:
 public func exteraSettingsScreen(context: AccountContext) -> ViewController {
     let statusPromise = ValuePromise<ExteraUpdaterStatus>(ignoreRepeated: true)
     let updateStatusDisposable = MetaDisposable()
-    let pluginsNavControllerHolder = Atomic<(NavigationController?)?>(value: nil)
+    let pluginsNavControllerHolder = Atomic<NavigationController?>(value: nil)
 
     let arguments = ExteraSettingsArguments(
         chooseDownloadBoost: { [weak context] in
@@ -567,11 +567,8 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
 
     let controller = ItemListController(context: context, state: signal)
     controller.navigationPresentation = .modal
-    let _ = pluginsNavControllerHolder.swap({ [weak controller] nav in
-        if nav == nil {
-            return controller.navigationController as? NavigationController
-        }
-        return nav
+    let _ = pluginsNavControllerHolder.swap({ [weak controller] _ in
+        controller?.navigationController as? NavigationController
     })
     return controller
 }

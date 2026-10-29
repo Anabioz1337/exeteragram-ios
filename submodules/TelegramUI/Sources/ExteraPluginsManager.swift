@@ -1,94 +1,44 @@
 import Foundation
-import JavaScriptCore
 import SwiftSignalKit
 import TelegramUIPreferences
 import AccountContext
 import UndoUI
-
-private final class ExteraPluginScriptBridge: NSObject {
-    var onMessageHandler: JSValue?
-    var lastException: JSValue?
-
-    @objc func registerOnMessage(_ handler: JSValue) {
-        guard handler.isFunction else {
-            return
-        }
-        self.onMessageHandler = handler
-    }
-
-    @objc func reportError(_ error: JSValue) {
-        self.lastException = error
-    }
-
-    @objc func log(_ text: String) {
-        if !text.isEmpty {
-            ExteraPluginsManager.shared.appendLog("log: \(text)")
-        }
-    }
-}
+import exteraPluginKit
 
 final class ExteraPluginRuntime {
     let plugin: InstalledExteraPlugin
-    private let bridge = ExteraPluginScriptBridge()
+    private let engine: ExteraPluginEngine
     private(set) var consecutiveFailures = 0
 
     init(plugin: InstalledExteraPlugin) {
         self.plugin = plugin
-
-        let context = JSContext()!
-        context.name = "extera-plugin:\(plugin.id)"
-        context.exceptionHandler = { [weak bridge] _, exception in
-            if !exception.isNull && !exception.isUndefined {
-                bridge?.lastException = exception
-            }
-        }
-        context.globalObject.setObject(
-            self.bridge,
-            forKeyedSubscript: "__extera" as NSString
+        self.engine = ExteraPluginEngine(
+            pluginId: plugin.id,
+            sourceCode: plugin.sourceCode,
+            logSink: { ExteraPluginsManager.shared.appendLog($0) }
         )
-        context.evaluateScript("""
-        var log = function(text) { __extera.log(String(text)); };
-        var onMessage = function(handler) { __extera.registerOnMessage(handler); };
-        """)
-        context.evaluateScript(plugin.sourceCode)
-        if let exception = self.bridge.lastException, !exception.isNull && !exception.isUndefined {
-            ExteraPluginsManager.shared.appendLog("\(plugin.name): ошибка загрузки — \(runtimeDescribed(exception))")
+        if let loadError = self.engine.loadError {
+            ExteraPluginsManager.shared.appendLog("\(plugin.name): ошибка загрузки — \(loadError)")
+            self.consecutiveFailures += 1
+        } else if !self.engine.hasMessageHandler {
+            ExteraPluginsManager.shared.appendLog("\(plugin.name): обработчик onMessage(...) не зарегистрирован")
             self.consecutiveFailures += 1
         }
-        self.context = context
     }
 
-    private let context: JSContext
-
     func deliverIncoming(text: String, senderName: String, chatId: Int64) -> String? {
-        guard let handler = self.bridge.onMessageHandler else {
-            return nil
-        }
-        self.bridge.lastException = nil
-        let payload: [String: Any] = [
-            "text": text,
-            "sender": senderName,
-            "chatId": chatId
-        ]
-        let reply = handler.call(withArguments: [NSDictionary(dictionary: payload)])
-        if let exception = self.bridge.lastException, !exception.isNull && !exception.isUndefined {
-            self.consecutiveFailures += 1
-            ExteraPluginsManager.shared.appendLog("\(self.plugin.name): ошибка вызова — \(runtimeDescribed(exception))")
+        guard let reply = self.engine.deliverIncoming(text: text, senderName: senderName, chatId: chatId) else {
+            if let callError = self.engine.callError {
+                self.consecutiveFailures += 1
+                ExteraPluginsManager.shared.appendLog("\(self.plugin.name): ошибка вызова — \(callError)")
+            }
             return nil
         }
         self.consecutiveFailures = 0
-        if let reply, reply.isString {
-            let replyText = reply.toString()
-            return replyText.isEmpty ? nil : replyText
-        }
-        return nil
+        return reply
     }
 }
 
-private func runtimeDescribed(_ value: JSValue) -> String {
-    let text = value.toString()
-    return text.count > 240 ? String(text.prefix(240)) + "…" : text
-}
 
 public final class ExteraPluginsManager {
     public static let shared = ExteraPluginsManager()
@@ -217,42 +167,5 @@ public final class ExteraPluginsManager {
             return settings.withUpdatedEnabled(pluginId, false)
         }).startStandalone()
         self.appendLog("Плагин отключён автоматически после повторяющихся ошибок.")
-    }
-
-    public static func testRun(sourceCode: String, sample: (text: String, sender: String, chatId: Int64)) -> (reply: String?, error: String?) {
-        let bridge = ExteraPluginScriptBridge()
-        let context = JSContext()!
-        context.exceptionHandler = { [weak bridge] _, exception in
-            if !exception.isNull && !exception.isUndefined {
-                bridge?.lastException = exception
-            }
-        }
-        context.globalObject.setObject(bridge, forKeyedSubscript: "__extera" as NSString)
-        context.evaluateScript("""
-        var log = function(text) { __extera.log(String(text)); };
-        var onMessage = function(handler) { __extera.registerOnMessage(handler); };
-        """)
-        context.evaluateScript(sourceCode)
-
-        if let exception = bridge.lastException, !exception.isNull && !exception.isUndefined {
-            return (nil, "Ошибка выполнения скрипта: \(runtimeDescribed(exception))")
-        }
-        guard let handler = bridge.onMessageHandler else {
-            return (nil, "Скрипт не зарегистрировал обработчик onMessage(...). Пример: onMessage(function(m){ return 'reply'; })")
-        }
-        bridge.lastException = nil
-        let payload: [String: Any] = [
-            "text": sample.text,
-            "sender": sample.sender,
-            "chatId": sample.chatId
-        ]
-        let reply = handler.call(withArguments: [NSDictionary(dictionary: payload)])
-        if let exception = bridge.lastException, !exception.isNull && !exception.isUndefined {
-            return (nil, "Ошибка в обработчике: \(runtimeDescribed(exception))")
-        }
-        if let reply, reply.isString {
-            return (reply.toString(), nil)
-        }
-        return (nil, nil)
     }
 }

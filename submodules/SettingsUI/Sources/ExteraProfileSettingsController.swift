@@ -241,8 +241,10 @@ public func exteraProfileSettingsController(context: AccountContext) -> ViewCont
     let pushControllerImpl = Atomic<(ViewController) -> Void>(value: { _ in })
 
     let arguments = ExteraProfileSettingsArguments(
-        update: { f in
-            ExteraProfileSettings.shared.with(f)
+        update: { transform in
+            var preferences = ExteraProfileSettings.shared.current
+            transform(&preferences)
+            ExteraProfileSettings.shared.update(preferences)
         },
         openActionBarTitlePicker: {
             pushControllerImpl.with { pushController in
@@ -271,7 +273,8 @@ public func exteraProfileSettingsController(context: AccountContext) -> ViewCont
     return controller
 }
 
-private func exteraActionBarTitleEntries(presentationData: PresentationData, currentValue: ExteraChatListActionBarTitle) -> [ExteraActionBarTitleEntry] {
+private func exteraActionBarTitleEntries(preferences: ExteraProfilePreferences) -> [ExteraActionBarTitleEntry] {
+    let currentValue = preferences.actionBarTitle
     return [
         .appName(selected: currentValue == .appName, exteraProfileString("Extera.Profile.ActionBarTitleAppName")),
         .name(selected: currentValue == .name, exteraProfileString("Extera.Profile.ActionBarTitleName")),
@@ -281,8 +284,10 @@ private func exteraActionBarTitleEntries(presentationData: PresentationData, cur
 
 private func exteraActionBarTitlePickerController(context: AccountContext) -> ViewController {
     let arguments = ExteraActionBarTitleArguments(select: { value in
-        ExteraProfileSettings.shared.with { preferences in
-            preferences.actionBarTitle = value
+        ExteraProfileSettings.shared.with { preferences -> ExteraProfilePreferences in
+            var updated = preferences
+            updated.actionBarTitle = value
+            return updated
         }
     })
 
@@ -293,7 +298,7 @@ private func exteraActionBarTitlePickerController(context: AccountContext) -> Vi
     |> deliverOnMainQueue
     |> map { presentationData, currentValue -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(exteraProfileString("Extera.Profile.ActionBarTitle")), leftNavigationButton: nil, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))
-        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraActionBarTitleEntries(presentationData: presentationData, currentValue: currentValue), style: .blocks, animateChanges: true)
+        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: exteraActionBarTitleEntries(preferences: currentValue), style: .blocks, animateChanges: true)
         return (controllerState, (listState, arguments))
     }
 

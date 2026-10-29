@@ -101,7 +101,7 @@ private func exteraSpeechSettingsEntries(presentationData: PresentationData, set
     let languageLabel: String
     if settings.languageIdentifier == "auto" {
         let resolvedName = exteraSpeechLanguageName(languageIdentifier: resolveSpeechLocaleIdentifier(languageIdentifier: "auto", deviceLanguageCode: presentationData.strings.baseLanguageCode), availableLocales: availableLocales) ?? presentationData.strings.Extera_Speech_Settings_Language
-        languageLabel = presentationData.strings.Extera_Speech_Settings_Language_Auto(resolvedName)
+        languageLabel = presentationData.strings.Extera_Speech_Settings_Language_Auto(resolvedName).string
     } else {
         languageLabel = exteraSpeechLanguageName(languageIdentifier: settings.languageIdentifier, availableLocales: availableLocales) ?? settings.languageIdentifier
     }
@@ -174,7 +174,7 @@ private enum ExteraSpeechLanguageEntry: ItemListNodeEntry {
     var stableId: Int32 {
         switch self {
         case .auto: return 0
-        case let .locale(index, _, _): return 1 + index
+        case let .locale(index, _, _, _): return 1 + index
         }
     }
 
@@ -190,7 +190,7 @@ private enum ExteraSpeechLanguageEntry: ItemListNodeEntry {
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: label, label: selected ? "✓" : "", labelStyle: .coloredText(accentColor), sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
                 arguments.select("auto")
             })
-        case let .locale(_, _, identifier, title):
+        case let .locale(_, selected, identifier, title):
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: selected ? "✓" : "", labelStyle: .coloredText(accentColor), sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
                 arguments.select(identifier)
             })
@@ -202,7 +202,7 @@ private func exteraSpeechLanguageEntries(presentationData: PresentationData, cur
     var entries: [ExteraSpeechLanguageEntry] = []
 
     let autoResolvedName = exteraSpeechLanguageName(languageIdentifier: resolveSpeechLocaleIdentifier(languageIdentifier: "auto", deviceLanguageCode: presentationData.strings.baseLanguageCode), availableLocales: availableLocales) ?? availableLocales.first?.displayName ?? currentLanguageIdentifier
-    entries.append(.auto(selected: currentLanguageIdentifier == "auto", presentationData.strings.Extera_Speech_Settings_Language_Auto(autoResolvedName)))
+    entries.append(.auto(selected: currentLanguageIdentifier == "auto", presentationData.strings.Extera_Speech_Settings_Language_Auto(autoResolvedName).string))
     for (index, option) in availableLocales.enumerated() {
         entries.append(.locale(index: Int32(index), selected: currentLanguageIdentifier == option.identifier, identifier: option.identifier, option.displayName))
     }

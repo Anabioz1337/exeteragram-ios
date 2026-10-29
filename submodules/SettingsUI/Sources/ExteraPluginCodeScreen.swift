@@ -81,7 +81,7 @@ final class ExteraPluginCodeScreen: ViewController {
             self.save(textView.text ?? "")
         }
         if let navigationController = self.navigationController as? NavigationController {
-            navigationController.popViewController(animated: true)
+            _ = navigationController.popViewController(animated: true)
         }
     }
 }

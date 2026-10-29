@@ -8,6 +8,8 @@ import TelegramUIPreferences
 import AccountContext
 import ItemListUI
 import PresentationDataUtils
+import UndoUI
+import exteraPluginKit
 
 private enum ExteraPluginEditorSection: Int32 {
     case meta
@@ -108,7 +110,6 @@ private enum ExteraPluginEditorEntry: ItemListNodeEntry {
                 label: nil,
                 type: .regular(capitalization: false, autocorrection: false),
                 sectionId: self.section,
-                style: .blocks,
                 textUpdated: { arguments.updateName($0) },
                 action: {}
             )
@@ -122,7 +123,6 @@ private enum ExteraPluginEditorEntry: ItemListNodeEntry {
                 label: nil,
                 type: .regular(capitalization: false, autocorrection: false),
                 sectionId: self.section,
-                style: .blocks,
                 textUpdated: { arguments.updateVersion($0) },
                 action: {}
             )
@@ -136,7 +136,6 @@ private enum ExteraPluginEditorEntry: ItemListNodeEntry {
                 label: nil,
                 type: .regular(capitalization: false, autocorrection: false),
                 sectionId: self.section,
-                style: .blocks,
                 textUpdated: { arguments.updateAuthor($0) },
                 action: {}
             )
@@ -228,7 +227,7 @@ private func exteraPluginRemoveAlert(context: AccountContext, pluginName: String
     let controller = textAlertController(
         context: context,
         title: presentationData.strings.Extera_Plugins_RemoveTitle,
-        text: presentationData.strings.Extera_Plugins_RemoveText(pluginName),
+        text: presentationData.strings.Extera_Plugins_RemoveText(pluginName).string,
         actions: [
             TextAlertAction(type: .genericAction, title: presentationData.strings.Common_Cancel, action: {}),
             TextAlertAction(type: .destructiveAction, title: presentationData.strings.Extera_Plugins_RemoveConfirm, action: { remove() })
@@ -256,17 +255,17 @@ public func exteraPluginEditorScreen(context: AccountContext, existing: Installe
 
     let arguments = ExteraPluginEditorArguments(
         updateName: { value in
-            draft.modify { $0.name = value.trimmingCharacters(in: .whitespacesAndNewlines) }
+            draft.with { $0.name = value.trimmingCharacters(in: .whitespacesAndNewlines) }
         },
         updateVersion: { value in
-            draft.modify { $0.version = value.trimmingCharacters(in: .whitespacesAndNewlines) }
+            draft.with { $0.version = value.trimmingCharacters(in: .whitespacesAndNewlines) }
         },
         updateAuthor: { value in
-            draft.modify { $0.author = value.trimmingCharacters(in: .whitespacesAndNewlines) }
+            draft.with { $0.author = value.trimmingCharacters(in: .whitespacesAndNewlines) }
         },
         openCodeEditor: {
             let editor = exteraPluginCodeScreen(context: context, code: draft.with({ $0 }).code, save: { code in
-                draft.modify { $0.code = code }
+                draft.with { $0.code = code }
             })
             pushControllerImpl.with { impl in
                 impl(editor)
@@ -277,7 +276,7 @@ public func exteraPluginEditorScreen(context: AccountContext, existing: Installe
             guard !current.code.isEmpty else {
                 return
             }
-            let (reply, error) = ExteraPluginsManager.testRun(
+            let (reply, error) = ExteraPluginEngine.testRun(
                 sourceCode: current.code,
                 sample: ("Привет! Это тестовое сообщение.", "Тестовый чат", 0)
             )
@@ -286,7 +285,7 @@ public func exteraPluginEditorScreen(context: AccountContext, existing: Installe
             if let error {
                 text = error
             } else if let reply {
-                text = presentationData.strings.Extera_Plugins_Editor_TestReply(reply)
+                text = presentationData.strings.Extera_Plugins_Editor_TestReply(reply).string
             } else {
                 text = presentationData.strings.Extera_Plugins_Editor_TestNoReply
             }

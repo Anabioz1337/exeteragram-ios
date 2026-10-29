@@ -42,7 +42,8 @@ private final class ExteraChatP1SettingsArguments {
     }
 
     private func apply(_ transform: (inout ExteraChatP1DisplayState) -> Void) {
-        let next = self.state.modify { value in
+        let next = self.state.with { value in
+            var value = value
             transform(&value)
             return value
         }
@@ -207,7 +208,7 @@ private func bottomButtonStyleName(_ style: Int) -> String {
 
 public func exteraChatP1SettingsController(context: AccountContext) -> ViewController {
     let initialState = ExteraChatP1DisplayState()
-    let stateValue = ValuePromise<ExteraChatP1DisplayState>(ignoreRepeatedUpdates: false)
+    let stateValue = ValuePromise<ExteraChatP1DisplayState>(ignoreRepeated: false)
     stateValue.set(initialState)
 
     let arguments = ExteraChatP1SettingsArguments(state: initialState, commit: { next in

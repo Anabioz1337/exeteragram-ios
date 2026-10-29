@@ -83,7 +83,7 @@ private enum ExteraPluginsEntry: ItemListNodeEntry {
         case let .empty(text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section, style: .blocks)
         case let .actionsHeader(text):
-            return ItemListSectionHeaderItem(presentationData: presentationData, text: text, switchValue: nil, sectionId: self.section)
+            return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
         case let .addPlugin(title):
             return ItemListActionItem(
                 presentationData: presentationData,
@@ -130,7 +130,7 @@ public func exteraPluginsScreen(context: AccountContext) -> ViewController {
 
     let signal = combineLatest(queue: .mainQueue(),
         context.sharedContext.presentationData,
-        exteraPluginsSettings(context.sharedContext.accountManager)
+        exteraPluginsSettings(accountManager: context.sharedContext.accountManager)
     )
     |> deliverOnMainQueue
     |> map { presentationData, settings -> (ItemListControllerState, (ItemListNodeState, Any)) in

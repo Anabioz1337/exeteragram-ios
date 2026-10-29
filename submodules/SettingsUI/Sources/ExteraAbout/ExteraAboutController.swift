@@ -67,19 +67,19 @@ private enum ExteraAboutEntry: ItemListNodeEntry {
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: value, sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {})
         case let .copyright(text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
-        case let .website(_, title):
+        case let .website(title):
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: "", sectionId: self.section, style: .blocks, action: {
                 arguments.openLink(ExteraBrandingLinks.website)
             })
-        case let .sourceCode(_, title):
+        case let .sourceCode(title):
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: "", sectionId: self.section, style: .blocks, action: {
                 arguments.openLink(ExteraBrandingLinks.sourceCode)
             })
-        case let .channel(_, title):
+        case let .channel(title):
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: "", sectionId: self.section, style: .blocks, action: {
                 arguments.openLink(ExteraBrandingLinks.officialChannel)
             })
-        case let .support(_, title):
+        case let .support(title):
             return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: title, label: "", sectionId: self.section, style: .blocks, action: {
                 arguments.openLink(ExteraBrandingLinks.support)
             })

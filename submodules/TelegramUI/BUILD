@@ -85,6 +85,7 @@ swift_library(
         "//submodules/GZip:GZip",
         "//submodules/TelegramCallsUI:TelegramCallsUI",
         "//submodules/TelegramUIPreferences:TelegramUIPreferences",
+        "//submodules/exteraPluginKit:exteraPluginKit",
         "//submodules/MediaPlayer:UniversalMediaPlayer",
         "//submodules/TelegramVoip:TelegramVoip",
         "//submodules/DeviceAccess:DeviceAccess",
