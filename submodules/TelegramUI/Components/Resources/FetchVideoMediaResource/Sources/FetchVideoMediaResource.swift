@@ -861,11 +861,10 @@ private extension MediaQualityPreset {
         self.init(preset: preset)
         if alwaysSendHD, ExteraCameraOptions.shared.current.alwaysSendHD {
             switch self {
-            case .videoMessage, .animation, .sticker, .passthrough, .quality,
-                 .profileLow, .profile, .profileHigh, .profileVeryHigh:
-                break
-            default:
+            case .compressedDefault, .compressedVeryLow, .compressedLow, .compressedMedium, .compressedHigh:
                 self = .compressedVeryHigh
+            default:
+                break
             }
         }
     }

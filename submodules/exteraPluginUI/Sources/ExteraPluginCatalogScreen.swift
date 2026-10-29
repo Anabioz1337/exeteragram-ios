@@ -25,8 +25,8 @@ public final class ExteraPluginCatalogScreen: UITableViewController {
     private var stateDisposable: Disposable?
 
     public override init(style: UITableView.Style = .grouped) {
-        self.verifiedOnly = self.store.verifiedSourcesOnlyValue
-        self.selectedSorting = self.store.sortingValue
+        self.verifiedOnly = ExteraPluginUIStore.shared.verifiedSourcesOnlyValue
+        self.selectedSorting = ExteraPluginUIStore.shared.sortingValue
         super.init(style: style)
         self.title = exteraPluginsString("Extera.Plugins.Catalog")
     }
@@ -90,7 +90,7 @@ public final class ExteraPluginCatalogScreen: UITableViewController {
 
     private var visibleEntries: [ExteraCatalogEntry] {
         return self.previewEntries.filter { entry in
-            self.verifiedOnly || entry.isVerified
+            !self.verifiedOnly || entry.isVerified
         }
     }
 

@@ -86,8 +86,9 @@ public final class ExteraPluginsManager {
                 guard let self else {
                     return
                 }
+                let runtimes = plugins.map { ExteraPluginRuntime(plugin: $0) }
                 self.stateLock.lock()
-                self.runtimes = plugins.map { ExteraPluginRuntime(plugin: $0) }
+                self.runtimes = runtimes
                 self.stateLock.unlock()
             })
         )

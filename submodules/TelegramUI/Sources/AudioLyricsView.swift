@@ -380,7 +380,8 @@ final class AudioLyricsView: UIView, UIScrollViewDelegate {
         self.activeMaskShape.frame = row.highlightLabel.bounds
         self.activeMaskShape.path = CGPath(
             roundedRect: CGRect(origin: CGPoint(), size: CGSize(width: row.highlightLabel.bounds.width * fraction, height: row.highlightLabel.bounds.height)),
-            cornerRadius: 0.0,
+            cornerWidth: 0.0,
+            cornerHeight: 0.0,
             transform: nil
         )
     }

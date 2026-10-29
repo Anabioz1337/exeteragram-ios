@@ -276,6 +276,13 @@ public func exteraAIRoleEditController(context: AccountContext, role: ExteraAIRo
         ExteraAIStore.shared.roles = roles
     }
 
+    let statePromise = Promise<ExteraAIRoleEditState>(currentState)
+
+    func refreshEntries(_ state: ExteraAIRoleEditState) {
+        currentState = state
+        statePromise.set(.single(state))
+    }
+
     func updateState(_ transform: (inout ExteraAIRoleEditState) -> Void) {
         transform(&currentState)
         refreshEntries(currentState)
@@ -284,13 +291,6 @@ public func exteraAIRoleEditController(context: AccountContext, role: ExteraAIRo
 
     var presentControllerImpl: ((ViewController, Any?) -> Void)?
     var dismissImpl: (() -> Void)?
-
-    let statePromise = Promise<ExteraAIRoleEditState>(currentState)
-
-    func refreshEntries(_ state: ExteraAIRoleEditState) {
-        currentState = state
-        statePromise.set(.single(state))
-    }
 
     let arguments = ExteraAIRoleEditArguments(
         updateName: { value in

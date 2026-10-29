@@ -105,7 +105,7 @@ public enum ExteraTimezoneResolver {
         }
         var utcCalendar = Calendar(identifier: .gregorian)
         utcCalendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .current
-        var reference = DateComponents()
+        var reference = utcCalendar.dateComponents([.year, .month, .day], from: Date())
         reference.hour = hour
         reference.minute = minute
         guard let wallClockReference = utcCalendar.date(from: reference) else {

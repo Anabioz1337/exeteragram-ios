@@ -920,7 +920,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
         case .resetTranslationStates:
             return 69
         case .exteraTranslator:
-            return 70
+            return 78
         case .exteraAI:
             return 75
         case .exteraAIChat:
@@ -958,7 +958,7 @@ private enum DebugControllerEntry: ItemListNodeEntry {
             // at, or the list traps at runtime inside its own state closure.
             return 72
         case .exteraPluginsUI:
-            return 76
+            return 79
         case .springSendAnimation:
             // Appended right after `inputDecTextBackend`; see the ordering note above.
             return 73

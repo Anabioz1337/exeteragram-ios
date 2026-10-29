@@ -113,7 +113,7 @@ public final class ExteraAdblockUrlFilter {
         guard let accountManager = self.accountManager.with({ $0 }) else {
             return
         }
-        updateExteraSettingsInteractively(accountManager: accountManager) { settings in
+        let _ = updateExteraSettingsInteractively(accountManager: accountManager) { settings in
             settings.withUpdatedAdBlockBlockedRequests(settings.adBlockBlockedRequests + 1)
         }.startStandalone()
     }

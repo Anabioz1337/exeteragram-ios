@@ -292,8 +292,8 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
         interaction.openSettings(.language)
     }))
 
-    let exteraStrings = exteraStrings(languageCode: presentationData.strings.primaryComponent.languageCode)
-    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 60, text: exteraStrings.settingsTitle, icon: PresentationResourcesSettings.dataAndStorage, action: {
+    let exteraLocalized = exteraStrings(languageCode: presentationData.strings.primaryComponent.languageCode)
+    items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 60, text: exteraLocalized.settingsTitle, icon: PresentationResourcesSettings.dataAndStorage, action: {
         interaction.openSettings(.extera)
     }))
 

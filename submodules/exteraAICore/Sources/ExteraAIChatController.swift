@@ -103,9 +103,7 @@ private final class ExteraAIChatController: ViewController, UITableViewDataSourc
         self.sendButton.setTitle(exteraAIString("Extera.AI.Chat.Send"), for: .normal)
         self.sendButton.isEnabled = false
         self.sendButton.tintColor = self.presentationTheme.list.itemAccentColor
-        self.sendButton.addAction(UIAction { [weak self] _ in
-            self?.sendPressed()
-        }, for: .touchUpInside)
+        self.sendButton.addTarget(self, action: #selector(self.sendPressed), for: .touchUpInside)
         self.inputBar.addSubview(self.sendButton)
 
         self.view.addSubview(self.inputBar)

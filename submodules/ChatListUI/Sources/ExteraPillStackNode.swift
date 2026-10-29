@@ -98,17 +98,20 @@ public final class ExteraPillStackNode: ASDisplayNode, UIGestureRecognizerDelega
         for runIndex in self.pillViewsByRun.indices {
             let runViews = self.pillViewsByRun[runIndex]
             for pill in pills {
+                let pillView: UIView
                 if let view = runViews[pill.kind] {
                     if let label = view.subviews.compactMap({ $0 as? UILabel }).first, label.text != pill.title {
                         label.text = pill.title
                     }
+                    pillView = view
                 } else {
                     let view = self.makePillView(pill)
                     self.pillViewsByRun[runIndex][pill.kind] = view
                     self.kindByView[view] = pill.kind
                     self.scrollView.addSubview(view)
+                    pillView = view
                 }
-                self.applyAppearance(to: runViews[pill.kind]!, selected: self.selectedKind == pill.kind)
+                self.applyAppearance(to: pillView, selected: self.selectedKind == pill.kind)
             }
         }
         self.layoutPills()
@@ -292,7 +295,8 @@ public final class ExteraPillStackNode: ASDisplayNode, UIGestureRecognizerDelega
             self.reorderActive = false
             return
         }
-        view.transform = CGAffineTransform()
+        view.transform = .identity
+        view.layer.zPosition = 0.0
         self.reorderActive = false
         self.scrollView.isScrollEnabled = true
         self.draggingView = nil

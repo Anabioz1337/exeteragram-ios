@@ -1085,7 +1085,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
     }
     
     @objc func rateButtonPressed() {
-        var nextRate: AudioPlaybackRate
+        let nextRate: AudioPlaybackRate
         if let rate = self.currentRate {
             switch rate {
             case .x0_5, .x2:
@@ -1162,7 +1162,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
         }
 
         let currentPitch = self.currentPitchCents
-        for cents in [-600, -300, 0, 300, 600] {
+        for cents: Int32 in [-600, -300, 0, 300, 600] {
             let isSelected = currentPitch == cents
             let text: String
             if cents == 0 {
@@ -1172,7 +1172,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
             }
             presetItems.append(.action(ContextMenuActionItem(text: text, icon: { _ in return nil }, iconSource: ContextMenuActionItemIconSource(size: CGSize(width: 24.0, height: 24.0), signal: .single(isSelected ? generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.contextMenu.primaryColor) : UIImage()), action: { [weak self] _, f in
                 f(.default)
-                self?.control?(.setPitch(Int32(cents)))
+                self?.control?(.setPitch(cents))
             }))))
         }
 

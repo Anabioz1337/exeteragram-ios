@@ -12,6 +12,7 @@ import ReactionImageComponent
 import AnimationCache
 import MultiAnimationRenderer
 import TelegramStringFormatting
+import ExteraChatP1
 
 private func maybeAddRotationAnimation(_ layer: CALayer, duration: Double) {
     if let _ = layer.animation(forKey: "clockFrameAnimation") {

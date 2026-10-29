@@ -900,7 +900,7 @@ func infoItems(
             }
         }
     } else if case let .legacyGroup(group) = data.peer {
-        let ItemExteraIdAndDcLegacyGroup = 0
+        let ItemExteraIdAndDcLegacyGroup = 100
         if let cachedData = data.cachedData as? CachedGroupData {
             let aboutText: String?
             if group.isFake {

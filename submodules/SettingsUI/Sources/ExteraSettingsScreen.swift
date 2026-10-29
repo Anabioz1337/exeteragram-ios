@@ -9,6 +9,7 @@ import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import TextFormat
+import TelegramStringFormatting
 
 private enum ExteraUpdaterStatus: Equatable {
     case idle
@@ -780,7 +781,7 @@ private func exteraSettingsEntries(presentationData: PresentationData, settings:
 public func exteraSettingsScreen(context: AccountContext) -> ViewController {
     let statusPromise = ValuePromise<ExteraUpdaterStatus>(ignoreRepeated: true)
     let updateStatusDisposable = MetaDisposable()
-    let pluginsNavControllerHolder = Atomic<NavigationController?>(value: nil)
+    let pushControllerImpl = Atomic<((ViewController) -> Void)?>(value: nil)
 
     let arguments = ExteraSettingsArguments(
         chooseDownloadBoost: { [weak context] in
@@ -895,7 +896,7 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
                 return
             }
             let screen = exteraPluginsScreen(context: context)
-            (pluginsNavControllerHolder.with { $0 })?.pushViewController(screen)
+            (pushControllerImpl.with { $0 })?(screen)
         },
         toggleBlockAds: { [weak context] value in
             guard let context = context else {
@@ -1115,7 +1116,9 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
 
     let controller = ItemListController(context: context, state: signal)
     controller.navigationPresentation = .modal
-    let _ = pluginsNavControllerHolder.swap(controller.navigationController as? NavigationController)
+    let _ = pushControllerImpl.swap({ [weak controller] c in
+        (controller?.navigationController as? NavigationController)?.pushViewController(c)
+    })
     return controller
 }
 

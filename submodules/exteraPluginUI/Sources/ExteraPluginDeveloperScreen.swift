@@ -15,7 +15,7 @@ public final class ExteraPluginDeveloperScreen: UITableViewController {
     private var stateDisposable: Disposable?
 
     public override init(style: UITableView.Style = .grouped) {
-        self.serverURL = self.store.developerServerURLValue
+        self.serverURL = ExteraPluginUIStore.shared.developerServerURLValue
         super.init(style: style)
         self.title = exteraPluginsString("Extera.Plugins.DevMode.Title")
     }
@@ -123,10 +123,6 @@ public final class ExteraPluginDeveloperScreen: UITableViewController {
         self.serverURL = sender.text ?? ""
     }
 
-    public override func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-        self.store.setDeveloperServerURL(self.serverURL)
-    }
-
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         switch Section(rawValue: indexPath.section) ?? .server {
@@ -144,5 +140,9 @@ extension ExteraPluginDeveloperScreen: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        self.store.setDeveloperServerURL(self.serverURL)
     }
 }

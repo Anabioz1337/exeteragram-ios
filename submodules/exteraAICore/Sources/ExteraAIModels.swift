@@ -89,6 +89,6 @@ func exteraAISystemPrompt(role: ExteraAIRoleConfig?, action: ExteraAIActionKind)
     }
 }
 
-func exteraAIQuoteText(_ text: String) -> String {
+public func exteraAIQuoteText(_ text: String) -> String {
     return text.components(separatedBy: "\n").map { "> \($0)" }.joined(separator: "\n")
 }

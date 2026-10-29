@@ -42,7 +42,7 @@ private final class ExteraChatP1SettingsArguments {
     }
 
     private func apply(_ transform: (inout ExteraChatP1DisplayState) -> Void) {
-        let next = self.state.with { value in
+        let next = self.state.modify { value in
             var value = value
             transform(&value)
             return value

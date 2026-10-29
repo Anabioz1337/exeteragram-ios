@@ -7,6 +7,7 @@ import TelegramPresentationData
 import ItemListUI
 import AccountContext
 import TelegramStringFormatting
+import TelegramUIPreferences
 import exteraSettingsCore
 import Postbox
 
@@ -49,7 +50,7 @@ func exteraFormattedTimestamp(_ timestamp: Int32, format: ExteraMessageDetailsDa
         case .relative:
             let relativeFormatter = RelativeDateTimeFormatter()
             relativeFormatter.locale = Locale.current
-            return relativeFormatter.localizedString(forDate: date)
+            return relativeFormatter.localizedString(for: date)
         case .shortTime:
             formatter.timeStyle = .short
         case .longTime:
@@ -116,7 +117,7 @@ private struct MessageMediaSummary: Equatable {
 }
 
 private func botApiPeerIdString(_ peerId: PeerId) -> String {
-    let id = peerId.id.rawValue
+    let id = peerId.id.id._internalGetInt64Value()
     if peerId.namespace == Namespaces.Peer.CloudChannel {
         return "-100\(id)"
     } else if peerId.namespace == Namespaces.Peer.CloudGroup {
@@ -244,7 +245,7 @@ public func exteraMessageDetailsController(context: AccountContext, message: Mes
     let summary = MessageMediaSummary(message: message, context: context)
     let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
 
-    let datacenterValue = botApiPeerIdString(message.peerId)
+    let datacenterValue = botApiPeerIdString(message.id.peerId)
 
     let arguments = ExteraMessageDetailsArguments()
 

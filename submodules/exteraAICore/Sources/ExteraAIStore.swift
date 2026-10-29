@@ -24,29 +24,29 @@ public final class ExteraAIStore {
         set { self.encode(newValue, key: Key.services) }
     }
 
-    var roles: [ExteraAIRoleConfig] {
+    public var roles: [ExteraAIRoleConfig] {
         get { return self.decoded([ExteraAIRoleConfig].self, key: Key.roles) ?? [] }
         set { self.encode(newValue, key: Key.roles) }
     }
 
-    var generationSettings: ExteraAIGenerationSettings {
+    public var generationSettings: ExteraAIGenerationSettings {
         get {
             return self.decoded(ExteraAIGenerationSettings.self, key: Key.generationSettings) ?? .defaultValue
         }
         set { self.encode(newValue, key: Key.generationSettings) }
     }
 
-    var selectedServiceId: String? {
+    public var selectedServiceId: String? {
         get { return self.defaults.string(forKey: Key.selectedServiceId.rawValue) }
         set { self.defaults.set(newValue, forKey: Key.selectedServiceId.rawValue) }
     }
 
-    var selectedRoleId: String? {
+    public var selectedRoleId: String? {
         get { return self.defaults.string(forKey: Key.selectedRoleId.rawValue) }
         set { self.defaults.set(newValue, forKey: Key.selectedRoleId.rawValue) }
     }
 
-    var replaceTelegramAI: Bool {
+    public var replaceTelegramAI: Bool {
         get {
             if self.defaults.object(forKey: Key.replaceTelegramAI.rawValue) == nil {
                 return true
@@ -56,7 +56,7 @@ public final class ExteraAIStore {
         set { self.defaults.set(newValue, forKey: Key.replaceTelegramAI.rawValue) }
     }
 
-    var selectedService: ExteraAIServiceConfig? {
+    public var selectedService: ExteraAIServiceConfig? {
         let selectedId = self.selectedServiceId
         if selectedId == exteraAIOnDeviceServiceId {
             return nil
@@ -64,7 +64,7 @@ public final class ExteraAIStore {
         return self.services.first(where: { $0.id == selectedId }) ?? self.services.first
     }
 
-    var selectedRole: ExteraAIRoleConfig? {
+    public var selectedRole: ExteraAIRoleConfig? {
         return self.roles.first(where: { $0.id == self.selectedRoleId })
     }
 

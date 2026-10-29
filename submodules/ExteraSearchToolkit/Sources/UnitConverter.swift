@@ -158,9 +158,7 @@ public enum ExteraUnitConverter {
         if let explicitTarget {
             resolvedTargetName = explicitTarget
         } else {
-            let preferredIsImperial = measureSystem == .imperial
-            let wantImperial = !fromUnit.isImperial == preferredIsImperial
-            resolvedTargetName = counterpartTitle(for: fromUnit.title, imperial: wantImperial)
+            resolvedTargetName = counterpartTitle(for: fromUnit.title, imperial: fromUnit.isImperial)
         }
         guard let targetName = resolvedTargetName, let targetUnit = allUnits[targetName] else {
             return nil
@@ -186,7 +184,7 @@ public enum ExteraUnitConverter {
     private static let metricCounterparts: [String: String] = [
         "m": "ft", "km": "mi", "cm": "in", "mm": "in",
         "kg": "lb", "g": "oz", "t": "st",
-        "\u{00B0}C": "\u{00B0}F", "K": "\u{00B0}C",
+        "\u{00B0}C": "f", "K": "c",
         "km/h": "mph", "m/s": "mph", "kn": "mph",
         "l": "gal", "ml": "pt"
     ]
@@ -194,7 +192,7 @@ public enum ExteraUnitConverter {
     private static let imperialCounterparts: [String: String] = [
         "mi": "km", "ft": "m", "in": "cm", "yd": "m",
         "lb": "kg", "oz": "g", "st": "t",
-        "\u{00B0}F": "\u{00B0}C",
+        "\u{00B0}F": "c",
         "mph": "km/h", "kn": "km/h",
         "gal": "l", "qt": "l", "pt": "ml"
     ]

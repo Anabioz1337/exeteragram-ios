@@ -1142,10 +1142,6 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
                 return true
             }
             
-            if !strongSelf.exteraSettings.hideKeyboardOnScroll {
-                return true
-            }
-            
             return false
         }
     }

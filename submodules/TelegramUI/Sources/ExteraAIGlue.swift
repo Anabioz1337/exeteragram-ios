@@ -9,7 +9,47 @@ import UndoUI
 import BrowserUI
 import TextFormat
 import exteraAICore
+import ChatControllerInteraction
+import ChatPresentationInterfaceState
 import ContextUI
+
+final class ExteraAIResultHostController: ViewController {
+    private let resultViewController: UIViewController
+    private var embedded = false
+
+    init(resultViewController: UIViewController) {
+        self.resultViewController = resultViewController
+        super.init(navigationBarPresentationData: nil)
+        self.title = resultViewController.title
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    public override func loadDisplayNode() {
+        self.displayNode = ASDisplayNode()
+    }
+
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.addChild(self.resultViewController)
+        self.resultViewController.view.frame = self.view.bounds
+        self.resultViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.view.addSubview(self.resultViewController.view)
+        self.resultViewController.didMove(toParent: self)
+        self.embedded = true
+    }
+
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if self.embedded {
+            self.resultViewController.view.frame = self.view.bounds
+        }
+    }
+}
 
 private func exteraAIPresentResult(
     context: AccountContext,
@@ -106,7 +146,7 @@ func exteraAIMessageContextMenuItems(
                 action: actionKind,
                 sourceText: messageText,
                 present: { resultController in
-                    controllerInteraction?.presentControllerInCurrent(resultController, nil)
+                    controllerInteraction?.presentControllerInCurrent(ExteraAIResultHostController(resultViewController: resultController), nil)
                 },
                 displayUndo: { content in
                     controllerInteraction?.displayUndo(content)
@@ -166,7 +206,7 @@ func exteraAIPresentComposeReplacement(
         action: .restyle,
         sourceText: instruction,
         present: { resultController in
-            controller?.present(resultController, in: .window(.root))
+            controller?.present(ExteraAIResultHostController(resultViewController: resultController), in: .window(.root))
         },
         displayUndo: { content in
             let undoController = UndoOverlayController(presentationData: context.sharedContext.currentPresentationData.with { $0 }, content: content, elevatedLayout: false, animateInAsReplacement: false, action: { _ in

@@ -911,7 +911,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
     
     let isScheduled = chatPresentationInterfaceState.subject == .scheduledMessages
     
-    let dataSignal: Signal<(MessageContextMenuData, [EngineMessage.Id: ChatUpdatingMessageMedia], InfoSummaryData, AppConfiguration, Bool, Int32, AvailableReactions?, TranslationSettings, LoggingSettings, NotificationSoundList?, EnginePeer?), NoError> = combineLatest(
+    let dataSignal: Signal<(MessageContextMenuData, [EngineMessage.Id: ChatUpdatingMessageMedia], InfoSummaryData, AppConfiguration, Bool, Int32, AvailableReactions?, TranslationSettings, LoggingSettings, ExteraSettings, NotificationSoundList?, EnginePeer?), NoError> = combineLatest(
         loadLimits,
         loadStickerSaveStatusSignal,
         loadResourceStatusSignal,
@@ -1989,7 +1989,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             }
         }
 
-        let exteraStrings = exteraLocalizedStrings(chatPresentationInterfaceState.presentationData)
+        let exteraStrings = exteraLocalizedStrings(context.sharedContext.currentPresentationData.with { $0 })
         if exteraSettings.showCopyPhotoButton, resourceAvailable && isImage && !isExpired && !isCopyProtected && !message.containsSecretMedia, let imageMedia = message.effectiveMedia.first(where: { $0 is TelegramMediaImage }) as? TelegramMediaImage, let controllerInteraction {
             actions.append(.action(ContextMenuActionItem(text: exteraStrings.value("extera_CopyPhoto"), icon: { theme in
                 return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Copy"), color: theme.actionSheet.primaryTextColor)

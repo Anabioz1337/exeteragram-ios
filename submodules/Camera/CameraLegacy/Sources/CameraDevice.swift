@@ -257,7 +257,7 @@ final class CameraDevice {
             device.isSubjectAreaChangeMonitoringEnabled = monitorSubjectAreaChange
             
             if abs(device.exposureTargetBias) > 0.0 {
-                device.setExposureTargetBias(0.0)
+                device.setExposureTargetBias(0.0, completionHandler: nil)
             }
         }
     }

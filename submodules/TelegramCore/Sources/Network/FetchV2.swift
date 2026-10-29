@@ -935,7 +935,7 @@ private final class FetchImpl {
                 }
                 |> `catch` { [fastDownloads = self.fastDownloads] error -> Signal<FilePartResult, NoError> in
                     if fastDownloads {
-                        return .single(.cdnFailure(sourceDatacenterId: cdnData.sourceDatacenterId, error: error.errorDescription ?? ""))
+                        return .single(.cdnFailure(sourceDatacenterId: cdnData.sourceDatacenterId, error: error.errorDescription))
                     }
                     return .single(.failure)
                 }
@@ -1263,7 +1263,7 @@ private final class FetchImpl {
                 guard let self, let state, self.isCurrent(state) else {
                     return
                 }
-                self.fallBackToMaster(sourceDatacenterId: cdnData.sourceDatacenterId, reason: "reupload failed: \(error.errorDescription ?? "")")
+                self.fallBackToMaster(sourceDatacenterId: cdnData.sourceDatacenterId, reason: "reupload failed: \(error.errorDescription)")
                 self.update()
             })
         }

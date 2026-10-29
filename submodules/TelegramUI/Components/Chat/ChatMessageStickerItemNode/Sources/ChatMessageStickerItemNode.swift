@@ -28,6 +28,7 @@ import ChatMessageActionButtonsNode
 import ChatMessageReactionsFooterContentNode
 import ChatSwipeToReplyRecognizer
 import ChatMessageSuggestedPostInfoNode
+import ExteraChatP1
 
 private let nameFont = Font.medium(14.0)
 private let inlineBotPrefixFont = Font.regular(14.0)

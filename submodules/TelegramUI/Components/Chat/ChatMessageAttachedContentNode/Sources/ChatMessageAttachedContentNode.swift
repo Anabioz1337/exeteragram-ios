@@ -55,7 +55,7 @@ public struct ChatMessageAttachedContentNodeMediaFlags: OptionSet {
     public static let preferMediaBeforeText = ChatMessageAttachedContentNodeMediaFlags(rawValue: 1 << 1)
     public static let preferMediaAspectFilled = ChatMessageAttachedContentNodeMediaFlags(rawValue: 1 << 2)
     public static let titleBeforeMedia = ChatMessageAttachedContentNodeMediaFlags(rawValue: 1 << 3)
-    public static let stickerPack = ChatMessageAttachedContentNodeMediaFlags(rawValue: 1 << 3)
+    public static let stickerPack = ChatMessageAttachedContentNodeMediaFlags(rawValue: 1 << 4)
 }
 
 public final class ChatMessageAttachedContentNode: ASDisplayNode {
@@ -1137,7 +1137,7 @@ public final class ChatMessageAttachedContentNode: ASDisplayNode {
                                         inlineMedia.setSignal(updateInlineImageSignal)
                                     }
                                 case let .peerAvatar(peer):
-                                    if let peerReference = PeerReference(peer) {
+                                    if let peerReference = PeerReference(peer._asPeer()) {
                                         if let signal = peerAvatarImage(account: context.account, peerReference: peerReference, authorOfMessage: nil, representation: peer.largeProfileImage, displayDimensions: inlineMediaSize, clipStyle: .none, blurred: false, inset: 0.0, emptyColor: mainColor.withMultipliedAlpha(0.1), synchronousLoad: synchronousLoads, provideUnrounded: false) {
                                             let updateInlineImageSignal = signal |> map { images -> (TransformImageArguments) -> DrawingContext? in
                                                 let image = images?.0

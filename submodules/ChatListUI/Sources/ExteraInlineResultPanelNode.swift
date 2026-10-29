@@ -26,7 +26,7 @@ public final class ExteraInlineResultPanelNode: ASDisplayNode, UIGestureRecogniz
         self.addSubnode(self.gearNode)
         self.updateBackground(for: theme)
         self.gearNode.image = generateTintedImage(image: UIImage(bundleImageName: "Wallet/InfoSettings"), color: theme.rootController.navigationBar.secondaryTextColor)
-        self.gearNode.isUserInteractionEnabled = false
+        self.gearNode.isUserInteractionEnabled = true
 
         let containerRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         containerRecognizer.delegate = self

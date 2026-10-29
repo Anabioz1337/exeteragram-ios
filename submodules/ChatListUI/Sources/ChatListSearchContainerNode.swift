@@ -416,6 +416,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
             self?.openAdInfo?(node, adPeer)
         })
         self.paneContainerNode.interaction = interaction
+        self.interaction = interaction
         
         self.paneContainerNode.currentPaneUpdated = { [weak self] key, transitionFraction, transition in
             guard let self, let key else {

@@ -13,7 +13,13 @@ private func exteraPluginExceptionIsReal(_ value: JSValue?) -> Bool {
     return !value.isNull && !value.isUndefined
 }
 
-final class ExteraPluginScriptBridge: NSObject {
+@objc protocol ExteraPluginScriptBridgeExport: JSExport {
+    func registerOnMessage(_ handler: JSValue)
+    func reportError(_ error: JSValue)
+    func log(_ text: String)
+}
+
+final class ExteraPluginScriptBridge: NSObject, ExteraPluginScriptBridgeExport {
     private let logSink: (String) -> Void
     var onMessageHandler: JSValue?
     var lastException: JSValue?

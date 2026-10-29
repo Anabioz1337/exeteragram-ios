@@ -46,7 +46,7 @@ public final class ExteraPillsService: NSObject, CLLocationManagerDelegate {
         case .manual:
             self.fetchWeather(latitude: location.latitude, longitude: location.longitude, completion: completion)
         case .current:
-            let status = self.locationManager.authorizationStatus
+            let status = self.authorizationStatus(self.locationManager)
             if status == .notDetermined {
                 self.authorizationCompletion = { [weak self] granted in
                     guard let self, granted else {
@@ -92,15 +92,30 @@ public final class ExteraPillsService: NSObject, CLLocationManagerDelegate {
         })
     }
 
-    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+    private func authorizationStatus(_ manager: CLLocationManager) -> CLAuthorizationStatus {
+        if #available(iOS 14.0, *) {
+            return manager.authorizationStatus
+        } else {
+            return CLLocationManager.authorizationStatus()
+        }
+    }
+
+    private func handleAuthorizationChange(_ status: CLAuthorizationStatus) {
+        if status == .notDetermined {
+            return
+        }
         let completion = self.authorizationCompletion
         self.authorizationCompletion = nil
-        let granted = manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways
-        if !granted {
-            completion?(false)
-        } else {
-            self.requestCurrentLocation(completion: { completion?(true) })
-        }
+        let granted = status == .authorizedWhenInUse || status == .authorizedAlways
+        completion?(granted)
+    }
+
+    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        self.handleAuthorizationChange(self.authorizationStatus(manager))
+    }
+
+    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        self.handleAuthorizationChange(status)
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

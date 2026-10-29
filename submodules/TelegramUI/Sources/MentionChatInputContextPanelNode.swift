@@ -173,13 +173,13 @@ final class MentionChatInputContextPanelNode: ChatInputContextPanelNode {
                             }
                             
                             if let range = mentionQueryRange {
-                                let trailingSeparator = self.addCommaAfterMention ? ", " : " "
+                                let trailingSeparator = strongSelf.addCommaAfterMention ? ", " : " "
                                 if let addressName = peer.addressName, !addressName.isEmpty {
                                     return (textInputState.replacingFlatRange(range, with: addressName + trailingSeparator), inputMode)
                                 } else if !peer.compactDisplayTitle.isEmpty {
                                     let replacementText = NSMutableAttributedString()
                                     replacementText.append(NSAttributedString(string: peer.compactDisplayTitle, attributes: [ChatTextInputAttributes.textMention: ChatTextInputTextMentionAttribute(peerId: peer.id)]))
-                                    replacementText.append(NSAttributedString(string: self.addCommaAfterMention ? ", " : " "))
+                                    replacementText.append(NSAttributedString(string: strongSelf.addCommaAfterMention ? ", " : " "))
 
                                     // The widened range eats the leading "@" as well as the query.
                                     let updatedRange = NSRange(location: range.location - 1, length: range.length + 1)

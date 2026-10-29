@@ -317,8 +317,7 @@ public func exteraPillsSettingsController(context: AccountContext) -> ViewContro
         }
 
         var updatedRows = rows
-        let moved = updatedRows.remove(at: fromRowIndex)
-        updatedRows.insert((fromKind, moved.hidden), at: 0)
+        let _ = updatedRows.remove(at: fromRowIndex)
 
         var insertionIndex = updatedRows.count
         if let referenceKind {

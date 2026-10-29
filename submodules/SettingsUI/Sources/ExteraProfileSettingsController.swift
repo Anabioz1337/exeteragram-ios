@@ -284,11 +284,9 @@ private func exteraActionBarTitleEntries(preferences: ExteraProfilePreferences) 
 
 private func exteraActionBarTitlePickerController(context: AccountContext) -> ViewController {
     let arguments = ExteraActionBarTitleArguments(select: { value in
-        ExteraProfileSettings.shared.with { preferences -> ExteraProfilePreferences in
-            var updated = preferences
-            updated.actionBarTitle = value
-            return updated
-        }
+        var preferences = ExteraProfileSettings.shared.current
+        preferences.actionBarTitle = value
+        ExteraProfileSettings.shared.update(preferences)
     })
 
     let signal = combineLatest(queue: .mainQueue(),

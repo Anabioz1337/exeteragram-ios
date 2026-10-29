@@ -4,6 +4,7 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
+import Postbox
 import TelegramCore
 import TelegramPresentationData
 import TelegramUIPreferences
@@ -689,7 +690,7 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
             switch state.status.status {
                 case .playing:
                     isPlaying = true
-                case .buffering(_, whilePlaying, _, _):
+                case let .buffering(_, whilePlaying, _, _):
                     isPlaying = whilePlaying
                 default:
                     break
@@ -1104,11 +1105,11 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
             |> take(1)
         )
         |> deliverOnMainQueue).startStandalone(next: { [weak self] message, sharedData in
-            guard let self else {
+            guard let self, let message else {
                 return
             }
             let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraMediaSettings]?.get(ExteraMediaSettings.self) ?? ExteraMediaSettings.defaultSettings
-            let targetPeerId: PeerId = settings.trackSavePeerIdRaw != 0 ? PeerId(_rawValue: settings.trackSavePeerIdRaw) : self.trackSavePeerId
+            let targetPeerId: PeerId = settings.trackSavePeerIdRaw != 0 ? PeerId(Int64(settings.trackSavePeerIdRaw)) : self.trackSavePeerId
             let forwardMessage: EnqueueMessage = .forward(source: message.id, threadId: nil, grouping: .auto, attributes: [], correlationId: nil)
             let _ = enqueueMessages(account: self.context.account, peerId: targetPeerId, messages: [forwardMessage]).startStandalone()
 
@@ -1137,13 +1138,14 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
             mode: .peerSelection(searchChatList: true, searchGroups: false, searchChannels: true),
             filters: [],
             isPeerEnabled: { peer in
-                if case let .channel(channel) = peer._asPeer() {
-                    return channel.flags.contains(.canSendMessage)
-                }
-                if case .user = peer._asPeer() {
+                switch peer {
+                case let .channel(channel):
+                    return channel.hasPermission(.sendSomething)
+                case .user:
                     return true
+                default:
+                    return false
                 }
-                return false
             }
         ))
         self.trackSaveChannelDisposable.set((controller.result
@@ -1153,7 +1155,7 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
                 return
             }
             let _ = updateExteraMediaSettingsInteractively(accountManager: self.context.sharedContext.accountManager, {
-                return $0.withUpdatedTrackSavePeerIdRaw(peerId.id._internalGetInt64Value())
+                return $0.withUpdatedTrackSavePeerIdRaw(peerId.toInt64())
             }).startStandalone()
 
             let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))

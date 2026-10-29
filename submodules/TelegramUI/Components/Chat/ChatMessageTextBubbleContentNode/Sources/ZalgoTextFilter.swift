@@ -35,12 +35,10 @@ func stripExcessiveCombiningMarks(from text: String) -> (strippedText: String, u
     indexMap.reserveCapacity(text.utf16.count)
 
     var runLength = 0
-    var sourceUtf16Offset = 0
     var resultUtf16Offset = 0
 
     for scalar in text.unicodeScalars {
         let width = UTF16.width(scalar)
-        defer { sourceUtf16Offset += width }
 
         if isCombiningDiacriticalMark(scalar) && runLength >= zalgoMaximumCombiningRunLength {
             for _ in 0..<width {

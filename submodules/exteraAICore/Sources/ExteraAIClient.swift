@@ -139,6 +139,9 @@ public final class ExteraAIChatClient {
                 do {
                     let body = try Self.requestBody(service: service, messages: messages, settings: settings, stream: settings.responseStreaming)
                     let urlRequest = try Self.urlRequest(service: service, body: body)
+                    guard #available(iOS 15.0, *) else {
+                        throw ExteraAIRequestFailure.network
+                    }
                     if settings.responseStreaming {
                         try await Self.stream(urlRequest: urlRequest, session: session, continuation: continuation)
                     } else {
@@ -164,6 +167,7 @@ public final class ExteraAIChatClient {
         return chatStream(service: service, messages: messages, settings: settings)
     }
 
+    @available(iOS 15.0, *)
     private static func complete(urlRequest: URLRequest, session: URLSession, continuation: AsyncThrowingStream<ExteraAIStreamEvent, Error>.Continuation) async throws {
         let (data, response) = try await session.data(for: urlRequest)
         guard let http = response as? HTTPURLResponse else {
@@ -182,6 +186,7 @@ public final class ExteraAIChatClient {
         continuation.yield(.content(content))
     }
 
+    @available(iOS 15.0, *)
     private static func stream(urlRequest: URLRequest, session: URLSession, continuation: AsyncThrowingStream<ExteraAIStreamEvent, Error>.Continuation) async throws {
         let (bytes, response) = try await session.bytes(for: urlRequest)
         guard let http = response as? HTTPURLResponse else {

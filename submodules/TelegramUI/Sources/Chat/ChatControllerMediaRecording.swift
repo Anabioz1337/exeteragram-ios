@@ -149,18 +149,15 @@ extension ChatControllerImpl {
     
     private func presentVideoMessagesCameraChoice() {
         let presentationData = self.presentationData
-        let alertController = UIAlertController(
-            title: exteraCameraString("extera_ChooseVideoMessagesCamera"),
-            message: nil,
-            preferredStyle: .alert
-        )
-        alertController.addAction(UIAlertAction(title: exteraCameraString("extera_RearCamera"), style: .default, handler: { [weak self] _ in
-            self?.requestVideoRecorder(forcedPositionIsFront: false)
-        }))
-        alertController.addAction(UIAlertAction(title: exteraCameraString("extera_FrontCamera"), style: .default, handler: { [weak self] _ in
-            self?.requestVideoRecorder(forcedPositionIsFront: true)
-        }))
-        alertController.addAction(UIAlertAction(title: presentationData.strings.Common_Cancel, style: .cancel, handler: nil))
+        let alertController = textAlertController(context: self.context, updatedPresentationData: self.updatedPresentationData, title: exteraCameraString("extera_ChooseVideoMessagesCamera"), text: "", actions: [
+            TextAlertAction(type: .defaultAction, title: exteraCameraString("extera_RearCamera"), action: { [weak self] in
+                self?.requestVideoRecorder(forcedPositionIsFront: false)
+            }),
+            TextAlertAction(type: .defaultAction, title: exteraCameraString("extera_FrontCamera"), action: { [weak self] in
+                self?.requestVideoRecorder(forcedPositionIsFront: true)
+            }),
+            TextAlertAction(type: .cancelAction, title: presentationData.strings.Common_Cancel, action: {})
+        ])
         self.present(alertController, in: .window(.root))
     }
 

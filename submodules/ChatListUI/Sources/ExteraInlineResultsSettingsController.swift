@@ -56,8 +56,8 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
     case angleUnit(String)
     case measureSystem(String)
     case digitGrouping(Bool)
-    case docTitle(String)
-    case docText(String)
+    case docTitle(Int, String)
+    case docText(Int, String)
 
     var section: ItemListSectionId {
         switch self {
@@ -86,8 +86,8 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
         case .angleUnit: return 3002
         case .measureSystem: return 3003
         case .digitGrouping: return 3004
-        case .docTitle: return 4000
-        case .docText: return 4001
+        case let .docTitle(index, _): return 4000 + index * 2
+        case let .docText(index, _): return 4001 + index * 2
         }
     }
 
@@ -145,12 +145,12 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
             if case let .digitGrouping(rhsValue) = rhs, value == rhsValue {
                 return true
             }
-        case let .docTitle(text):
-            if case let .docTitle(rhsText) = rhs, text == rhsText {
+        case let .docTitle(index, text):
+            if case let .docTitle(rhsIndex, rhsText) = rhs, index == rhsIndex, text == rhsText {
                 return true
             }
-        case let .docText(text):
-            if case let .docText(rhsText) = rhs, text == rhsText {
+        case let .docText(index, text):
+            if case let .docText(rhsIndex, rhsText) = rhs, index == rhsIndex, text == rhsText {
                 return true
             }
         }
@@ -207,9 +207,9 @@ private enum ExteraInlineResultsSettingsEntry: ItemListNodeEntry {
             return ItemListSwitchItem(presentationData: presentationData, title: exteraPillString("extera_InlineDigitGrouping"), value: value, sectionId: self.section, style: .blocks, updated: { updatedValue in
                 arguments.updateDigitGrouping(updatedValue)
             })
-        case let .docTitle(text):
+        case let .docTitle(_, text):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
-        case let .docText(text):
+        case let .docText(_, text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
         }
     }
@@ -233,14 +233,14 @@ private func exteraInlineResultsSettingsEntries(presentationData: PresentationDa
     entries.append(.measureSystem(settings.measureSystem == .metric ? exteraPillString("extera_InlineMeasureMetric") : exteraPillString("extera_InlineMeasureImperial")))
     entries.append(.digitGrouping(settings.digitGrouping))
     
-    entries.append(.docTitle(exteraPillString("extera_InlineDocArithmetic")))
-    entries.append(.docText(exteraPillString("extera_InlineDocArithmeticInfo") + ". " + exteraPillString("extera_InlineDocFunctionsText") + " " + exteraPillString("extera_InlineDocPercentText") + " " + exteraPillString("extera_InlineDocShorthandsText")))
-    entries.append(.docTitle(exteraPillString("extera_InlineDocCurrenciesInfo")))
-    entries.append(.docText(exteraPillString("extera_InlineDocCurrencyText")))
-    entries.append(.docTitle(exteraPillString("extera_InlineDocUnitsInfo")))
-    entries.append(.docText(exteraPillString("extera_InlineDocUnitsText")))
-    entries.append(.docTitle(exteraPillString("extera_InlineDocTimeInfo")))
-    entries.append(.docText(exteraPillString("extera_InlineDocTimeText")))
+    entries.append(.docTitle(0, exteraPillString("extera_InlineDocArithmetic")))
+    entries.append(.docText(0, exteraPillString("extera_InlineDocArithmeticInfo") + ". " + exteraPillString("extera_InlineDocFunctionsText") + " " + exteraPillString("extera_InlineDocPercentText") + " " + exteraPillString("extera_InlineDocShorthandsText")))
+    entries.append(.docTitle(1, exteraPillString("extera_InlineDocCurrenciesInfo")))
+    entries.append(.docText(1, exteraPillString("extera_InlineDocCurrencyText")))
+    entries.append(.docTitle(2, exteraPillString("extera_InlineDocUnitsInfo")))
+    entries.append(.docText(2, exteraPillString("extera_InlineDocUnitsText")))
+    entries.append(.docTitle(3, exteraPillString("extera_InlineDocTimeInfo")))
+    entries.append(.docText(3, exteraPillString("extera_InlineDocTimeText")))
     
     return entries
 }

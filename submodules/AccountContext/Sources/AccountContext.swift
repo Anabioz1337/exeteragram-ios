@@ -205,9 +205,7 @@ public enum PeerType: Equatable {
     case community
     
     public static func getType(for peer: EnginePeer) -> PeerType {
-        if case .community = peer {
-            return .community
-        } else if case let .user(user) = peer {
+        if case let .user(user) = peer {
             return .user(isBot: user.botInfo != nil)
         } else if case let .channel(channel) = peer, case .broadcast = channel.info {
             return .channel

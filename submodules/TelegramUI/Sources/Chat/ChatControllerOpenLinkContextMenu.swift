@@ -115,7 +115,7 @@ extension ChatControllerImpl {
         guard ExteraAdblockUrlFilter.shared.isAllowed(url) else {
             let filterUrl = url
             let screen = ExteraPageBlockedScreen(theme: self.presentationData.theme, strings: self.presentationData.strings, url: url, onProceed: { [weak self] in
-                guard let self else {
+                guard self != nil else {
                     return
                 }
                 ExteraAdblockUrlFilter.shared.proceed(filterUrl)

@@ -47,7 +47,7 @@ public final class ExteraAdblockAdMessagesContext: AdMessagesHistoryContext {
             guard let self else {
                 return
             }
-            self.baseState.swap(ExteraBaseAdState(interPostInterval: interPostInterval, messages: messages, startDelay: startDelay, betweenDelay: betweenDelay))
+            let _ = self.baseState.swap(ExteraBaseAdState(interPostInterval: interPostInterval, messages: messages, startDelay: startDelay, betweenDelay: betweenDelay))
             self.republish()
         }))
 
@@ -89,7 +89,7 @@ public final class ExteraAdblockAdMessagesContext: AdMessagesHistoryContext {
                     return true
                 }
                 var insertedNew = false
-                self.countedIds.modify { ids -> Set<Data> in
+                let _ = self.countedIds.modify { ids -> Set<Data> in
                     guard !ids.contains(adAttribute.opaqueId) else {
                         return ids
                     }

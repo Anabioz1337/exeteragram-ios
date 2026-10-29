@@ -37,10 +37,10 @@ func addSynchronizeRecentlyUsedMediaOperation(transaction: Transaction, category
     transaction.operationLogAddEntry(peerId: peerId, tag: tag, tagLocalIndex: .automatic, tagMergedIndex: .automatic, contents: SynchronizeRecentlyUsedMediaOperation(content: .sync))
 }
 
-func addRecentlyUsedSticker(transaction: Transaction, fileReference: FileMediaReference) {
+func addRecentlyUsedSticker(transaction: Transaction, fileReference: FileMediaReference, unlimitedRecentStickers: Bool = false) {
     if let resource = fileReference.media.resource as? CloudDocumentMediaResource {
         if let entry = CodableEntry(RecentMediaItem(fileReference.media)) {
-            transaction.addOrMoveToFirstPositionOrderedItemListItem(collectionId: Namespaces.OrderedItemList.CloudRecentStickers, item: OrderedItemListEntry(id: RecentMediaItemId(fileReference.media.fileId).rawValue, contents: entry), removeTailIfCountExceeds: ExteraChatP1.unlimitedRecentStickers ? nil : 20)
+            transaction.addOrMoveToFirstPositionOrderedItemListItem(collectionId: Namespaces.OrderedItemList.CloudRecentStickers, item: OrderedItemListEntry(id: RecentMediaItemId(fileReference.media.fileId).rawValue, contents: entry), removeTailIfCountExceeds: unlimitedRecentStickers ? nil : 20)
         }
         addSynchronizeRecentlyUsedMediaOperation(transaction: transaction, category: .stickers, operation: .add(id: resource.fileId, accessHash: resource.accessHash, fileReference: fileReference))
     }

@@ -796,10 +796,12 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
                                     strongSelf.relativeDateTimer?.timer.invalidate()
                                     strongSelf.relativeDateTimer = nil
                                 }
-                                strongSelf.relativeDateTimer = (SwiftSignalKit.Timer(timeout: Double(formattedDateUpdatePeriod), repeat: true, completion: { [weak self] in
-                                    self?.requestFullUpdate?(ControlledTransition(duration: 0.15, curve: .easeInOut, interactive: false))
-                                }, queue: Queue.mainQueue()), formattedDateUpdatePeriod)
-                                strongSelf.relativeDateTimer?.timer.start()
+                                if strongSelf.relativeDateTimer == nil {
+                                    strongSelf.relativeDateTimer = (SwiftSignalKit.Timer(timeout: Double(formattedDateUpdatePeriod), repeat: true, completion: { [weak self] in
+                                        self?.requestFullUpdate?(ControlledTransition(duration: 0.15, curve: .easeInOut, interactive: false))
+                                    }, queue: Queue.mainQueue()), formattedDateUpdatePeriod)
+                                    strongSelf.relativeDateTimer?.timer.start()
+                                }
                             } else if let (timer, _) = strongSelf.relativeDateTimer {
                                 strongSelf.relativeDateTimer = nil
                                 timer.invalidate()

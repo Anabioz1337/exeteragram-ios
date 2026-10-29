@@ -998,7 +998,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
     private let exteraSettingsDisposable = MetaDisposable()
     private let lifecycleDisposable = MetaDisposable()
     private var doubleTapSeekSeconds: Int32 = 10
-    private var automaticPlaybackDisabled = true
+    private var automaticPlaybackDisabled = false
     private var useConfiguredSeekDuration = false
     private var hidePhotoCounter = false
     private var pauseOnMinimize = false

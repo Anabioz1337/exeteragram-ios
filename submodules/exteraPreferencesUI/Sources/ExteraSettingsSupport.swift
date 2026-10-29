@@ -6,6 +6,7 @@ import TelegramPresentationData
 import TelegramUIPreferences
 import ItemListUI
 import AccountContext
+import exteraSettingsCore
 
 final class ExteraSettingsEditor {
     private let accountManager: AccountManager<TelegramAccountManagerTypes>

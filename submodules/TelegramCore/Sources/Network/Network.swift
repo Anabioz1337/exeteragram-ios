@@ -701,11 +701,11 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             context.beginExplicitBackupAddressDiscovery()
             #endif*/
             
-            var rustDisabledReason = networkEngineRustDisabledReason(appConfiguration: appConfiguration, engineState: networkEngine.state, appVersion: arguments.appVersion, timestamp: Int32(Date().timeIntervalSince1970))
+            let baseRustDisabledReason = networkEngineRustDisabledReason(appConfiguration: appConfiguration, engineState: networkEngine.state, appVersion: arguments.appVersion, timestamp: Int32(Date().timeIntervalSince1970))
             #if os(macOS)
-            if rustDisabledReason == nil {
-                rustDisabledReason = networkLivenessDisabledReason()
-            }
+            let rustDisabledReason = baseRustDisabledReason ?? networkLivenessDisabledReason()
+            #else
+            let rustDisabledReason = baseRustDisabledReason
             #endif
             let resolvedEngine = resolveNetworkEngine(accountId: accountId, context: context, factory: arguments.networkEngineFactory, settings: networkEngine.settings, rustDisabledReason: rustDisabledReason, isAppExtension: isAppExtension)
             resolvedEngine.activate()

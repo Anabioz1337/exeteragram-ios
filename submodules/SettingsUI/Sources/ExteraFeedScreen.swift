@@ -328,11 +328,8 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
                 TextAlertAction(type: .genericAction, title: strings?.Common_Cancel ?? "", action: {}),
                 TextAlertAction(type: .defaultAction, title: strings?.Extera_Feed_Hide ?? "", action: {
                     exteraFeedSetChannelHidden(peerId, hidden: true, defaults: defaults)
-                    let _ = refreshCounter.with { current -> Int in
-                        let updated = current + 1
-                        refreshPromise.set(updated)
-                        return updated
-                    }
+                    let updated = refreshCounter.modify { $0 + 1 }
+                    refreshPromise.set(updated)
                 })
             ])
             presentControllerImpl(alertController, nil)

@@ -18,6 +18,7 @@ import ChatMessageItemCommon
 import MessageInlineBlockBackgroundView
 import CheckNode
 import EmojiTextAttachmentView
+import ExteraChatP1
 
 public enum ChatMessageReplyInfoType {
     case bubble(incoming: Bool)

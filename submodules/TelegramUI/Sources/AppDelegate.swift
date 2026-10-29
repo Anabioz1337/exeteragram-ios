@@ -1328,11 +1328,10 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                     return result
                 }
                 |> map { settings -> (AccountContext, CallListSettings, ExteraSettings)? in
-                    if let context = context {
-                        return (context, settings.0, settings.1)
-                    } else {
+                    guard let settings = settings, let context = context else {
                         return nil
                     }
+                    return (context, settings.0, settings.1)
                 }
             }
             |> deliverOnMainQueue

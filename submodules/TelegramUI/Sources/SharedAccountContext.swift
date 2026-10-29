@@ -386,8 +386,6 @@ public final class SharedAccountContextImpl: SharedAccountContext {
             self.energyUsageSettings = self.currentAutomaticMediaDownloadSettings.energyUsageSettings
         }
 
-        ExteraPluginsManager.shared.attach(sharedContext: self)
-        
         let presentationData: Signal<PresentationData, NoError> = .single(initialPresentationDataAndSettings.presentationData)
         |> then(
             updatedPresentationData(accountManager: self.accountManager, applicationInForeground: self.applicationBindings.applicationInForeground, systemUserInterfaceStyle: mainWindow?.systemUserInterfaceStyle ?? .single(.light))
@@ -403,6 +401,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         ))
         
         self.mediaManager = MediaManagerImpl(accountManager: accountManager, inForeground: applicationBindings.applicationInForeground, presentationData: presentationData)
+
+        ExteraPluginsManager.shared.attach(sharedContext: self)
         
         self.mediaManager.overlayMediaManager.updatePossibleEmbeddingItem = { [weak self] item in
             guard let strongSelf = self else {
@@ -555,6 +555,9 @@ public final class SharedAccountContextImpl: SharedAccountContext {
 
         self.exteraSettingsDisposable = (self.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
         |> deliverOnMainQueue).start(next: { [weak self] sharedData in
+            guard let self else {
+                return
+            }
             if let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self) {
                 applyExteraFormatFlags(numericRoundingDisabled: settings.disableNumberRounding, timeWithSeconds: settings.formatTimeWithSeconds)
                 ExteraUpdater.checkOnLaunchIfNeeded(sharedContext: self, settings: settings)

@@ -28,33 +28,31 @@ private final class ExteraPageBlockedScreenNode: ASDisplayNode {
 
         self.backgroundColor = theme.list.blocksBackgroundColor
 
-        self.titleNode.attributedText = NSAttributedString(string: strings.Extera_Adblock_PageBlocked, font: Font.bold(22.0), textColor: theme.list.itemPrimaryTextColor, textAlignment: .center)
-        self.descriptionNode.attributedText = NSAttributedString(string: strings.Extera_Adblock_PageBlockedDescription, font: Font.regular(15.0), textColor: theme.list.itemSecondaryTextColor, textAlignment: .center)
-        self.urlNode.attributedText = NSAttributedString(string: url, font: Font.regular(15.0), textColor: theme.list.itemAccentColor, textAlignment: .center)
+        self.titleNode.attributedText = NSAttributedString(string: strings.Extera_Adblock_PageBlocked, font: Font.bold(22.0), textColor: theme.list.itemPrimaryTextColor, paragraphAlignment: .center)
+        self.descriptionNode.attributedText = NSAttributedString(string: strings.Extera_Adblock_PageBlockedDescription, font: Font.regular(15.0), textColor: theme.list.itemSecondaryTextColor, paragraphAlignment: .center)
+        self.urlNode.attributedText = NSAttributedString(string: url, font: Font.regular(15.0), textColor: theme.list.itemAccentColor, paragraphAlignment: .center)
         self.urlNode.maximumNumberOfLines = 4
 
         self.goBackButton.setTitle(strings.Extera_Adblock_PageBlockedGoBack, with: Font.medium(17.0), with: theme.list.itemAccentColor, for: .normal)
-        self.goBackButton.setBackgroundImage(generateImage(CGSize(width: 220.0, height: 44.0), rotatedContext: false, scale: 2.0, opaque: false, clear: true, generator: { size, context in
+        self.goBackButton.setBackgroundImage(generateImage(CGSize(width: 220.0, height: 44.0), contextGenerator: { size, context in
             let bounds = CGRect(origin: CGPoint(), size: size)
             context.clear(bounds)
             context.setFillColor(theme.actionSheet.controlAccentColor.withAlphaComponent(0.12).cgColor)
             let path = UIBezierPath(roundedRect: bounds, cornerRadius: 22.0)
             context.addPath(path.cgPath)
             context.fillPath()
-            return true
-        }), for: .normal)
+        }, opaque: false, scale: 2.0), for: .normal)
         self.goBackButton.addTarget(self, action: #selector(self.goBackPressed), forControlEvents: .touchUpInside)
 
         self.proceedButton.setTitle(strings.Extera_Adblock_PageBlockedProceed, with: Font.medium(17.0), with: theme.list.itemAccentColor, for: .normal)
-        self.proceedButton.setBackgroundImage(generateImage(CGSize(width: 220.0, height: 44.0), rotatedContext: false, scale: 2.0, opaque: false, clear: true, generator: { size, context in
+        self.proceedButton.setBackgroundImage(generateImage(CGSize(width: 220.0, height: 44.0), contextGenerator: { size, context in
             let bounds = CGRect(origin: CGPoint(), size: size)
             context.clear(bounds)
             context.setFillColor(theme.actionSheet.controlAccentColor.withAlphaComponent(0.12).cgColor)
             let path = UIBezierPath(roundedRect: bounds, cornerRadius: 22.0)
             context.addPath(path.cgPath)
             context.fillPath()
-            return true
-        }), for: .normal)
+        }, opaque: false, scale: 2.0), for: .normal)
         self.proceedButton.addTarget(self, action: #selector(self.proceedPressed), forControlEvents: .touchUpInside)
 
         self.addSubnode(self.titleNode)
@@ -77,21 +75,22 @@ private final class ExteraPageBlockedScreenNode: ASDisplayNode {
         let cardWidth: CGFloat = min(320.0, size.width - 32.0)
 
         var topOffset: CGFloat = size.height * 0.18
-        let contentHeight: CGFloat = self.titleNode.measure(cardWidth).height + 12.0 + self.descriptionNode.measure(cardWidth).height + 8.0 + min(self.urlNode.measure(cardWidth).height, 80.0)
+        let measureSize = CGSize(width: cardWidth, height: CGFloat.greatestFiniteMagnitude)
+        let contentHeight: CGFloat = self.titleNode.measure(measureSize).height + 12.0 + self.descriptionNode.measure(measureSize).height + 8.0 + min(self.urlNode.measure(measureSize).height, 80.0)
         if topOffset + contentHeight > size.height * 0.6 {
             topOffset = max(24.0, (size.height - contentHeight - 140.0) / 2.0)
         }
 
         var y = topOffset
-        let titleSize = self.titleNode.measure(cardWidth)
+        let titleSize = self.titleNode.measure(measureSize)
         self.titleNode.frame = CGRect(origin: CGPoint(x: (size.width - titleSize.width) / 2.0, y: y), size: titleSize)
         y += titleSize.height + 12.0
 
-        let descriptionSize = self.descriptionNode.measure(cardWidth)
+        let descriptionSize = self.descriptionNode.measure(measureSize)
         self.descriptionNode.frame = CGRect(origin: CGPoint(x: (size.width - descriptionSize.width) / 2.0, y: y), size: descriptionSize)
         y += descriptionSize.height + 8.0
 
-        let urlSize = self.urlNode.measure(cardWidth)
+        let urlSize = self.urlNode.measure(measureSize)
         self.urlNode.frame = CGRect(origin: CGPoint(x: (size.width - urlSize.width) / 2.0, y: y), size: CGSize(width: min(urlSize.width, cardWidth), height: min(urlSize.height, 80.0)))
 
         self.goBackButton.frame = CGRect(x: (size.width - 220.0) / 2.0, y: size.height * 0.5, width: 220.0, height: 44.0)
