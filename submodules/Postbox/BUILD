@@ -14,6 +14,7 @@ package_group(
         "//submodules/ChatListUI",
         "//submodules/ChatPresentationInterfaceState",
         "//submodules/DirectMediaImageCache",
+        "//submodules/ExteraProfile",
         "//submodules/FeaturedStickersScreen",
         "//submodules/FetchManagerImpl",
         "//submodules/GalleryUI",
