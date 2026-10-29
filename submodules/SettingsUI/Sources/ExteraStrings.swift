@@ -41,6 +41,28 @@ public struct ExteraStringsTable {
     public let downloadOnGitHub: String
     public let restartRequired: String
     public let restartRequiredText: String
+    public let messagesHeader: String
+    public let blockAds: String
+    public let hideShareButton: String
+    public let showCopyPhotoButton: String
+    public let showClearButton: String
+    public let showSaveMessageButton: String
+    public let showReportButton: String
+    public let showHistoryButton: String
+    public let groupsHeader: String
+    public let permissionsShortcut: String
+    public let administratorsShortcut: String
+    public let membersShortcut: String
+    public let recentActionsShortcut: String
+    public let tabCounter: String
+    public let hideAllChats: String
+    public let tabIcons: String
+    public let stickerShape: String
+    public let hideStickerTime: String
+    public let hideCategories: String
+    public let hidePhotoCounter: String
+    public let disablePlayback: String
+    public let longDoubleTapSeek: String
 }
 
 private let exteraStringsEnglish = ExteraStringsTable(
@@ -81,7 +103,29 @@ private let exteraStringsEnglish = ExteraStringsTable(
     downloadAction: "Download",
     downloadOnGitHub: "Download on GitHub",
     restartRequired: "Restart Required",
-    restartRequiredText: "Restart the app to apply the changes."
+    restartRequiredText: "Restart the app to apply the changes.",
+    messagesHeader: "Messages",
+    blockAds: "Block Ads",
+    hideShareButton: "Hide Forward Button",
+    showCopyPhotoButton: "Show Copy Photo Action",
+    showClearButton: "Always Show Message Deletion",
+    showSaveMessageButton: "Save to Saved Messages Action",
+    showReportButton: "Always Show Report Action",
+    showHistoryButton: "Show History Action",
+    groupsHeader: "Group Shortcuts",
+    permissionsShortcut: "Permissions Shortcut",
+    administratorsShortcut: "Administrators Shortcut",
+    membersShortcut: "Members Shortcut",
+    recentActionsShortcut: "Recent Actions Shortcut",
+    tabCounter: "Numeric Tab Counters",
+    hideAllChats: "Hide All Chats Tab",
+    tabIcons: "Alternative Tab Icons",
+    stickerShape: "Round Sticker Previews",
+    hideStickerTime: "Hide Sticker Timestamp",
+    hideCategories: "Hide Sticker Categories",
+    hidePhotoCounter: "Hide Photo Counter",
+    disablePlayback: "Disable Video Autoplay",
+    longDoubleTapSeek: "Long Double-Tap Seek"
 )
 
 private let exteraStringsRussian = ExteraStringsTable(
@@ -122,7 +166,29 @@ private let exteraStringsRussian = ExteraStringsTable(
     downloadAction: "Скачать",
     downloadOnGitHub: "Скачать с GitHub",
     restartRequired: "Требуется перезапуск",
-    restartRequiredText: "Перезапустите приложение, чтобы применить изменения."
+    restartRequiredText: "Перезапустите приложение, чтобы применить изменения.",
+    messagesHeader: "Сообщения",
+    blockAds: "Блокировать рекламу",
+    hideShareButton: "Скрывать кнопку пересылки",
+    showCopyPhotoButton: "Кнопка копирования фото",
+    showClearButton: "Всегда показывать удаление",
+    showSaveMessageButton: "Кнопка сохранения в избранное",
+    showReportButton: "Всегда показывать жалобу",
+    showHistoryButton: "Показывать историю правок",
+    groupsHeader: "Ярлыки групп",
+    permissionsShortcut: "Ярлык разрешений",
+    administratorsShortcut: "Ярлык администраторов",
+    membersShortcut: "Ярлык участников",
+    recentActionsShortcut: "Ярлык последних действий",
+    tabCounter: "Числовые счётчики вкладок",
+    hideAllChats: "Скрыть вкладку «Все чаты»",
+    tabIcons: "Другие иконки вкладок",
+    stickerShape: "Округлять превью стикеров",
+    hideStickerTime: "Скрывать время на стикерах",
+    hideCategories: "Скрывать категории стикеров",
+    hidePhotoCounter: "Скрывать счётчик фото",
+    disablePlayback: "Отключить автовоспроизведение видео",
+    longDoubleTapSeek: "Длинная перемотка двойным тапом"
 )
 
 public func exteraStrings(languageCode: String) -> ExteraStringsTable {

@@ -24,6 +24,8 @@ private enum ExteraSettingsSection: Int32 {
     case interface = 2
     case analytics = 3
     case updates = 4
+    case messages = 5
+    case groups = 6
 }
 
 private enum ExteraSettingsEntry: ItemListNodeEntry {
@@ -38,6 +40,15 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
     case disableNumberRounding(PresentationTheme, String, Bool)
     case formatTimeWithSeconds(PresentationTheme, String, Bool)
     case pluginsRow(PresentationTheme, String)
+    case tabCounter(PresentationTheme, String, Bool)
+    case hideAllChats(PresentationTheme, String, Bool)
+    case tabIcons(PresentationTheme, String, Bool)
+    case stickerShape(PresentationTheme, String, Bool)
+    case hideStickerTime(PresentationTheme, String, Bool)
+    case hideCategories(PresentationTheme, String, Bool)
+    case hidePhotoCounter(PresentationTheme, String, Bool)
+    case disablePlayback(PresentationTheme, String, Bool)
+    case longDoubleTapSeek(PresentationTheme, String, Bool)
     case analyticsHeader(PresentationTheme, String)
     case useGoogleAnalytics(PresentationTheme, String, Bool)
     case useGoogleCrashlytics(PresentationTheme, String, Bool)
@@ -50,6 +61,19 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
     case latestVersion(PresentationTheme, String, String)
     case changelog(PresentationTheme, String)
     case downloadOnGitHub(PresentationTheme, String, String)
+    case messagesHeader(PresentationTheme, String)
+    case blockAds(PresentationTheme, String, Bool)
+    case hideShareButtonEntry(PresentationTheme, String, Bool)
+    case showCopyPhotoButton(PresentationTheme, String, Bool)
+    case showClearButton(PresentationTheme, String, Bool)
+    case showSaveMessageButton(PresentationTheme, String, Bool)
+    case showReportButton(PresentationTheme, String, Bool)
+    case showHistoryButton(PresentationTheme, String, Bool)
+    case groupsHeader(PresentationTheme, String)
+    case permissionsShortcut(PresentationTheme, String, Bool)
+    case administratorsShortcut(PresentationTheme, String, Bool)
+    case membersShortcut(PresentationTheme, String, Bool)
+    case recentActionsShortcut(PresentationTheme, String, Bool)
 
     var section: ItemListSectionId {
         switch self {
@@ -57,12 +81,18 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 return ExteraSettingsSection.speed.rawValue
             case .storageHeader, .customSaveFolderInput, .customSaveFolderHint:
                 return ExteraSettingsSection.storage.rawValue
-            case .interfaceHeader, .disableNumberRounding, .formatTimeWithSeconds, .pluginsRow:
+            case .interfaceHeader, .disableNumberRounding, .formatTimeWithSeconds, .pluginsRow,
+                 .tabCounter, .hideAllChats, .tabIcons, .stickerShape, .hideStickerTime, .hideCategories,
+                 .hidePhotoCounter, .disablePlayback, .longDoubleTapSeek:
                 return ExteraSettingsSection.interface.rawValue
             case .analyticsHeader, .useGoogleAnalytics, .useGoogleCrashlytics, .analyticsInfo:
                 return ExteraSettingsSection.analytics.rawValue
             case .updatesHeader, .checkForUpdates, .checkOnLaunch, .lastCheck, .currentVersion, .latestVersion, .changelog, .downloadOnGitHub:
                 return ExteraSettingsSection.updates.rawValue
+            case .messagesHeader, .blockAds, .hideShareButtonEntry, .showCopyPhotoButton, .showClearButton, .showSaveMessageButton, .showReportButton, .showHistoryButton:
+                return ExteraSettingsSection.messages.rawValue
+            case .groupsHeader, .permissionsShortcut, .administratorsShortcut, .membersShortcut, .recentActionsShortcut:
+                return ExteraSettingsSection.groups.rawValue
         }
     }
 
@@ -79,6 +109,28 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
             case .disableNumberRounding: return 8
             case .formatTimeWithSeconds: return 9
             case .pluginsRow: return 22
+            case .tabCounter: return 23
+            case .hideAllChats: return 24
+            case .tabIcons: return 25
+            case .stickerShape: return 26
+            case .hideStickerTime: return 27
+            case .hideCategories: return 28
+            case .hidePhotoCounter: return 29
+            case .disablePlayback: return 30
+            case .longDoubleTapSeek: return 31
+            case .messagesHeader: return 32
+            case .blockAds: return 33
+            case .hideShareButtonEntry: return 34
+            case .showCopyPhotoButton: return 35
+            case .showClearButton: return 36
+            case .showSaveMessageButton: return 37
+            case .showReportButton: return 38
+            case .showHistoryButton: return 39
+            case .groupsHeader: return 40
+            case .permissionsShortcut: return 41
+            case .administratorsShortcut: return 42
+            case .membersShortcut: return 43
+            case .recentActionsShortcut: return 44
             case .analyticsHeader: return 10
             case .useGoogleAnalytics: return 11
             case .useGoogleCrashlytics: return 12
@@ -234,6 +286,94 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
+            case let .tabCounter(lhsTheme, lhsText, lhsValue):
+                if case let .tabCounter(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .hideAllChats(lhsTheme, lhsText, lhsValue):
+                if case let .hideAllChats(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .tabIcons(lhsTheme, lhsText, lhsValue):
+                if case let .tabIcons(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .stickerShape(lhsTheme, lhsText, lhsValue):
+                if case let .stickerShape(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .hideStickerTime(lhsTheme, lhsText, lhsValue):
+                if case let .hideStickerTime(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .hideCategories(lhsTheme, lhsText, lhsValue):
+                if case let .hideCategories(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .hidePhotoCounter(lhsTheme, lhsText, lhsValue):
+                if case let .hidePhotoCounter(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .disablePlayback(lhsTheme, lhsText, lhsValue):
+                if case let .disablePlayback(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .longDoubleTapSeek(lhsTheme, lhsText, lhsValue):
+                if case let .longDoubleTapSeek(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .blockAds(lhsTheme, lhsText, lhsValue):
+                if case let .blockAds(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .hideShareButtonEntry(lhsTheme, lhsText, lhsValue):
+                if case let .hideShareButtonEntry(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .showCopyPhotoButton(lhsTheme, lhsText, lhsValue):
+                if case let .showCopyPhotoButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .showClearButton(lhsTheme, lhsText, lhsValue):
+                if case let .showClearButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .showSaveMessageButton(lhsTheme, lhsText, lhsValue):
+                if case let .showSaveMessageButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .showReportButton(lhsTheme, lhsText, lhsValue):
+                if case let .showReportButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .showHistoryButton(lhsTheme, lhsText, lhsValue):
+                if case let .showHistoryButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .permissionsShortcut(lhsTheme, lhsText, lhsValue):
+                if case let .permissionsShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .administratorsShortcut(lhsTheme, lhsText, lhsValue):
+                if case let .administratorsShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .membersShortcut(lhsTheme, lhsText, lhsValue):
+                if case let .membersShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .recentActionsShortcut(lhsTheme, lhsText, lhsValue):
+                if case let .recentActionsShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
+                    return true
+                }
+            case let .messagesHeader(lhsTheme, lhsText):
+                if case let .messagesHeader(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+                    return true
+                }
+            case let .groupsHeader(lhsTheme, lhsText):
+                if case let .groupsHeader(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+                    return true
+                }
         }
     }
 
@@ -278,6 +418,42 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: text, label: "", sectionId: self.section, style: .blocks, action: {
                     arguments.openPlugins()
                 })
+            case let .tabCounter(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleTabCounter(value)
+                })
+            case let .hideAllChats(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleHideAllChats(value)
+                })
+            case let .tabIcons(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleTabIcons(value)
+                })
+            case let .stickerShape(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleStickerShape(value)
+                })
+            case let .hideStickerTime(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleHideStickerTime(value)
+                })
+            case let .hideCategories(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleHideCategories(value)
+                })
+            case let .hidePhotoCounter(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleHidePhotoCounter(value)
+                })
+            case let .disablePlayback(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleDisablePlayback(value)
+                })
+            case let .longDoubleTapSeek(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleLongDoubleTapSeek(value)
+                })
             case let .analyticsHeader(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .useGoogleAnalytics(_, text, value):
@@ -290,6 +466,54 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
                 })
             case let .analyticsInfo(_, text):
                 return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
+            case let .messagesHeader(_, text):
+                return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
+            case let .hideShareButtonEntry(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleHideShareButton(value)
+                })
+            case let .blockAds(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleBlockAds(value)
+                })
+            case let .showCopyPhotoButton(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleShowCopyPhotoButton(value)
+                })
+            case let .showClearButton(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleShowClearButton(value)
+                })
+            case let .showSaveMessageButton(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleShowSaveMessageButton(value)
+                })
+            case let .showReportButton(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleShowReportButton(value)
+                })
+            case let .showHistoryButton(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleShowHistoryButton(value)
+                })
+            case let .groupsHeader(_, text):
+                return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
+            case let .permissionsShortcut(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.togglePermissionsShortcut(value)
+                })
+            case let .administratorsShortcut(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleAdministratorsShortcut(value)
+                })
+            case let .membersShortcut(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleMembersShortcut(value)
+                })
+            case let .recentActionsShortcut(_, text, value):
+                return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: value, sectionId: self.section, style: .blocks, updated: { value in
+                    arguments.toggleRecentActionsShortcut(value)
+                })
             case let .updatesHeader(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .checkForUpdates(_, text, value):
@@ -328,6 +552,26 @@ private final class ExteraSettingsArguments {
     let toggleCheckOnLaunch: (Bool) -> Void
     let openReleasePage: (String) -> Void
     let openPlugins: () -> Void
+    let toggleBlockAds: (Bool) -> Void
+    let toggleHideShareButton: (Bool) -> Void
+    let toggleShowCopyPhotoButton: (Bool) -> Void
+    let toggleShowClearButton: (Bool) -> Void
+    let toggleShowSaveMessageButton: (Bool) -> Void
+    let toggleShowReportButton: (Bool) -> Void
+    let toggleShowHistoryButton: (Bool) -> Void
+    let togglePermissionsShortcut: (Bool) -> Void
+    let toggleAdministratorsShortcut: (Bool) -> Void
+    let toggleMembersShortcut: (Bool) -> Void
+    let toggleRecentActionsShortcut: (Bool) -> Void
+    let toggleTabCounter: (Bool) -> Void
+    let toggleHideAllChats: (Bool) -> Void
+    let toggleTabIcons: (Bool) -> Void
+    let toggleStickerShape: (Bool) -> Void
+    let toggleHideStickerTime: (Bool) -> Void
+    let toggleHideCategories: (Bool) -> Void
+    let toggleHidePhotoCounter: (Bool) -> Void
+    let toggleDisablePlayback: (Bool) -> Void
+    let toggleLongDoubleTapSeek: (Bool) -> Void
 
     init(
         chooseDownloadBoost: @escaping () -> Void,
@@ -340,7 +584,27 @@ private final class ExteraSettingsArguments {
         checkForUpdates: @escaping () -> Void,
         toggleCheckOnLaunch: @escaping (Bool) -> Void,
         openReleasePage: @escaping (String) -> Void,
-        openPlugins: @escaping () -> Void
+        openPlugins: @escaping () -> Void,
+        toggleBlockAds: @escaping (Bool) -> Void,
+        toggleHideShareButton: @escaping (Bool) -> Void,
+        toggleShowCopyPhotoButton: @escaping (Bool) -> Void,
+        toggleShowClearButton: @escaping (Bool) -> Void,
+        toggleShowSaveMessageButton: @escaping (Bool) -> Void,
+        toggleShowReportButton: @escaping (Bool) -> Void,
+        toggleShowHistoryButton: @escaping (Bool) -> Void,
+        togglePermissionsShortcut: @escaping (Bool) -> Void,
+        toggleAdministratorsShortcut: @escaping (Bool) -> Void,
+        toggleMembersShortcut: @escaping (Bool) -> Void,
+        toggleRecentActionsShortcut: @escaping (Bool) -> Void,
+        toggleTabCounter: @escaping (Bool) -> Void,
+        toggleHideAllChats: @escaping (Bool) -> Void,
+        toggleTabIcons: @escaping (Bool) -> Void,
+        toggleStickerShape: @escaping (Bool) -> Void,
+        toggleHideStickerTime: @escaping (Bool) -> Void,
+        toggleHideCategories: @escaping (Bool) -> Void,
+        toggleHidePhotoCounter: @escaping (Bool) -> Void,
+        toggleDisablePlayback: @escaping (Bool) -> Void,
+        toggleLongDoubleTapSeek: @escaping (Bool) -> Void
     ) {
         self.chooseDownloadBoost = chooseDownloadBoost
         self.toggleUploadBoost = toggleUploadBoost
@@ -353,6 +617,26 @@ private final class ExteraSettingsArguments {
         self.toggleCheckOnLaunch = toggleCheckOnLaunch
         self.openReleasePage = openReleasePage
         self.openPlugins = openPlugins
+        self.toggleBlockAds = toggleBlockAds
+        self.toggleHideShareButton = toggleHideShareButton
+        self.toggleShowCopyPhotoButton = toggleShowCopyPhotoButton
+        self.toggleShowClearButton = toggleShowClearButton
+        self.toggleShowSaveMessageButton = toggleShowSaveMessageButton
+        self.toggleShowReportButton = toggleShowReportButton
+        self.toggleShowHistoryButton = toggleShowHistoryButton
+        self.togglePermissionsShortcut = togglePermissionsShortcut
+        self.toggleAdministratorsShortcut = toggleAdministratorsShortcut
+        self.toggleMembersShortcut = toggleMembersShortcut
+        self.toggleRecentActionsShortcut = toggleRecentActionsShortcut
+        self.toggleTabCounter = toggleTabCounter
+        self.toggleHideAllChats = toggleHideAllChats
+        self.toggleTabIcons = toggleTabIcons
+        self.toggleStickerShape = toggleStickerShape
+        self.toggleHideStickerTime = toggleHideStickerTime
+        self.toggleHideCategories = toggleHideCategories
+        self.toggleHidePhotoCounter = toggleHidePhotoCounter
+        self.toggleDisablePlayback = toggleDisablePlayback
+        self.toggleLongDoubleTapSeek = toggleLongDoubleTapSeek
     }
 }
 
@@ -403,6 +687,28 @@ private func exteraSettingsEntries(presentationData: PresentationData, settings:
     entries.append(.disableNumberRounding(presentationData.theme, strings.disableNumberRounding, settings.disableNumberRounding))
     entries.append(.formatTimeWithSeconds(presentationData.theme, strings.formatTimeWithSeconds, settings.formatTimeWithSeconds))
     entries.append(.pluginsRow(presentationData.theme, strings.pluginsRow))
+    entries.append(.tabCounter(presentationData.theme, strings.tabCounter, settings.tabCounter))
+    entries.append(.hideAllChats(presentationData.theme, strings.hideAllChats, settings.hideAllChats))
+    entries.append(.tabIcons(presentationData.theme, strings.tabIcons, settings.tabIcons))
+    entries.append(.stickerShape(presentationData.theme, strings.stickerShape, settings.stickerShape))
+    entries.append(.hideStickerTime(presentationData.theme, strings.hideStickerTime, settings.hideStickerTime))
+    entries.append(.hideCategories(presentationData.theme, strings.hideCategories, settings.hideCategories))
+    entries.append(.hidePhotoCounter(presentationData.theme, strings.hidePhotoCounter, settings.hidePhotoCounter))
+    entries.append(.disablePlayback(presentationData.theme, strings.disablePlayback, settings.disablePlayback))
+    entries.append(.longDoubleTapSeek(presentationData.theme, strings.longDoubleTapSeek, settings.doubleTapSeekDuration))
+    entries.append(.messagesHeader(presentationData.theme, strings.messagesHeader.uppercased()))
+    entries.append(.blockAds(presentationData.theme, strings.blockAds, settings.adBlockEnabled))
+    entries.append(.hideShareButtonEntry(presentationData.theme, strings.hideShareButton, settings.hideShareButton))
+    entries.append(.showCopyPhotoButton(presentationData.theme, strings.showCopyPhotoButton, settings.showCopyPhotoButton))
+    entries.append(.showClearButton(presentationData.theme, strings.showClearButton, settings.showClearButton))
+    entries.append(.showSaveMessageButton(presentationData.theme, strings.showSaveMessageButton, settings.showSaveMessageButton))
+    entries.append(.showReportButton(presentationData.theme, strings.showReportButton, settings.showReportButton))
+    entries.append(.showHistoryButton(presentationData.theme, strings.showHistoryButton, settings.showHistoryButton))
+    entries.append(.groupsHeader(presentationData.theme, strings.groupsHeader.uppercased()))
+    entries.append(.permissionsShortcut(presentationData.theme, strings.permissionsShortcut, settings.permissionsShortcut))
+    entries.append(.administratorsShortcut(presentationData.theme, strings.administratorsShortcut, settings.administratorsShortcut))
+    entries.append(.membersShortcut(presentationData.theme, strings.membersShortcut, settings.membersShortcut))
+    entries.append(.recentActionsShortcut(presentationData.theme, strings.recentActionsShortcut, settings.recentActionsShortcut))
 
     entries.append(.analyticsHeader(presentationData.theme, strings.analyticsHeader.uppercased()))
     entries.append(.useGoogleAnalytics(presentationData.theme, strings.useGoogleAnalytics, settings.useGoogleAnalytics))
@@ -547,6 +853,204 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
             let screen = exteraPluginsScreen(context: context)
             (pluginsNavControllerHolder.with { $0 })?.pushViewController(screen)
         }
+         toggleBlockAds: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                return settings.withUpdatedAdBlockEnabled(value)
+            }.start()
+        },
+        toggleHideShareButton: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.hideShareButton = value
+                return settings
+            }.start()
+        },
+        toggleShowCopyPhotoButton: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.showCopyPhotoButton = value
+                return settings
+            }.start()
+        },
+        toggleShowClearButton: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.showClearButton = value
+                return settings
+            }.start()
+        },
+        toggleShowSaveMessageButton: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.showSaveMessageButton = value
+                return settings
+            }.start()
+        },
+        toggleShowReportButton: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.showReportButton = value
+                return settings
+            }.start()
+        },
+        toggleShowHistoryButton: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.showHistoryButton = value
+                return settings
+            }.start()
+        },
+        togglePermissionsShortcut: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.permissionsShortcut = value
+                return settings
+            }.start()
+        },
+        toggleAdministratorsShortcut: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.administratorsShortcut = value
+                return settings
+            }.start()
+        },
+        toggleMembersShortcut: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.membersShortcut = value
+                return settings
+            }.start()
+        },
+        toggleRecentActionsShortcut: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.recentActionsShortcut = value
+                return settings
+            }.start()
+        },
+        toggleTabCounter: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.tabCounter = value
+                return settings
+            }.start()
+        },
+        toggleHideAllChats: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.hideAllChats = value
+                return settings
+            }.start()
+        },
+        toggleTabIcons: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.tabIcons = value
+                return settings
+            }.start()
+        },
+        toggleStickerShape: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.stickerShape = value
+                return settings
+            }.start()
+        },
+        toggleHideStickerTime: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.hideStickerTime = value
+                return settings
+            }.start()
+        },
+        toggleHideCategories: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.hideCategories = value
+                return settings
+            }.start()
+        },
+        toggleHidePhotoCounter: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.hidePhotoCounter = value
+                return settings
+            }.start()
+        },
+        toggleDisablePlayback: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.disablePlayback = value
+                return settings
+            }.start()
+        },
+        toggleLongDoubleTapSeek: { [weak context] value in
+            guard let context = context else {
+                return
+            }
+            let _ = updateExteraSettingsInteractively(accountManager: context.sharedContext.accountManager) { settings in
+                var settings = settings
+                settings.doubleTapSeekDuration = value
+                return settings
+            }.start()
+        },
     )
 
     let signal = combineLatest(queue: .mainQueue(),
