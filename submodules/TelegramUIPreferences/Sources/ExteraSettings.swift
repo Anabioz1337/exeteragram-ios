@@ -93,8 +93,8 @@ public struct ExteraSettings: Codable, Equatable {
     public var tabIcons: Bool = false
     public var stickerSize: Bool = false
     public var stickerShape: Bool = false
-    public var doubleTapAction: Bool = false
-    public var doubleTapActionOutOwner: Bool = false
+    public var doubleTapAction: Int32 = 0
+    public var doubleTapActionOutOwner: Int32 = 0
     public var doubleTapSeekDuration: Bool = false
     public var bottomButton: Bool = false
     public var sendPhotosQuality: Int32 = 0
@@ -220,8 +220,8 @@ public struct ExteraSettings: Codable, Equatable {
         self.tabIcons = ((try? container.decode(Int32.self, forKey: "tabIcons")) ?? 0) != 0
         self.stickerSize = ((try? container.decode(Int32.self, forKey: "stickerSize")) ?? 0) != 0
         self.stickerShape = ((try? container.decode(Int32.self, forKey: "stickerShape")) ?? 0) != 0
-        self.doubleTapAction = ((try? container.decode(Int32.self, forKey: "doubleTapAction")) ?? 0) != 0
-        self.doubleTapActionOutOwner = ((try? container.decode(Int32.self, forKey: "doubleTapActionOutOwner")) ?? 0) != 0
+        self.doubleTapAction = (try? container.decode(Int32.self, forKey: "doubleTapAction")) ?? 0
+        self.doubleTapActionOutOwner = (try? container.decode(Int32.self, forKey: "doubleTapActionOutOwner")) ?? 0
         self.doubleTapSeekDuration = ((try? container.decode(Int32.self, forKey: "doubleTapSeekDuration")) ?? 0) != 0
         self.bottomButton = ((try? container.decode(Int32.self, forKey: "bottomButton")) ?? 0) != 0
         self.sendPhotosQuality = (try? container.decode(Int32.self, forKey: "sendPhotosQuality")) ?? 0
@@ -290,8 +290,8 @@ public struct ExteraSettings: Codable, Equatable {
         try container.encode((self.tabIcons ? 1 : 0) as Int32, forKey: "tabIcons")
         try container.encode((self.stickerSize ? 1 : 0) as Int32, forKey: "stickerSize")
         try container.encode((self.stickerShape ? 1 : 0) as Int32, forKey: "stickerShape")
-        try container.encode((self.doubleTapAction ? 1 : 0) as Int32, forKey: "doubleTapAction")
-        try container.encode((self.doubleTapActionOutOwner ? 1 : 0) as Int32, forKey: "doubleTapActionOutOwner")
+        try container.encode(self.doubleTapAction, forKey: "doubleTapAction")
+        try container.encode(self.doubleTapActionOutOwner, forKey: "doubleTapActionOutOwner")
         try container.encode((self.doubleTapSeekDuration ? 1 : 0) as Int32, forKey: "doubleTapSeekDuration")
         try container.encode((self.bottomButton ? 1 : 0) as Int32, forKey: "bottomButton")
         try container.encode(self.sendPhotosQuality, forKey: "sendPhotosQuality")

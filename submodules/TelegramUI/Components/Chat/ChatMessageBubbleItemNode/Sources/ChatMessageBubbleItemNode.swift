@@ -5820,9 +5820,10 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
     }
     
     private func performConfiguredDoubleTapAction(message: Message, controllerInteraction: ChatControllerInteraction) {
-        let configuredAction = message.flags.contains(.Outgoing)
-            ? self.item?.associatedData.exteraSettings.doubleTapActionOutOwner ?? 1
-            : self.item?.associatedData.exteraSettings.doubleTapAction ?? 1
+        let outgoing = !message.flags.contains(.Incoming)
+        let configuredAction = outgoing
+            ? self.item?.associatedData.exteraSettings.doubleTapActionOutOwner ?? 0
+            : self.item?.associatedData.exteraSettings.doubleTapAction ?? 0
 
         switch configuredAction {
             case 1:
