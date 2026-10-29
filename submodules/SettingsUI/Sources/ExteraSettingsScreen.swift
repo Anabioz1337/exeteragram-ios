@@ -369,10 +369,14 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
             case let .messagesHeader(lhsTheme, lhsText):
                 if case let .messagesHeader(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
+                } else {
+                    return false
                 }
             case let .groupsHeader(lhsTheme, lhsText):
                 if case let .groupsHeader(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
+                } else {
+                    return false
                 }
         }
     }
