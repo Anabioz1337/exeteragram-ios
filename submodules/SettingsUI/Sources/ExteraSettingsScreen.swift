@@ -1071,9 +1071,7 @@ public func exteraSettingsScreen(context: AccountContext) -> ViewController {
 
     let controller = ItemListController(context: context, state: signal)
     controller.navigationPresentation = .modal
-    let _ = pluginsNavControllerHolder.swap({ [weak controller] previousController in
-        controller?.navigationController as? NavigationController ?? previousController
-    })
+    let _ = pluginsNavControllerHolder.swap(controller.navigationController as? NavigationController)
     return controller
 }
 
