@@ -102,43 +102,61 @@ private enum ExteraProfileSettingsEntry: ItemListNodeEntry {
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
         case let .hidePhoneNumber(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.HidePhoneNumber"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.hidePhoneNumber = value }
+                arguments.update { preferences in
+                    preferences.hidePhoneNumber = value
+                }
             })
         case let .showIdAndDc(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowIdAndDc"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.showIdAndDc = value }
+                arguments.update { preferences in
+                    preferences.showIdAndDc = value
+                }
             })
         case let .showIdAndDcInfo(text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
         case let .showCreationDate(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowCreationDate"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.showCreationDate = value }
+                arguments.update { preferences in
+                    preferences.showCreationDate = value
+                }
             })
         case let .showRegistrationDates(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowRegistrationDates"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.showRegistrationDates = value }
+                arguments.update { preferences in
+                    preferences.showRegistrationDates = value
+                }
             })
         case let .showOnlineIndicator(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowOnlineIndicator"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.showOnlineIndicator = value }
+                arguments.update { preferences in
+                    preferences.showOnlineIndicator = value
+                }
             })
         case let .showForwardsCount(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ShowForwardsCount"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.showForwardsCount = value }
+                arguments.update { preferences in
+                    preferences.showForwardsCount = value
+                }
             })
         case let .chatListHeader(text):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
         case let .hideArchiveFolder(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.HideArchiveFolder"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.hideArchiveFolder = value }
+                arguments.update { preferences in
+                    preferences.hideArchiveFolder = value
+                }
             })
         case let .archiveOnPull(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.ArchiveOnPull"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.archiveOnPull = value }
+                arguments.update { preferences in
+                    preferences.archiveOnPull = value
+                }
             })
         case let .disableUnarchiveSwipe(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.DisableUnarchiveSwipe"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.disableUnarchiveSwipe = value }
+                arguments.update { preferences in
+                    preferences.disableUnarchiveSwipe = value
+                }
             })
         case let .disableUnarchiveSwipeInfo(text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
@@ -148,7 +166,9 @@ private enum ExteraProfileSettingsEntry: ItemListNodeEntry {
             })
         case let .senderMiniAvatars(value):
             return exteraProfileSwitchItem(presentationData, title: exteraProfileString("Extera.Profile.SenderMiniAvatars"), value: value, sectionId: self.section, updated: { value in
-                arguments.update { $0.senderMiniAvatars = value }
+                arguments.update { preferences in
+                    preferences.senderMiniAvatars = value
+                }
             })
         }
     }

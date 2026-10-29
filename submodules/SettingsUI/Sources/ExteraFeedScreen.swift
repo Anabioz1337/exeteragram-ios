@@ -253,8 +253,8 @@ public func exteraFeedController(context: AccountContext) -> ViewController {
     let accountManager = context.sharedContext.accountManager
     let defaults = exteraAdBlockUserDefaults ?? UserDefaults.standard
 
-    let selectedCategoryId = Promise<Int64>(exteraFeedAllCategoryId)
-    let refreshPromise = Promise<Int>(0)
+    let selectedCategoryId = ValuePromise<Int64>(exteraFeedAllCategoryId)
+    let refreshPromise = ValuePromise<Int>(0)
     let refreshCounter = Atomic<Int>(value: 0)
     let activePeerIds = Atomic<[EnginePeer.Id]>(value: [])
     let stringsHolder = Atomic<PresentationStrings?>(value: nil)

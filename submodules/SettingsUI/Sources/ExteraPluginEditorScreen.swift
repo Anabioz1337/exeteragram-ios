@@ -148,7 +148,7 @@ private enum ExteraPluginEditorEntry: ItemListNodeEntry {
             let lines = code.components(separatedBy: "\n").prefix(12).joined(separator: "\n")
             return ItemListMultilineTextItem(
                 presentationData: presentationData,
-                text: .plain(lines + (code.components(separatedBy: "\n").count > 12 ? "\n…" : "")),
+                text: lines + (code.components(separatedBy: "\n").count > 12 ? "\n…" : ""),
                 enabledEntityTypes: [],
                 sectionId: self.section,
                 style: .blocks
