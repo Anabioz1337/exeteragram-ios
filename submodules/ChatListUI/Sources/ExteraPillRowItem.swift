@@ -214,21 +214,19 @@ final class ExteraPillRowItemNode: ListViewItemNode {
                     let hasCorners = itemListHasRoundedBlockLayout(params)
                     var hasTopCorners = false
                     var hasBottomCorners = false
-                    let topStripeIsHidden: Bool
                     switch neighbors.top {
                     case .sameSection(false):
-                        topStripeIsHidden = true
+                        strongSelf.topStripeNode.isHidden = true
                     default:
                         hasTopCorners = true
-                        topStripeIsHidden = hasCorners
+                        strongSelf.topStripeNode.isHidden = hasCorners
                     }
-                    let bottomStripeIsHidden: Bool
                     switch neighbors.bottom {
                     case .sameSection(false):
-                        bottomStripeIsHidden = false
+                        strongSelf.bottomStripeNode.isHidden = false
                     default:
                         hasBottomCorners = true
-                        bottomStripeIsHidden = hasCorners
+                        strongSelf.bottomStripeNode.isHidden = hasCorners
                     }
 
                     strongSelf.maskNode.image = hasCorners ? PresentationResourcesItemList.cornersImage(item.presentationData.theme, top: hasTopCorners, bottom: hasBottomCorners, glass: false) : nil
