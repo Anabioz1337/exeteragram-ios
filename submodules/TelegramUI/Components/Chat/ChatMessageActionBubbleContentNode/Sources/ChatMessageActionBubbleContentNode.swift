@@ -427,7 +427,7 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
                 }
                 
                 if item.associatedData.exteraSettings.showActionTimestamps, let attributedString = updatedAttributedString, item.message.timestamp >= 10 {
-                    var mutableString = NSMutableAttributedString(attributedString: attributedString)
+                    let mutableString = NSMutableAttributedString(attributedString: attributedString)
                     let timestampString = stringForMediumCompactDate(timestamp: item.message.timestamp, strings: item.presentationData.strings, dateTimeFormat: item.presentationData.dateTimeFormat)
                     if !mutableString.string.isEmpty {
                         mutableString.append(NSAttributedString(string: "\n"))
