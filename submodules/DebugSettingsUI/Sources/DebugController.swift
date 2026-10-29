@@ -2088,11 +2088,11 @@ final class ExteraKitStackHostController: ViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override open func loadDisplayNode() {
+    public override func loadDisplayNode() {
         self.displayNode = ASDisplayNode()
     }
 
-    override open func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         self.addChild(self.stackController)
@@ -2103,7 +2103,7 @@ final class ExteraKitStackHostController: ViewController {
         self.stackEmbedded = true
     }
 
-    override open func viewDidLayoutSubviews() {
+    public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         if self.stackEmbedded {
@@ -2113,7 +2113,8 @@ final class ExteraKitStackHostController: ViewController {
 }
 
 public func debugController(sharedContext: SharedAccountContext, context: AccountContext?, modal: Bool = false) -> ViewController {
-    var presentControllerImpl: ((ViewController, ViewControllerPresentationArguments?) -> Void)?    var pushControllerImpl: ((ViewController) -> Void)?
+    var presentControllerImpl: ((ViewController, ViewControllerPresentationArguments?) -> Void)?
+    var pushControllerImpl: ((ViewController) -> Void)?
     var dismissImpl: (() -> Void)?
     var getRootControllerImpl: (() -> UIViewController?)?
     var getNavigationControllerImpl: (() -> NavigationController?)?
