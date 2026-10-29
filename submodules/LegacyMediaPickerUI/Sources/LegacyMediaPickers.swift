@@ -386,11 +386,17 @@ public func legacyAssetPickerEnqueueMessages(
     signals: [Any],
     originalMediaReference: AnyMediaReference? = nil
 ) -> Signal<[LegacyAssetPickerEnqueueMessage], Void> {
-    return context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
-        |> mapToSignal { sharedData -> Signal<[LegacyAssetPickerEnqueueMessage], Void> in
+    let inner: Signal<[LegacyAssetPickerEnqueueMessage], NoError> = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.exteraSettings])
+        |> mapToSignal { sharedData -> Signal<[LegacyAssetPickerEnqueueMessage], NoError> in
             let quality = sharedData.entries[ApplicationSpecificSharedDataKeys.exteraSettings]?.get(ExteraSettings.self)?.sendPhotosQuality ?? 0
             return enqueueAssetPickerMessages(context: context, account: account, signals: signals, originalMediaReference: originalMediaReference, maxPhotoDimension: sendPhotosQualityMaxDimension(quality))
         }
+    return Signal { subscriber in
+        return inner.start(next: { messages in
+            subscriber.putNext(messages)
+            subscriber.putCompletion()
+        })
+    }
 }
 
 private func enqueueAssetPickerMessages(
@@ -399,7 +405,7 @@ private func enqueueAssetPickerMessages(
     signals: [Any],
     originalMediaReference: AnyMediaReference?,
     maxPhotoDimension: CGFloat
-) -> Signal<[LegacyAssetPickerEnqueueMessage], Void> {
+) -> Signal<[LegacyAssetPickerEnqueueMessage], NoError> {
     return Signal { subscriber in
         let disposable = SSignal.combineSignals(signals).start(next: { anyValues in
             var messages: [LegacyAssetPickerEnqueueMessage] = []
@@ -1090,10 +1096,8 @@ private func enqueueAssetPickerMessages(
             
             subscriber.putNext(messages)
             subscriber.putCompletion()
-        }, error: { _ in
-            subscriber.putError(Void())
-        }, completed: nil)
-        
+        })
+
         return ActionDisposable {
             disposable?.dispose()
         }
