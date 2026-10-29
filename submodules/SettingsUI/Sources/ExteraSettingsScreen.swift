@@ -289,82 +289,122 @@ private enum ExteraSettingsEntry: ItemListNodeEntry {
             case let .tabCounter(lhsTheme, lhsText, lhsValue):
                 if case let .tabCounter(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .hideAllChats(lhsTheme, lhsText, lhsValue):
                 if case let .hideAllChats(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .tabIcons(lhsTheme, lhsText, lhsValue):
                 if case let .tabIcons(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .stickerShape(lhsTheme, lhsText, lhsValue):
                 if case let .stickerShape(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .hideStickerTime(lhsTheme, lhsText, lhsValue):
                 if case let .hideStickerTime(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .hideCategories(lhsTheme, lhsText, lhsValue):
                 if case let .hideCategories(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .hidePhotoCounter(lhsTheme, lhsText, lhsValue):
                 if case let .hidePhotoCounter(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .disablePlayback(lhsTheme, lhsText, lhsValue):
                 if case let .disablePlayback(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .longDoubleTapSeek(lhsTheme, lhsText, lhsValue):
                 if case let .longDoubleTapSeek(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .blockAds(lhsTheme, lhsText, lhsValue):
                 if case let .blockAds(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .hideShareButtonEntry(lhsTheme, lhsText, lhsValue):
                 if case let .hideShareButtonEntry(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .showCopyPhotoButton(lhsTheme, lhsText, lhsValue):
                 if case let .showCopyPhotoButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .showClearButton(lhsTheme, lhsText, lhsValue):
                 if case let .showClearButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .showSaveMessageButton(lhsTheme, lhsText, lhsValue):
                 if case let .showSaveMessageButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .showReportButton(lhsTheme, lhsText, lhsValue):
                 if case let .showReportButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .showHistoryButton(lhsTheme, lhsText, lhsValue):
                 if case let .showHistoryButton(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .permissionsShortcut(lhsTheme, lhsText, lhsValue):
                 if case let .permissionsShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .administratorsShortcut(lhsTheme, lhsText, lhsValue):
                 if case let .administratorsShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .membersShortcut(lhsTheme, lhsText, lhsValue):
                 if case let .membersShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .recentActionsShortcut(lhsTheme, lhsText, lhsValue):
                 if case let .recentActionsShortcut(rhsTheme, rhsText, rhsValue) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsValue == rhsValue {
                     return true
+                } else {
+                    return false
                 }
             case let .messagesHeader(lhsTheme, lhsText):
                 if case let .messagesHeader(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
